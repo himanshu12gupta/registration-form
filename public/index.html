@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -82,8 +81,7 @@
                 <div class="form-group">
                   <label for="form_email">Email *</label>
                   <input id="form_email" type="email" name="email" class="form-control"
-                    placeholder="Please enter your email *"
-                    pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}">
+                    placeholder="Please enter your email *">
                   <div class="help-block with-errors"></div>
                 </div>
               </div>
@@ -91,7 +89,6 @@
                 <div class="form-group">
                   <label for="dateOfBirth">Date of Birth (DD/MM/YYYY):</label>
                   <input type="text" id="dateOfBirth" name="dateOfBirth" placeholder="DD/MM/YYYY" id="form_name"
-                    pattern="^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/([0-9]{4})$"
                     title="Please enter a valid date in DD/MM/YYYY format." class="form-control">
                   <div class="help-block with-errors"></div>
                 </div>
@@ -185,7 +182,7 @@
                     placeholder="Describe your nature of duties here..." class="form-control"
                     title="Please enter a description between 10 and 200 characters, using only letters, numbers, spaces, commas, periods, and hyphens."></textarea>
                   <div class="help-block with-errors"></div>
-                  <div class="help-block with-errors"></div>
+                  <!-- <div class="help-block with-errors"></div> -->
                 </div>
               </div>
               <div class="col-md-6">
@@ -202,7 +199,7 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="lengthOfServiceBusiness">Length of Service/Business (in years):</label>
-                  <input type="number" id="presentEmployer" name="presentEmployer" class="form-control"
+                  <input type="number" id="presentEmployer" name="lengthOfServiceBusiness" class="form-control"
                     placeholder="Enter the name of your present employer or business"
                     title="The name should only contain letters and spaces, and be between 2 to 100 characters long.">
                   <div class="help-block with-errors"></div>
@@ -232,8 +229,7 @@
                 <div class="form-group">
                   <lebel for="panCardNumber">Pan Card:</lebel>
                   <input type="text" id="panCardNumber" name="panCardNumber" class="form-control"
-                    placeholder="Enter your PAN Card Number" minlength="10" maxlength="10"
-                    pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
+                    placeholder="Enter your PAN Card Number"
                     title="PAN Card number must be in the format: 5 uppercase letters, followed by 4 digits, and ending with 1 uppercase letter.">
                   <div class="help-block with-errors"></div>
                 </div>
@@ -366,9 +362,12 @@
             <div id="addendumSection" style="display: none; margin-top: 10px;">
               <p>Please fill in the addendum:</p>
               <a href="https://www.anytime.com" target="_blank">www.anytime.com</a>
+              <br><br>
             </div>
                 <!-- ... other fields ... -->
-                <button type="button" class="next-button btn btn-primary" style="background-color: green;" onclick="showPage(2)">Next</button>
+                <div class="next-button-container">
+                <button type="button" class="next-button btn btn-primary right" style="background-color: green;"   onclick="showPage(2)">Next>></button><br><br>
+                </div>
             </div>
 
             <!-- Page 2 -->
@@ -387,7 +386,7 @@
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="accountNumber">Account Number:</label>
-                      <input type="number" id="accountNumber" name="accountNumber" class="form-control" pattern="\d+"
+                      <input type="number" id="accountNumber" name="accountNumber" class="form-control"
                         placeholder="Only numbers"  >
                       <div class="help-block with-errors"></div>
                     </div>
@@ -433,13 +432,25 @@
                     </div>
                   </div>
                 </div>
+                
+              <br><br>
+              <div class="button-box">
+                <button type="button" class="prev-button btn btn-primary" style="background-color: red;" onclick="showPage(1)"> Previous</button>
+                <button type="button" class="next-button btn btn-primary" style="background-color: green;" onclick="showPage(3)">Next>></button>
+
+                </div>
+              </div>
+              <br><br>
               </div>
 
+                          <!-- Page 3 -->
+            <div class="form-page" id="page3" style="display: none;">
               <h2>Nominee Detail</h2><br>
               <div class="controls">
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group">
+                      
                       <label for="applicantName">Name:</label>
                       <input type="text" id="applicantName" name="Nom_Name" class="form-control"  
                         placeholder="Enter nominee's name">
@@ -510,12 +521,25 @@
                     </div>
                   </div>
                 </div>
-                <button type="button" class="prev-button" onclick="showPage(1)">Previous</button>
-                <button type="button" class="next-button btn btn-primary" style="background-color: green;" onclick="showPage(3)">Next</button>
+               
+                <div class="next-button-container">
+                <!-- <button type="button" class="next-button btn btn-primary" onclick="showPage(4)">Next>></button> -->
             </div>
+            <div class="previous-button-container">
+              <!-- <button type="button" class="prev-button btn btn-primary" onclick="showPage(2)">Previous</button> -->
+              </div>
+            </div>
+            <br><br>
+            <div class="button-box">
+              <button type="button" class="prev-button btn btn-primary" style="background-color: red;" onclick="showPage(2)"> Previous</button>
+              <button type="button" class="next-button btn btn-primary" style="background-color: green;" onclick="showPage(4)">Next>></button>
+
+              </div>
+            <br><br>
               </div>
 
-            <div class="form-page" id="page3" style="display: none;">
+              <!-- page4 -->
+            <div class="form-page" id="page4" style="display: none;">
               <h2>Plan Details</h2><br>
 
                 <div class="controls">
@@ -561,21 +585,21 @@
                       <td>5 YEARS</td>
                       <td>5 YEARS</td>
                       <td>11%</td>
-                      <td><input type="radio" name="planSelection" value="planA" onclick="updateTable();"  ></td>
+                      <td><input type="radio" name="planSelection" value="planA" onclick="updateTable();"></td>
                     </tr>
                     <tr>
                       <td>PLAN B</td>
                       <td>5 YEARS</td>
                       <td>3 YEARS</td>
                       <td>10%</td>
-                      <td><input type="radio" name="planSelection" value="planB" onclick="updateTable();"  ></td>
+                      <td><input type="radio" name="planSelection" value="planB" onclick="updateTable();"></td>
                     </tr>
                     <tr>
                       <td>PLAN C</td>
                       <td>3 YEARS</td>
                       <td>1 YEAR</td>
                       <td>9%</td>
-                      <td><input type="radio" name="planSelection" value="planC" onclick="updateTable();"  ></td>
+                      <td><input type="radio" name="planSelection" value="planC" onclick="updateTable();"></td>
                     </tr>
                   </tbody>
                 </table>
@@ -587,19 +611,19 @@
                 <div class="subscription-options">
                   <label>
                     Monthly
-                    <input type="radio" name="subscriptionOption" value="monthly" onclick="updateTable();"  >
+                    <input type="radio" name="subscriptionOption" value="monthly" onclick="updateTable();">
                   </label>
                   <label>
                     Quarterly
-                    <input type="radio" name="subscriptionOption" value="quarterly" onclick="updateTable();"  >
+                    <input type="radio" name="subscriptionOption" value="quarterly" onclick="updateTable();">
                   </label>
                   <label>
                     Half Yearly
-                    <input type="radio" name="subscriptionOption" value="halfyearly" onclick="updateTable();"  >
+                    <input type="radio" name="subscriptionOption" value="halfyearly" onclick="updateTable();">
                   </label>
                   <label>
                     Yearly
-                    <input type="radio" name="subscriptionOption" value="yearly" onclick="updateTable();"  >
+                    <input type="radio" name="subscriptionOption" value="yearly" onclick="updateTable();">
                   </label>
                 </div>
                 <br><br>
@@ -817,11 +841,17 @@
                   <h4>PLAN C - Yearly</h4>
                   <h5 style="color: blue;">You will get 9% + 0% Loyalty Bonus Every Year</h5>
                 </div>
-              <button type="button" class="prev-button" onclick="showPage(2)">Previous</button>
-              <button type="button" class="next-button" onclick="showPage(4)">Next</button>
+                <br><br>
+              <div class="button-box">
+                <button type="button" class="prev-button btn btn-primary" style="background-color: red;" onclick="showPage(3)"> Previous</button>
+                <button type="button" class="next-button btn btn-primary" style="background-color: green;" onclick="showPage(5)">Next>></button>
+
+                </div>
             </div>
-            <!-- Page 3 -->
-            <div class="form-page" id="page4" style="display: none;">
+            
+
+            <!-- Page 5 -->
+            <div class="form-page" id="page5" style="display: none;">
               <h2>Payor Details</h2><br>
                 <div class="controls">
                   <div class="row">
@@ -863,7 +893,14 @@
                   </div>
 
                   <div class="row">
-                    <h3>Would you like to opt for online agreement?</h3>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <h3>Would you like to opt for online agreement?</h3>
+                      </div>
+                    </div>
+                    </div>
+
+                  <div class="row">
                     <div class="col-md-6">
                       <div class="form-group">
                         <label>
@@ -881,8 +918,17 @@
                       </div>
                     </div>
                   </div>
+                  </div>
+                  <br><br>
+                  <div class="button-box">
+                    <button type="button" class="prev-button btn btn-primary" style="background-color: red;" onclick="showPage(4)"> Previous</button>
+                    <button type="button" class="next-button btn btn-primary" style="background-color: green;" onclick="showPage(6)">Next>></button>
+    
+                </div>
                 </div>
 
+                <!-- page 6 -->
+                <div class="form-page" id="page6" style="display: none;">
                 <h2>Witness</h2><br>
                 <div class="controls">
                   <div class="row">
@@ -971,9 +1017,12 @@
                     <h4><strong>*T&C Apply As per (MOU)</strong></h4>
                     <p>*Charges will be applicable as per regulatory norms for all payments</p>
                   </div>
-              <button type="button" class="prev-button" onclick="showPage(3)">Previous</button>
+                  <br><br>
+            <div class="button-box">
+              <button type="button" class="prev-button btn btn-primary" style="background-color: red;" onclick="showPage(5)"> Previous</button>
               <button type="submit" class="next-button btn btn-primary" style="background-color: green;">Submit</button>
-            </div>
+
+              </div>
         </form>
         </div>
         </div>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applicants</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .scrollable-table {
+            height: 400px;
+            overflow-y: auto;
+            display: block;
+        }
+        #noDataMessage {
+            display: none;
+            font-size: 18px;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Applicants</h1>
+    <div id="noDataMessage">No data is present</div>
+    <div class="scrollable-table">
+        <table id="applicantsTable">
+            <thead>
+                <tr>
+                    <th>Application No</th>
+                    <th>Application Date</th>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Material Status</th>
+                    <th>Education Qualification</th>
+                    <th>Email</th>
+                    <th>Date of Birth</th>
+                    <th>Phone Number</th>
+                    <th>Whatsapp Number</th>
+                    <th>Father</th>
+                    <th>Mother</th>
+                    <th>Occupation</th>
+                    <th>Designation</th>
+                    <th>Nature of Duties</th>
+                    <th>Present Employer</th>
+                    <th>Length of Service Business</th>
+                    <th>Work Location</th>
+                    <th>Annual Income</th>
+                    <th>Pan Card Number</th>
+                    <th>Aadhaar Number</th>
+                    <th>Current Address</th>
+                    <th>Same Address</th>
+                    <th>Permanent Address</th>
+                    <th>Pin Code</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Country</th>
+                    <th>Landmark</th>
+                    <th>Foreign National</th>
+                    <th>PEP Status</th>
+                    <th>Bank Name</th>
+                    <th>Account Number</th>
+                    <th>MICR</th>
+                    <th>IFSC Code</th>
+                    <th>Account Type</th>
+                    <th>Branch Address</th>
+                    <th>Nominee Name</th>
+                    <th>Nominee DOB</th>
+                    <th>Nominee Gender</th>
+                    <th>Nominee Relationship</th>
+                    <th>Nominee Phone Number</th>
+                    <th>Appointee Name</th>
+                    <th>Appointee Relationship</th>
+                    <th>Payment Mode</th>
+                    <th>Plan Selection</th>
+                    <th>Subscription Option</th>
+                    <th>Payor Name</th>
+                    <th>Payor Relation</th>
+                    <th>Payor Phone</th>
+                    <th>Payor Email</th>
+                    <th>Opt Option</th>
+                    <th>With Name</th>
+                    <th>With Relationship</th>
+                    <th>With Address</th>
+                    <th>With City</th>
+                    <th>With State</th>
+                    <th>With Country</th>
+                    <th>With Pincode</th>
+                    <th>With Landmark</th>
+                    <th>Terms Accepted</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Table rows will be inserted here dynamically -->
+            </tbody>
+        </table>
+    </div>
+    <br>
+    <button onclick="downloadExcel()">Download Excel</button>
+
+    <script>
+        fetch('/api/applicants')
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.querySelector('#applicantsTable tbody');
+                const noDataMessage = document.getElementById('noDataMessage');
+
+                if (data.length === 0) {
+                    noDataMessage.style.display = 'block'; // Show the no data message
+                } else {
+                    data.forEach(applicant => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${applicant.appl_no}</td>
+                            <td>${applicant.appl_date}</td>
+                            <td>${applicant.name}</td>
+                            <td>${applicant.gender}</td>
+                            <td>${applicant.materialStatus}</td>
+                            <td>${applicant.educationQualification}</td>
+                            <td>${applicant.email}</td>
+                            <td>${applicant.dateOfBirth}</td>
+                            <td>${applicant.phoneNumber}</td>
+                            <td>${applicant.whatsappNumber}</td>
+                            <td>${applicant.father}</td>
+                            <td>${applicant.mother}</td>
+                            <td>${applicant.occupation}</td>
+                            <td>${applicant.designation}</td>
+                            <td>${applicant.natureOfDuties}</td>
+                            <td>${applicant.presentEmployer}</td>
+                            <td>${applicant.lengthOfServiceBusiness}</td>
+                            <td>${applicant.workLocation}</td>
+                            <td>${applicant.annualIncome}</td>
+                            <td>${applicant.panCardNumber}</td>
+                            <td>${applicant.aadhaarNumber}</td>
+                            <td>${applicant.currentAddress}</td>
+                            <td>${applicant.sameAddress}</td>
+                            <td>${applicant.permanentAddress}</td>
+                            <td>${applicant.pinCode}</td>
+                            <td>${applicant.city}</td>
+                            <td>${applicant.state}</td>
+                            <td>${applicant.country}</td>
+                            <td>${applicant.landmark}</td>
+                            <td>${applicant.foreignNational}</td>
+                            <td>${applicant.pepStatus}</td>
+                            <td>${applicant.bankName}</td>
+                            <td>${applicant.accountNumber}</td>
+                            <td>${applicant.MICR}</td>
+                            <td>${applicant.ifscCode}</td>
+                            <td>${applicant.accountType}</td>
+                            <td>${applicant.branchAddress}</td>
+                            <td>${applicant.nomineeName}</td>
+                            <td>${applicant.nomineeDOB}</td>
+                            <td>${applicant.nomineeGender}</td>
+                            <td>${applicant.nomineeRelationship}</td>
+                            <td>${applicant.nomineePhoneNumber}</td>
+                            <td>${applicant.appointeeName}</td>
+                            <td>${applicant.appointeeRelationship}</td>
+                            <td>${applicant.paymentMode}</td>
+                            <td>${applicant.planSelection}</td>
+                            <td>${applicant.subscriptionOption}</td>
+                            <td>${applicant.payor_name}</td>
+                            <td>${applicant.payor_relation}</td>
+                            <td>${applicant.payor_phone}</td>
+                            <td>${applicant.payor_email}</td>
+                            <td>${applicant.opt_option}</td>
+                            <td>${applicant.with_name}</td>
+                            <td>${applicant.with_relationship}</td>
+                            <td>${applicant.with_address}</td>
+                            <td>${applicant.with_city}</td>
+                            <td>${applicant.with_state}</td>
+                            <td>${applicant.with_country}</td>
+                            <td>${applicant.with_pincode}</td>
+                            <td>${applicant.with_landmark}</td>
+                            <td>${applicant.terms_accepted}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                }
+            })
+            .catch(error => console.error('Error fetching applicants data:', error));
+
+        function downloadExcel() {
+            window.location.href = '/download-excel';
+        }
+    </script>
+</body>
+</html>

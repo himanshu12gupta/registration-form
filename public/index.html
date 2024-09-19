@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-page Form</title>
+    <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+</head>
+<body>
+  <div class="container ctn">
+    <div class="row">
+      <div class="col-lg-12 col-md-12">
+        <form id="multiPageForm">
+            <!-- Page 1 -->
+            <div class="form-page" id="page1">
+              <div class="yy">
+                <div class="existing-form-group">
+                  <label for="current-number">Application Number:</label>
+                  <input type="text" id="appl_no" name="Appl_No" readonly>
+              </div>
+              <div class="existing-form-group">
+                  <label for="current-date">Date:</label>
+                  <input type="text" id="appl_date" name="Appl_date" readonly>
+              </div>
+              </div>
+
+            <h2>Details of Applicant</h2>   
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="name">Name</label>
+                  <input id="form_name" type="text" name="name" class="form-control"
+                    placeholder="Please enter your Name*">
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="gender">Gender:</label>
+                  <select name="gender" class="form-control" id="form_name">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                  </select>
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="materialStatus">Material Status:</label>
+                  <select id="status" name="materialStatus" class="form-control" id="form_name">
+                    <option value="Married">Married</option>
+                    <option value="single">Single</option>
+                    <option value="widow">Widow</option>
+                    <option value="divorce">divorce</option>
+                  </select>
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="educationQualification">Education Qualification:</label>
+                  <select id="educationQualification" name="educationQualification" class="form-control"
+                    id="form_name">
+                    <option value="highschool">High School</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="bachelor">Bachelor's Degree</option>
+                    <option value="master">Master's Degree</option>
+                    <option value="phd">PhD</option>
+                  </select>
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="form_email">Email *</label>
+                  <input id="form_email" type="email" name="email" class="form-control"
+                    placeholder="Please enter your email *"
+                    pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}">
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="dateOfBirth">Date of Birth (DD/MM/YYYY):</label>
+                  <input type="text" id="dateOfBirth" name="dateOfBirth" placeholder="DD/MM/YYYY" id="form_name"
+                    pattern="^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/([0-9]{4})$"
+                    title="Please enter a valid date in DD/MM/YYYY format." class="form-control">
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="phoneNumber">Phone Number:</label>
+                  <input type="tel" id="phoneNumber" name="phoneNumber" id="form_name" class="form-control"
+                    title="Please enter a valid 10-digit phone number."  >
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <p>
+                  <div id="whatsappInputContainer" style="display: none;">
+                    <label for="whatsappNumber">WhatsApp Number:</label>
+                    <input type="tel" id="whatsappNumber" name="whatsappNumber" id="form_name" class="form-control"
+                      title="Please enter a valid 10-digit WhatsApp number.">
+                  </div>
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="checkbox-container">
+              <label for="whatsappSameYes">Is this number used for WhatsApp?</label>
+              <div class="rad">
+                <input type="radio" id="whatsappSameYes" name="whatsappSame" value="yes"
+                  onclick="toggleWhatsAppInput()"> Yes
+                <span style="margin: 0 80px;"> </span>
+                <input type="radio" id="whatsappSameNo" name="whatsappSame" value="no"
+                  onclick="toggleWhatsAppInput()"> No
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="father">Father Name</label>
+                  <input type="text" id="farher" name="father" id="form_name" class="form-control">
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="mother">Mother Name</label>
+                  <input type="text" id="mother" name="mother" id="form_name" class="form-control">
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="occupation">Occupation:</label>
+                  <select id="occupation" name="occupation" id="form_name" class="form-control">
+                    <option value="service">Service</option>
+                    <option value="business">Business</option>
+                    <option value="housewife">Housewife</option>
+                    <option value="retired">Retired</option>
+                  </select>
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="designation">Designation:</label>
+                  <input type="text" id="designation" name="designation" id="form_name" class="form-control"
+                    placeholder="Enter your designation"
+                    title="Designation should only contain letters and spaces, and be between 2 to 50 characters long.">
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="natureOfDuties">Nature of Duties:</label>
+                  <!-- <input type="text" id="natureOfDuties" name="natureOfDuties" rows="4"
+                    placeholder="Describe your nature of duties here..." id="form_name" class="form-control"   > -->
+                  <textarea id="natureOfDuties" name="natureOfDuties" rows="4"
+                    placeholder="Describe your nature of duties here..." class="form-control"
+                    title="Please enter a description between 10 and 200 characters, using only letters, numbers, spaces, commas, periods, and hyphens."></textarea>
+                  <div class="help-block with-errors"></div>
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="presentEmployer">Name of Present Employer/Business:</label>
+                  <input type="text" id="presentEmployer" name="presentEmployer" id="form_name" class="form-control">
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="lengthOfServiceBusiness">Length of Service/Business (in years):</label>
+                  <input type="number" id="presentEmployer" name="presentEmployer" class="form-control"
+                    placeholder="Enter the name of your present employer or business"
+                    title="The name should only contain letters and spaces, and be between 2 to 100 characters long.">
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="workLocation">Work Location:</label>
+                  <input type="text" id="workLocation" name="workLocation" id="form_name" class="form-control">
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="annualIncome">Annual Income (in Rs):</label>
+                  <input type="number" id="annualIncome" name="annualIncome" class="form-control"
+                    placeholder="Enter your annual income in Rs" min="0" step="1"
+                    title="Please enter a valid positive number for annual income.">
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <lebel for="panCardNumber">Pan Card:</lebel>
+                  <input type="text" id="panCardNumber" name="panCardNumber" class="form-control"
+                    placeholder="Enter your PAN Card Number" minlength="10" maxlength="10"
+                    pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
+                    title="PAN Card number must be in the format: 5 uppercase letters, followed by 4 digits, and ending with 1 uppercase letter.">
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="aadhaarNumber">Aadhaar Number:</label>
+                  <input type="text" id="aadhaarNumber" name="aadhaarNumber" class="form-control"
+                    placeholder="Enter your Aadhaar Number"
+                    title="Aadhaar number must be exactly 12 digits long.">
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="currentAddress">Current Address:</label>
+                  <input type="text" id="currentAddress" name="currentAddress" class="form-control"
+                    placeholder="Enter your current address"
+                    title="Please enter a valid address. It should contain only letters, numbers, spaces, commas, periods, and hyphens.">
+                  <div class="help-block with-errors"></div>
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <div class="checkbox-container">
+                    <div class="rad">
+                      <!-- <label>Is your current address the same as your permanent address?</label> -->
+                      <h5><b>Is your current address the same as your permanent address?</b></h5>
+                      <input type="radio" id="addressYes" name="sameAddress" value="yes"
+                        onclick="togglePermanentAddress(false)"> Yes
+                      <span style="margin: 0 80px;"> </span>
+                      <input type="radio" id="addressNo" name="sameAddress" value="no"
+                        onclick="togglePermanentAddress(true)"> No
+                    </div>
+                  </div>
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <div id="permanentAddressContainer" style="display: none;">
+                    <label for="permanentAddress">Permanent Address:</label>
+                    <input type="text" id="permanentAddress" name="permanentAddress" class="form-control"
+                      placeholder="Enter your permanent address"
+                      title="Please enter a valid address. It should contain only letters, numbers, spaces, commas, periods, and hyphens.">
+                  </div>
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="pinCode">PIN Code:</label>
+                  <input type="text" id="pinCode" name="pinCode" class="form-control"
+                    placeholder="Enter your 6-digit PIN code" title="Please enter a 6-digit PIN code">
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="city">City:</label>
+                  <input type="text" id="city" name="city" class="form-control" placeholder="Enter your city" title="Please enter a valid city name. Only letters and spaces are allowed.">
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <label for="state">State:</label>
+                <input type="text" id="state" name="state" class="form-control" placeholder="Enter your state" title="Please enter a valid state name. Only letters and spaces are allowed.">
+                <div class="form-group">
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="country">Country:</label>
+                  <input type="text" id="country" name="country" class="form-control" placeholder="Enter your country"
+                    title="Please enter a valid country name. Only letters and spaces are allowed.">
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+            </div>
+
+            <div clas s="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="landmark">Landmark:</label>
+                  <input type="text" id="landmark" name="landmark" class="form-control"
+                    placeholder="Enter a landmark (optional)">
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+            </div>
+
+            <label for="foreignNational">Are you a foreign national or NRI, or a resident of any other country other
+              than India (for I.Tax purpose)?</label>
+            <div class="checkbox-container">
+              <input type="radio" id="foreignNationalYes" name="foreignNational" value="yes"
+                onclick="toggleFatcaForm()">
+              <label for="foreignNationalYes">Yes</label>
+              <input type="radio" id="foreignNationalNo" name="foreignNational" value="no" onclick="hideFatcaForm()">
+              <label for="foreignNationalNo">No</label>
+            </div>
+            <div id="fatcaFormSection" style="display: none; margin-top: 10px;">
+              <p>If yes, please fill the FATCA form:</p>
+              <a href="https://www.anytimeinvest.com" target="_blank">www.anytimeinvest.com</a>
+            </div>
+
+
+            <label for="pepStatus">Are you a politically exposed person (PEP) as per AMI act?</label>
+            <div class="checkbox-container">
+              <input type="radio" id="pepYes" name="pepStatus" value="yes" onclick="toggleAddendum()"  >
+              <label for="pepYes">Yes</label>
+              <input type="radio" id="pepNo" name="pepStatus" value="no" onclick="hideAddendum()"  >
+              <label for="pepNo">No</label>
+            </div>
+            <div id="addendumSection" style="display: none; margin-top: 10px;">
+              <p>Please fill in the addendum:</p>
+              <a href="https://www.anytime.com" target="_blank">www.anytime.com</a>
+            </div>
+                <!-- ... other fields ... -->
+                <button type="button" class="next-button btn btn-primary" style="background-color: green;" onclick="showPage(2)">Next</button>
+            </div>
+
+            <!-- Page 2 -->
+            <div class="form-page" id="page2" style="display: none;">
+              <h2>Bank Applicant's Details</h2><br>
+              <div class="controls">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="bankName">Bank Name:</label>
+                      <input type="text" id="bankName" name="bankName" class="form-control"
+                        placeholder="Enter the bank name"  >
+                      <div class="help-block with-errors"></div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="accountNumber">Account Number:</label>
+                      <input type="number" id="accountNumber" name="accountNumber" class="form-control" pattern="\d+"
+                        placeholder="Only numbers"  >
+                      <div class="help-block with-errors"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="chequeDDNumber">MICR</label>
+                      <input type="text" id="MICR" name="MICR" class="form-control" placeholder="Enter MICR code">
+                      <div class="help-block with-errors"></div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="ifscCode">IFSC Code:</label>
+                      <input type="text" id="ifscCode" name="ifscCode"
+                        placeholder="e.g., HDFC0001234" class="form-control"  >
+                      <div class="help-block with-errors"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="accountType">Account Type:</label>
+                      <select id="accountType" name="accountType" id="form_name" class="form-control"  >
+                        <option value="">Select Account Type</option>
+                        <option value="saving">Saving</option>
+                        <option value="current">Current</option>
+                      </select>
+                      <div class="help-block with-errors"></div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="branchAddress">Branch Address:</label>
+                      <input type="text" id="branchAddress" name="branchAddress" class="form-control"  
+                        placeholder="Enter branch address here...">
+                      <div class="help-block with-errors"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <h2>Nominee Detail</h2><br>
+              <div class="controls">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="applicantName">Name:</label>
+                      <input type="text" id="applicantName" name="Nom_Name" class="form-control"  
+                        placeholder="Enter nominee's name">
+                      <div class="help-block with-errors"></div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="dob">Date of Birth (DD/MM/YYYY):</label>
+                      <input type="text" id="dob" name="Nom_dob" placeholder="DD/MM/YYYY" class="form-control"  
+                        onblur="validateDOB()">
+                      <div class="help-block with-errors"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="gender">Gender:</label>
+                      <select id="gender" name="Nom_gender" id="form_name" class="form-control" id="form_name"
+                        class="form-control"  >
+                        <option value="">Select</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                      </select>
+                      <div class="help-block with-errors"></div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="relationship">Relationship with Applicant:</label>
+                      <input type="text" id="relationship" name="Nom_relationship" id="form_name" class="form-control"
+                         >
+                      <div class="help-block with-errors"></div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="phoneNumber">Phone Number:</label>
+                      <input type="number" id="phoneNumber" name="Nom_phoneNumber" class="form-control"  >
+                      <div class="help-block with-errors"></div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="appointeeName">Appointee Name (if nominee is minor):</label>
+                      <input type="text" id="appointeeName" name="Nom_appointeeName" id="form_name"
+                        class="form-control">
+                      <div class="help-block with-errors"></div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="appointeeRelationship">Appointee Relationship with Nominee:</label>
+                      <input type="text" id="appointeeRelationship" id="form_name" class="form-control"
+                        name="Nom_appointeeRelationship"  >
+                      <div class="help-block with-errors"></div>
+                    </div>
+                  </div>
+                </div>
+                <button type="button" class="prev-button" onclick="showPage(1)">Previous</button>
+                <button type="button" class="next-button btn btn-primary" style="background-color: green;" onclick="showPage(3)">Next</button>
+            </div>
+              </div>
+
+            <div class="form-page" id="page3" style="display: none;">
+              <h2>Plan Details</h2><br>
+
+                <div class="controls">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>
+                          <input type="radio" name="paymentMode" value="regular" onclick="handlePaymentModeChange()"
+                             >
+                          Regular
+                        </label>
+                        <div class="help-block with-errors"></div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>
+                          <input type="radio" name="paymentMode" value="single" onclick="handlePaymentModeChange()"
+                             >
+                          Single
+                        </label>
+                        <div class="help-block with-errors"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <h5 id="notApplicableMessage" style="color: red; display: none;">Not Applicable</h5>
+
+                <!-- Plan Selection -->
+                <table>
+                  <thead>
+                    <tr>
+                      <th>PLAN</th>
+                      <th>TENURE</th>
+                      <th>LOCK-IN</th>
+                      <th>INTEREST</th>
+                      <th>Select</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>PLAN A</td>
+                      <td>5 YEARS</td>
+                      <td>5 YEARS</td>
+                      <td>11%</td>
+                      <td><input type="radio" name="planSelection" value="planA" onclick="updateTable();"  ></td>
+                    </tr>
+                    <tr>
+                      <td>PLAN B</td>
+                      <td>5 YEARS</td>
+                      <td>3 YEARS</td>
+                      <td>10%</td>
+                      <td><input type="radio" name="planSelection" value="planB" onclick="updateTable();"  ></td>
+                    </tr>
+                    <tr>
+                      <td>PLAN C</td>
+                      <td>3 YEARS</td>
+                      <td>1 YEAR</td>
+                      <td>9%</td>
+                      <td><input type="radio" name="planSelection" value="planC" onclick="updateTable();"  ></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <br><br>
+
+                <!-- Subscription Options -->
+                <h4 style="text-align: center;"><b><u>Select Subscription Option</u></b></h4>
+                <br><br>
+                <div class="subscription-options">
+                  <label>
+                    Monthly
+                    <input type="radio" name="subscriptionOption" value="monthly" onclick="updateTable();"  >
+                  </label>
+                  <label>
+                    Quarterly
+                    <input type="radio" name="subscriptionOption" value="quarterly" onclick="updateTable();"  >
+                  </label>
+                  <label>
+                    Half Yearly
+                    <input type="radio" name="subscriptionOption" value="halfyearly" onclick="updateTable();"  >
+                  </label>
+                  <label>
+                    Yearly
+                    <input type="radio" name="subscriptionOption" value="yearly" onclick="updateTable();"  >
+                  </label>
+                </div>
+                <br><br>
+                <!-- Tables for PLAN A -->
+                <div id="planA-monthly" class="hidden">
+                  <h4>PLAN A - Monthly</h4>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>PLAN</th>
+                        <th>TENURE</th>
+                        <th>LOCK-IN</th>
+                        <th>INTEREST</th>
+                        <th>LOYALTY BONUS</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>PLAN A</td>
+                        <td>5 YEARS</td>
+                        <td>5 YEARS</td>
+                        <td>11%</td>
+                        <td>0%</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div id="planA-quarterly" class="hidden">
+                  <h4>PLAN A - Quarterly</h4>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>PLAN</th>
+                        <th>TENURE</th>
+                        <th>LOCK-IN</th>
+                        <th>INTEREST</th>
+                        <th>LOYALTY BONUS</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>PLAN A</td>
+                        <td>5 YEARS</td>
+                        <td>5 YEARS</td>
+                        <td>11%</td>
+                        <td>0%</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div id="planA-halfyearly" class="hidden">
+                  <h4>PLAN A - Half Yearly</h4>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>PLAN</th>
+                        <th>TENURE</th>
+                        <th>LOCK-IN</th>
+                        <th>INTEREST</th>
+                        <th>LOYALTY BONUS</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>PLAN A</td>
+                        <td>5 YEARS</td>
+                        <td>5 YEARS</td>
+                        <td>11%</td>
+                        <td>0%</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div id="planA-yearly" class="hidden">
+                  <h4>PLAN A - Yearly</h4>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>PLAN</th>
+                        <th>TENURE</th>
+                        <th>LOCK-IN</th>
+                        <th>INTEREST</th>
+                        <th>LOYALTY BONUS</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>PLAN A</td>
+                        <td>5 YEARS</td>
+                        <td>5 YEARS</td>
+                        <td>11%</td>
+                        <td>1%</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Tables for PLAN B -->
+                <div id="planB-monthly" class="hidden">
+                  <h4>PLAN B - Monthly</h4>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>PLAN</th>
+                        <th>TENURE</th>
+                        <th>LOCK-IN</th>
+                        <th>INTEREST</th>
+                        <th>LOYALTY BONUS</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>PLAN B</td>
+                        <td>5 YEARS</td>
+                        <td>3 YEARS</td>
+                        <td>10%</td>
+                        <td>0%</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div id="planB-quarterly" class="hidden">
+                  <h4>PLAN B - Quarterly</h4>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>PLAN</th>
+                        <th>TENURE</th>
+                        <th>LOCK-IN</th>
+                        <th>INTEREST</th>
+                        <th>LOYALTY BONUS</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>PLAN B</td>
+                        <td>5 YEARS</td>
+                        <td>3 YEARS</td>
+                        <td>10%</td>
+                        <td>0%</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div id="planB-halfyearly" class="hidden">
+                  <h4>PLAN B - Half Yearly</h4>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>PLAN</th>
+                        <th>TENURE</th>
+                        <th>LOCK-IN</th>
+                        <th>INTEREST</th>
+                        <th>LOYALTY BONUS</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>PLAN B</td>
+                        <td>5 YEARS</td>
+                        <td>3 YEARS</td>
+                        <td>10%</td>
+                        <td>0%</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div id="planB-yearly" class="hidden">
+                  <h4>PLAN B - Yearly</h4>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>PLAN</th>
+                        <th>TENURE</th>
+                        <th>LOCK-IN</th>
+                        <th>INTEREST</th>
+                        <th>LOYALTY BONUS</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>PLAN B</td>
+                        <td>5 YEARS</td>
+                        <td>3 YEARS</td>
+                        <td>10%</td>
+                        <td>1%</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Tables for PLAN C -->
+                <div id="planC-monthly" class="hidden">
+                  <h4>PLAN C - Monthly</h4>
+                  <h5 style="color: red;">Not Applicable</h5>
+                </div>
+
+                <div id="planC-quarterly" class="hidden">
+                  <h4>PLAN C - Quarterly</h4>
+                  <h5 style="color: red;">Not Applicable</h5>
+                </div>
+
+                <div id="planC-halfyearly" class="hidden">
+                  <h4>PLAN C - Half Yearly</h4>
+                  <h5 style="color: red;">Not Applicable</h5>
+                </div>
+
+                <div id="planC-yearly" class="hidden">
+                  <h4>PLAN C - Yearly</h4>
+                  <h5 style="color: blue;">You will get 9% + 0% Loyalty Bonus Every Year</h5>
+                </div>
+              <button type="button" class="prev-button" onclick="showPage(2)">Previous</button>
+              <button type="button" class="next-button" onclick="showPage(4)">Next</button>
+            </div>
+            <!-- Page 3 -->
+            <div class="form-page" id="page4" style="display: none;">
+              <h2>Payor Details</h2><br>
+                <div class="controls">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="form_name">Name</label>
+                        <input id="form_name" type="text" name="Payor_name" class="form-control"
+                          placeholder="Please enter your Name*" data-error="Name is  .">
+                        <div class="help-block with-errors"></div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="form_name">Relationship with Applicant</label>
+                        <input id="form_name" type="text" name="payor_relation" class="form-control"
+                          data-error="Relationship with applicant is  .">
+                        <div class="help-block with-errors"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="phoneNumber">Phone Number:</label>
+                        <input type="tel" id="payorPhoneNumber" name="payor_phone" class="form-control"
+                          placeholder="1234567890"  
+                          data-error="A valid 10-digit phone number is  .">
+                        <div class="help-block with-errors"></div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="Payor_email" id="form_name" class="form-control"  >
+                        <div class="help-block with-errors"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <h3>Would you like to opt for online agreement?</h3>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>
+                          <input type="radio" name="opyOption" value="yes"> Yes
+                        </label>
+                        <div class="help-block with-errors"></div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>
+                          <input type="radio" name="optOption" value="no"> No
+                        </label>
+                        <div class="help-block with-errors"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <h2>Witness</h2><br>
+                <div class="controls">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="with_name" id="form_name" class="form-control"  >
+                        <div class="help-block with-errors"></div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="relationship">Relationship with Applicant:</label>
+                        <input type="text" id="relationship" name="with_relationship" id="form_name"
+                          class="form-control"  >
+                        <div class="help-block with-errors"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="address">Address:</label>
+                        <input type="text" id="address" name="with_address" id="form_name" class="form-control"
+                           >
+                        <div class="help-block with-errors"></div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="city">City:</label>
+                        <input type="text" id="city" name="with_city" id="form_name" class="form-control"  >
+                        <div class="help-block with-errors"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="state">State:</label>
+                        <input type="text" id="state" name="with_state" id="form_name" class="form-control"  >
+                        <div class="help-block with-errors"></div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="country">Country:</label>
+                        <input type="text" id="country" name="with_country" id="form_name" class="form-control"
+                           >
+                        <div class="help-block with-errors"></div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="pincode">Pincode:</label>
+                        <input type="text" id="pincode" name="with_pincode"
+                          title="Pincode must be a 6-digit number" id="form_name" class="form-control">
+                        <div class="help-block with-errors"></div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <p>
+                          <label for="landmark">Landmark:</label>
+                          <input type="text" id="landmark" id="form_name" class="form-control" name="with_landmark"
+                             >
+                        <div class="help-block with-errors"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="terms-checkbox">
+                    <label>
+                      <input type="checkbox" id="termsCheckbox"  >
+                      <span>I agree to the <a href="#terms">terms and conditions</a></span>
+                    </label>
+                  </div>
+
+                  <!-- Terms and Conditions Section -->
+                  <div class="terms" id="terms">
+                    <h4><strong>*T&C Apply As per (MOU)</strong></h4>
+                    <p>*Charges will be applicable as per regulatory norms for all payments</p>
+                  </div>
+              <button type="button" class="prev-button" onclick="showPage(3)">Previous</button>
+              <button type="submit" class="next-button btn btn-primary" style="background-color: green;">Submit</button>
+            </div>
+        </form>
+        </div>
+        </div>
+        </div>
+
+    <script src="index.js"></script>
+</body>
+</html>

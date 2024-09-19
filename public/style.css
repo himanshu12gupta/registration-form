@@ -1,0 +1,151 @@
+
+.thank-you-message {
+  margin-top: 50px;
+  text-align: center;
+  color: green;
+}
+
+.checkbox-container {
+  margin-bottom: 20px;
+}
+
+.checkbox-container label {
+  margin-right: 300px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table,
+th,
+td {
+  border: 1px solid rgb(126, 178, 241);
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  background-color: rgb(134, 204, 227);
+}
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+.subscription-options {
+  display: flex;
+  align-items: center;
+  /* Align items in the center vertically */
+  gap: 80px;
+  /* Space between items */
+  max-width: 600px;
+  /* Adjust width as needed */
+  margin: 0 auto;
+  /* Center align container */
+}
+
+.subscription-options label {
+  display: flex;
+  margin: auto;
+  /* align-items: center; Align checkbox and text vertically */
+  gap: 6px;
+  /* Space between text and checkbox */
+  cursor: pointer;
+}
+
+.subscription-options input[type="checkbox"] {
+  margin-left: 8px;
+  /* Space between checkbox and label text */
+}
+
+.hidden {
+  display: none;
+}
+
+.not-applicable {
+  color: red;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.loyalty-bonus {
+  color: lightblue;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.terms-checkbox {
+  margin-bottom: 20px;
+}
+
+.terms-checkbox label {
+  font-size: 14px;
+}
+
+.terms-checkbox input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.terms {
+  font-size: 12px;
+  color: #555;
+}
+
+/* .existing-form-group {
+  margin-bottom: 15px;
+} */
+
+.existing-form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.existing-form-group input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+/* .submit-btn {
+          padding: 10px 15px;
+          background-color: #007bff;
+          color: white;
+          border: none;
+          cursor: pointer;
+      }
+      .submit-btn:hover {
+          background-color: #0056b3; */
+/* } */
+h2 {
+  background-color: lightblue;
+  padding: 10px;
+  margin: auto;
+  text-align: center;
+}
+
+.row {
+  background-color: rgb(244, 241, 241);
+  border-radius: 10px;
+}
+
+.yy {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.ctn {
+  max-width: 70%; /* adjusted width to 70% of the page */
+  margin: 40px auto;
+  padding: 20px;
+  background-color: rgb(230, 240, 244);
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}

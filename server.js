@@ -65,7 +65,7 @@ app.get('/get-application-info', (req, res) => {
 //     });
 // });
 
-
+console.log('hello')
 app.post('/submit', (req, res) => {
     const data = req.body;
     console.log(data);
@@ -204,6 +204,8 @@ app.get('/download-excel', (req, res) => {
         });
     });
 });
+
+
 // Start server
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);

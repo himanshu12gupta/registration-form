@@ -1,7 +1,6 @@
 let currentPage = 1;
 
 function showPage(page) {
-  debugger
     document.getElementById(`page${currentPage}`).style.display = 'none';
     document.getElementById(`page${page}`).style.display = 'block';
     currentPage = page;
@@ -9,8 +8,6 @@ function showPage(page) {
 
 document.getElementById('multiPageForm').addEventListener('submit', function(event) {
     event.preventDefault();
-    debugger
-
     const formData = new FormData(this);
     const data = Object.fromEntries(formData.entries());
 
@@ -27,7 +24,7 @@ document.getElementById('multiPageForm').addEventListener('submit', function(eve
             document.querySelectorAll('.form-page').forEach(page => {
                 page.style.display = 'none';
             });
-            document.getElementById('thanksPage').style.display = 'block';
+            window.location.href = '/thank-you';
         } else {
             alert('Something went wrong. Please try again.');
         }

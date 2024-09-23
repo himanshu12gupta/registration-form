@@ -4,8 +4,7 @@ const db = new sqlite3.Database('applicant.db');
 
 // Drop table if exists and then recreate it
 db.serialize(() => {
-    db.run(`DROP TABLE IF EXISTS applicant`);
-    db.run(`CREATE TABLE applicant (
+    db.run(`CREATE TABLE IF NOT EXISTS applicant (
         appl_no INTEGER NOT NULL UNIQUE,
         appl_date TEXT NOT NULL,
         name TEXT,
@@ -45,7 +44,7 @@ db.serialize(() => {
         accountType TEXT,
         branchAddress TEXT,
         nomineeName TEXT,
-        nomineeDOB TEXT,
+        nomineeDOB TEXT,            
         nomineeGender TEXT,
         nomineeRelationship TEXT,
         nomineePhoneNumber TEXT,
@@ -70,5 +69,40 @@ db.serialize(() => {
         terms_accepted BOOLEAN
     )`);
 });
+
+db.run(`ALTER TABLE applicant ADD COLUMN from_date TEXT`, (err) => {
+    if (err) {
+        if (err.message.includes("duplicate column name")) {
+            // console.log("Column 'from_date' already exists.");
+        } else {
+            console.error("Error adding 'from_date':", err.message);
+        }
+    } else {
+        console.log("Column 'from_date' added successfully.");
+    }
+});
+
+db.run(`ALTER TABLE applicant ADD COLUMN expiry_date TEXT`, (err) => {
+    if (err) {
+        if (err.message.includes("duplicate column name")) {
+            // console.log("Column 'expiry_date' already exists.");
+        } else {
+            console.error("Error adding 'expiry_date':", err.message);
+        }
+    } else {
+        console.log("Column 'expiry_date' added successfully.");
+    }
+});
+
+db.serialize(() => {
+    db.run(`CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        email TEXT NOT NULL UNIQUE,
+        password TEXT NOT NULL,
+        isAdmin BOOLEAN DEFAULT 0
+    )`);
+});
+
 
 module.exports = db;

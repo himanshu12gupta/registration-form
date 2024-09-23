@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const db = require('./database'); // Include the database connection
 const ExcelJS = require('exceljs');
-
+// const session = require('express-session');
 
 const app = express();
 const port = 3006;
@@ -11,6 +11,99 @@ const port = 3006;
 // Middleware
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
+const crypto = require('crypto');
+const session = require('express-session');
+
+const secretKey = crypto.randomBytes(32).toString('hex'); // Generates a random 32-byte secret
+
+app.use(session({
+    secret: secretKey,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }
+}));
+
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
+// Logout route
+app.post('/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            return res.status(500).send('Could not log out.');
+        }
+        res.clearCookie('connect.sid'); // Adjust this based on your cookie name
+        res.sendStatus(200); // Success
+    });
+});
+
+app.post('/register', (req, res) => {
+    const { name, email, password } = req.body;
+
+    // Hash the password
+    bcrypt.hash(password, saltRounds, (err, hash) => {
+        if (err) {
+            return res.status(500).json({ message: 'Error hashing password' });
+        }
+
+        // Insert the user into the database with the hashed password
+        db.run(`INSERT INTO users (name, email, password, isAdmin) VALUES (?, ?, ?, ?)`, 
+            [name, email, hash, false], // false for regular user, change to true for admin if needed
+            function(err) {
+                if (err) {
+                    return res.status(500).json({ message: 'Error creating user' });
+                }
+                res.status(200).json({ message: 'User registered successfully' });
+            }
+        );
+    });
+});
+
+app.get('/create-admin', (req, res) => {
+    const name = 'admin';
+    const email = 'admin@gmail.com';
+    const plainPassword = 'password'; // Enter the admin's plain text password here
+
+    bcrypt.hash(plainPassword, saltRounds, (err, hash) => {
+        if (err) {
+            return res.status(500).json({ message: 'Error hashing password' });
+        }
+
+        db.run(`INSERT INTO users (name, email, password, isAdmin) VALUES (?, ?, ?, ?)`, 
+            [name, email, hash, true], // isAdmin set to true
+            function(err) {
+                if (err) {
+                    return res.status(500).json({ message: 'Error creating admin' });
+                }
+                res.status(200).json({ message: 'Admin created successfully' });
+            }
+        );
+    });
+});
+
+// Endpoint to fetch expiry applicants
+app.get('/expiry-user', isAdmin,(req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'expiry-user.html'));
+});
+
+// API route to get expiry applicants data
+app.get('/api/expiry-user', isAdmin,(req, res) => {
+    const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+
+    // SQL query to fetch applicants with expiry_date greater than today
+    db.all(`SELECT * FROM applicant WHERE expiry_date < ?`, [today], (err, rows) => {
+        if (err) {
+            console.error(err.message);
+            res.status(500).json({ error: 'Failed to retrieve data' });
+        } else {
+            res.json(rows); // Send the rows as JSON response
+        }
+    });
+});
 
 app.get('/get-application-info', (req, res) => {
     db.get('SELECT appl_no FROM applicant ORDER BY appl_no DESC LIMIT 1', [], (err, row) => {
@@ -25,62 +118,67 @@ app.get('/get-application-info', (req, res) => {
         res.json({ appl_no, appl_date });
     });
 });
-// app.post('/submit', (req, res) => {
-//     const data = req.body;
-//     console.log(data);
-//     const appl_no = data.Appl_No; // Use the application number from the form
-//     const appl_date = data.Appl_date; // Use the application date from the form
-//     debugger
-//     const query = `INSERT INTO applicant (
-//         appl_no, appl_date, name, gender, materialStatus, educationQualification, email, dateOfBirth, phoneNumber,
-//         whatsappNumber, father, mother, occupation, designation, natureOfDuties, presentEmployer,
-//         lengthOfServiceBusiness, workLocation, annualIncome, panCardNumber, aadhaarNumber, currentAddress, sameAddress,
-//         permanentAddress, pinCode, city, state, country, landmark, foreignNational, pepStatus, bankName, accountNumber,
-//         MICR, ifscCode, accountType, branchAddress, nomineeName, nomineeDOB, nomineeGender, nomineeRelationship,
-//         nomineePhoneNumber, appointeeName, appointeeRelationship, paymentMode, planSelection, subscriptionOption, 
-//         payor_name, payor_relation, payor_phone, payor_email, opt_option, with_name, with_relationship, 
-//         with_address, with_city, with_state, with_country, with_pincode, with_landmark, terms_accepted
-//     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-
-//     const params = [
-//         appl_no, appl_date, data.name, data.gender, data.materialStatus, data.educationQualification, data.email,
-//         data.dateOfBirth, data.phoneNumber, data.whatsappNumber, data.father, data.mother, data.occupation, data.designation,
-//         data.natureOfDuties, data.presentEmployer, data.lengthOfServiceBusiness, data.workLocation, data.annualIncome,
-//         data.panCardNumber, data.aadhaarNumber, data.currentAddress, data.sameAddress, data.permanentAddress, data.pinCode,
-//         data.city, data.state, data.country, data.landmark, data.foreignNational, data.pepStatus, data.bankName,
-//         data.accountNumber, data.MICR, data.ifscCode, data.accountType, data.branchAddress, data.nomineeName, data.nomineeDOB,
-//         data.nomineeGender, data.nomineeRelationship, data.nomineePhoneNumber, data.appointeeName, data.appointeeRelationship,
-//         data.paymentMode, data.planSelection, data.subscriptionOption, data.payor_name, data.payor_relation, 
-//         data.payor_phone, data.payor_email, data.opt_option, data.with_name, data.with_relationship, data.with_address, 
-//         data.with_city, data.with_state, data.with_country, data.with_pincode, data.with_landmark, true
-//     ];
-
-//     db.run(query, params, function(err) {
-//         if (err) {
-//             console.error('Error inserting data:', err.message);
-//             return res.status(500).json({ error: err.message });
-//         }
-//         console.log('Data inserted successfully');
-//         res.status(200).json({ message: 'Form submitted successfully!' });
-//     });
-// });
-
-console.log('hello')
 app.post('/submit', (req, res) => {
     const data = req.body;
     console.log(data);
     const appl_no = data.Appl_No;
     const appl_date = data.Appl_date;
+     // Calculate the current date (from_date)
+     const currentDate = new Date();
+     const from_date = currentDate.toISOString().split('T')[0]; // Store in YYYY-MM-DD format
+ 
+     // Calculate expiry date based on subscription option
+     let expiry_date;
+ 
+     // Helper function to add months to a date
+     function addMonths(date, months) {
+         const newDate = new Date(date);
+         newDate.setMonth(newDate.getMonth() - months);
+         return newDate.toISOString().split('T')[0]; // Return in YYYY-MM-DD format
+     }
+ 
+     // Set expiry date based on subscriptionOption
+     switch (data.subscriptionOption.toLowerCase()) {
+         case 'monthly':
+             expiry_date = addMonths(currentDate, 1);  // Add 1 month
+             break;
+         case 'quarterly':
+             expiry_date = addMonths(currentDate, 3);  // Add 3 months
+             break;
+         case 'half yearly':
+             expiry_date = addMonths(currentDate, 6);  // Add 6 months
+             break;
+         case 'yearly':
+             expiry_date = addMonths(currentDate, 12); // Add 12 months
+             break;
+         default:
+             return res.status(400).json({ error: "Invalid subscription option" });
+     }
 
     const query = `INSERT INTO applicant (
-        appl_no, appl_date, name, gender, materialStatus, educationQualification, email, dateOfBirth, phoneNumber,
-        whatsappNumber, isWhatsapp, father, mother, occupation, designation, natureOfDuties
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        appl_no, appl_date, name, gender, email, dateOfBirth, phoneNumber,
+        whatsappNumber, isWhatsapp,
+        panCardNumber, aadhaarNumber, currentAddress, sameAddress, permanentAddress, pinCode, city,
+        bankName, accountNumber, MICR, ifscCode, accountType, branchAddress,
+        nomineeName, nomineeDOB,nomineeGender, nomineeRelationship, nomineePhoneNumber, appointeeName, appointeeRelationship,
+        paymentMode, planSelection, subscriptionOption, payor_name, payor_relation, payor_phone, payor_email, opt_option,
+        with_name, with_relationship, with_address, with_city, 
+        with_state, with_country, with_pincode, with_landmark,from_date,expiry_date
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
+    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
+    ?, ?, ?, ?, ?, ?, ?)`;
 
     const params = [
-        appl_no, appl_date, data.name, data.gender, data.materialStatus, data.educationQualification, data.email,
-        data.dateOfBirth, data.phoneNumber, data.whatsappNumber,data.whatsappSame, data.father, data.mother, data.occupation, data.designation,
-        data.natureOfDuties
+        appl_no, appl_date, data.name, data.gender, data.email,data.dateOfBirth, data.phoneNumber,
+        data.whatsappNumber, data.whatsappSame,
+        data.panCardNumber, data.aadhaarNumber, data.currentAddress, data.sameAddress, data.permanentAddress,data.pinCode, data.city, 
+        data.bankName,data.accountNumber, data.MICR, data.ifscCode, data.accountType, data.branchAddress, 
+        data.Nom_Name, data.Nom_dob, data.Nom_gender, data.Nom_relationship, data.Nom_phoneNumber, data.appointeeName, data.appointeeRelationship,
+        data.paymentMode, data.planSelection, data.subscriptionOption,data.Payor_name, data.payor_relation, data.payor_phone,data.Payor_email, data.optOption, 
+        data.with_name, data.with_relationship, data.with_address, data.with_city, 
+        data.with_state, data.with_country, data.with_pincode, data.with_landmark,from_date,expiry_date
     ];
 
     db.run(query, params, function(err) {
@@ -91,28 +189,52 @@ app.post('/submit', (req, res) => {
         console.log('Data inserted successfully');
         res.status(200).json({ message: 'Form submitted successfully!' });
     });
+    console.log('SQL Query:', query);
+    console.log('Params:', params);
 });
 
-// Fetch all applicants
-app.get('/applicants', (req, res) => {
+// Route to get users with expiry date greater than today
+// app.get('/expiry-user', (req, res) => {
+//     debugger
+//     const today = new Date().toISOString().split('T')[0]; 
+//     // Get today's date in YYYY-MM-DD format
+//     const query = `SELECT name, email, expiry_date FROM applicants WHERE expiry_date > ?`;
+
+//     db.all(query, [today], (err, rows) => {
+//         if (err) {
+//             console.error(err);
+//             return res.status(500).json({ error: 'Failed to fetch data' });
+//         }
+//         res.json(rows);
+//     });
+// });
+
+
+
+app.get('/applicants', isAdmin, (req, res) => {
     db.all('SELECT * FROM applicant', [], (err, rows) => {
         if (err) {
             console.error('Error fetching data:', err.message);
             return res.status(500).json({ error: err.message });
         }
-        res.sendFile(path.join(__dirname, 'public', 'applicants.html'));
+        res.json(rows);  // Send the applicant data as JSON
     });
 });
 
-app.get('/api/applicants', (req, res) => {
-    db.all('SELECT * FROM applicant', [], (err, rows) => {
-        if (err) {
-            console.error('Error fetching data:', err.message);
-            return res.status(500).json({ error: err.message });
-        }
-        res.json(rows);
-    });
+app.get('/applicants-page', isAdmin, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'applicants.html'));
 });
+
+
+function isAdmin(req, res, next) {
+    if (req.session.user && req.session.user.isAdmin) {
+        return next();
+    } else {
+        // Redirect with a query parameter to indicate not authorized
+        return res.redirect('/login?error=not-authorized');
+    }
+}
+
 
 app.get('/download-excel', (req, res) => {
     db.all('SELECT * FROM applicant', [], (err, rows) => {
@@ -207,6 +329,53 @@ app.get('/download-excel', (req, res) => {
 
 
 // Start server
+debugger
+app.post('/admin/login', (req, res) => {
+    debugger
+    const { email, password } = req.body;
+
+    db.get(`SELECT * FROM users WHERE email = ?`, [email], (err, user) => {
+
+        if (err) {
+            return res.status(500).json({ message: 'Database error' });
+        }
+
+        if (!user) {
+            return res.status(401).json({ message: 'Invalid email or password' });
+        }
+
+        bcrypt.compare(password, user.password, (err, isMatch) => {
+            if (err) {
+                return res.status(500).json({ message: 'Error checking password' });
+            }
+
+            if (isMatch) {
+                if (user.isAdmin) {
+                    req.session.user = user;
+                    res.json({ success: true });
+                } else {
+                    res.status(403).json({ message: 'You are not authorized' });
+                }
+            } else {
+                res.status(401).json({ message: 'Invalid email or password' });
+            }
+        });
+    });
+});
+app.post('/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            return res.status(500).send('Could not log out.');
+        }
+        res.clearCookie('connect.sid'); // Adjust this based on your cookie name
+        res.sendStatus(200); // Success
+    });
+});
+
+app.get('/thank-you', (req, res) => {
+    debugger
+    res.sendFile(path.join(__dirname, 'public', 'thank-you.html'));
+});
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });

@@ -118,7 +118,6 @@ app.get('/get-application-info', (req, res) => {
         res.json({ appl_no, appl_date });
     });
 });
-
 app.post('/submit', (req, res) => {
     const data = req.body;
     console.log(data);
@@ -327,6 +326,8 @@ app.get('/download-excel', (req, res) => {
         });
     });
 });
+
+
 // Start server
 debugger
 app.post('/admin/login', (req, res) => {

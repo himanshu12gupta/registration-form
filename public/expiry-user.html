@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expiry Applicants</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .scrollable-table {
+            height: 400px;
+            overflow-y: auto;
+            display: block;
+        }
+        #noDataMessage {
+            display: none;
+            font-size: 18px;
+            color: red;
+        }
+        .toast {
+            position: fixed;
+            top: 0px;
+            background-color: #f44336;
+            color: white;
+            padding: 16px;
+            border-radius: 5px;
+            z-index: 1000;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-primary d-flex">
+        <div>
+            <a class="navbar-brand text-light" href="#" style="font-weight: bold;">Admin</a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link text-light" href="/applicants-page" style="font-weight: bold;">Applicants</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link text-light" href="/expiry-user" style="font-weight: bold;">Expiry Applicants</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <section>
+        <br>
+        <h1>Expiry Applicants</h1>
+        <div id="noDataMessage">No data is present</div>
+
+        <div class="scrollable-table">
+            <table id="expiryTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone Number</th>
+                        <th>Buy Date</th>
+                        <th>Expiry Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Table rows will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <script>
+        // Function to show toast notification
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            // Remove the toast after 3 seconds
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Fetch expiry applicants data
+        fetch('/api/expiry-user') // Changed to /api/expiry-user
+        .then(response => {
+            if (response.status === 403) {
+                showToast('You are not authorized, please log in first.');
+                window.location.href = '/login'; // Redirect to login page
+                return;
+            }
+            return response.json();
+        })
+
+        .then(data => {
+            const tableBody = document.querySelector('#expiryTable tbody');
+            const noDataMessage = document.getElementById('noDataMessage');
+
+            // Clear previous data
+            tableBody.innerHTML = '';
+
+            if (data.length === 0) {
+                noDataMessage.style.display = 'block'; // Show the no data message
+            } else {
+                noDataMessage.style.display = 'none'; // Hide no data message
+                data.forEach(applicant => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${applicant.name}</td>
+                        <td>${applicant.email}</td>
+                        <td>${applicant.phoneNumber}</td>
+                        <td>${applicant.from_date}</td>
+                        <td>${applicant.expiry_date}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching expiry applicants:', error);
+            showToast('Error fetching expiry applicants');
+        });
+    </script>
+</body>
+</html>

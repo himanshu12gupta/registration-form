@@ -141,6 +141,21 @@
             console.error('Error fetching expiry applicants:', error);
             showToast('Error fetching expiry applicants');
         });
+
+        
+        function logout() {
+    fetch('/logout', {
+        method: 'POST',
+        credentials: 'include' // Include cookies for session
+    })
+    .then(response => {
+        if (response.ok) {
+            showToast('logout successfully');
+            window.location.href = '/login'; // Redirect to the login page
+        }
+    })
+    .catch(error => console.error('Error logging out:', error));
+}
     </script>
 </body>
 </html>

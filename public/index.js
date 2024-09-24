@@ -71,3 +71,28 @@ function toggleWhatsAppInput() {
   function hideAddendum() {
     document.getElementById('addendumSection').style.display = 'none';
   }
+
+  function updateTable() {
+    // tables 
+    document.querySelectorAll('div[id^="plan"]').forEach(function (div) {
+      div.classList.add('hidden');
+    });
+
+    // selected plan
+    const selectedPlan = document.querySelector('input[name="planSelection"]:checked');
+    // selected subscription option
+    const selectedOption = document.querySelector('input[name="subscriptionOption"]:checked');
+
+    if (selectedPlan && selectedOption) {
+      const plan = selectedPlan.value;
+      const option = selectedOption.value;
+
+      //  table to show
+      const tableId = `${plan}-${option}`;
+      const tableToShow = document.getElementById(tableId);
+
+      if (tableToShow) {
+        tableToShow.classList.remove('hidden');
+      }
+    }
+  }

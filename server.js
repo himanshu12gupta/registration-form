@@ -138,21 +138,24 @@ app.post('/submit', (req, res) => {
      }
  
      // Set expiry date based on subscriptionOption
-     switch (data.subscriptionOption.toLowerCase()) {
-         case 'monthly':
-             expiry_date = addMonths(currentDate, 1);  // Add 1 month
-             break;
-         case 'quarterly':
-             expiry_date = addMonths(currentDate, 3);  // Add 3 months
-             break;
-         case 'half yearly':
-             expiry_date = addMonths(currentDate, 6);  // Add 6 months
-             break;
-         case 'yearly':
-             expiry_date = addMonths(currentDate, 12); // Add 12 months
-             break;
-         default:
-             return res.status(400).json({ error: "Invalid subscription option" });
+     if (data.subscriptionOption){
+
+         switch (data.subscriptionOption.toLowerCase()) {
+             case 'monthly':
+                 expiry_date = addMonths(currentDate, 1);  // Add 1 month
+                 break;
+             case 'quarterly':
+                 expiry_date = addMonths(currentDate, 3);  // Add 3 months
+                 break;
+             case 'half yearly':
+                 expiry_date = addMonths(currentDate, 6);  // Add 6 months
+                 break;
+             case 'yearly':
+                 expiry_date = addMonths(currentDate, 12); // Add 12 months
+                 break;
+             default:
+                 return res.status(400).json({ error: "Invalid subscription option" });
+         }
      }
 
     const query = `INSERT INTO applicant (

@@ -133,8 +133,8 @@ app.post('/submit', (req, res) => {
  
      function addMonths(date, months) {
          const newDate = new Date(date);
-         newDate.setMonth(newDate.getMonth() - months);
-         return newDate.toISOString().split('T')[0];
+         newDate.setMonth(newDate.getMonth() + months);
+         return newDate.toISOString().split('T')[0]; // Return in YYYY-MM-DD format
      }
  
      if (data.subscriptionOption){

@@ -296,6 +296,12 @@
                     </div>
                   </div>
                 </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <label for="amount">Enter Amount:</label>
+<input type="number" id="amount" name="amount" required>
+                  </div>
+                </div>
               </div>
               <h5 id="notApplicableMessage" style="color: red; display: none;">Not Applicable</h5>
               <table>
@@ -314,26 +320,27 @@
                     <td>5 YEARS</td>
                     <td>5 YEARS</td>
                     <td>11%</td>
-                    <td><input type="radio" name="planSelection" value="planA" onclick="updateTable();"></td>
+                    <td><input type="radio" name="planSelection" value="A" onclick="updateTable();"></td>
                   </tr>
                   <tr>
                     <td>PLAN B</td>
                     <td>5 YEARS</td>
                     <td>3 YEARS</td>
                     <td>10%</td>
-                    <td><input type="radio" name="planSelection" value="planB" onclick="updateTable();"></td>
+                    <td><input type="radio" name="planSelection" value="B" onclick="updateTable();"></td>
                   </tr>
                   <tr>
                     <td>PLAN C</td>
                     <td>3 YEARS</td>
                     <td>1 YEAR</td>
                     <td>9%</td>
-                    <td><input type="radio" name="planSelection" value="planC" onclick="updateTable();"></td>
+                    <td><input type="radio" name="planSelection" value="C" onclick="updateTable();"></td>
                   </tr>
                 </tbody>
               </table>
               <br><br>
               <!-- Subscription Options -->
+
               <h4 style="text-align: center;"><b><u>Select Subscription Option</u></b></h4>
               <br><br>
               <div class="subscription-options">
@@ -358,6 +365,7 @@
                     onclick="updateTable();">
                 </label>
               </div>
+
               <br><br>
               <div id="planA-monthly" class="hidden">
                 <h4>PLAN A - Monthly</h4>

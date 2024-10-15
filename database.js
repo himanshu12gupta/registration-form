@@ -8,6 +8,7 @@ db.serialize(() => {
         appl_no INTEGER NOT NULL UNIQUE,
         appl_date TEXT NOT NULL,
         name TEXT,
+        amount INTEGER,
         gender TEXT,
         materialStatus TEXT,
         educationQualification TEXT,
@@ -69,6 +70,23 @@ db.serialize(() => {
         terms_accepted BOOLEAN
     )`);
 });
+
+db.run(`CREATE TABLE IF NOT EXISTS subscription (
+    subscription_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    subscription_type TEXT NOT NULL,
+    no_of_emi INTEGER NOT NULL
+)`);
+
+db.run(`CREATE TABLE IF NOT EXISTS installment (
+    installment_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    applicant_id INTEGER NOT NULL,
+    subscription_id INTEGER NOT NULL,
+    due_date TEXT NOT NULL,
+    amount INTEGER NOT NULL,
+    status TEXT NOT NULL,
+    FOREIGN KEY (applicant_id) REFERENCES applicant(appl_no),
+    FOREIGN KEY (subscription_id) REFERENCES subscription(subscription_id)
+)`);
 
 db.run(`ALTER TABLE applicant ADD COLUMN from_date TEXT`, (err) => {
     if (err) {

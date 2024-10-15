@@ -120,43 +120,90 @@ app.get('/get-application-info', (req, res) => {
 });
 app.post('/submit', (req, res) => {
     const data = req.body;
-    console.log(data);
     const appl_no = data.Appl_No;
+    const amount = data.amount;
     const appl_date = data.Appl_date;
-     // Calculate the current date (from_date)
      const currentDate = new Date();
-     const from_date = currentDate.toISOString().split('T')[0]; // Store in YYYY-MM-DD format
+     const from_date = currentDate.toISOString().split('T')[0];
  
-     // Calculate expiry date based on subscription option
      let expiry_date;
+     let totalInterest, totalPrincipal, totalAmount, installments, perInstallmentAmount;
+    //  const amount = 100000; 
+
  
-     // Helper function to add months to a date
      function addMonths(date, months) {
          const newDate = new Date(date);
          newDate.setMonth(newDate.getMonth() + months);
          return newDate.toISOString().split('T')[0]; // Return in YYYY-MM-DD format
      }
  
-     // Set expiry date based on subscriptionOption
      if (data.subscriptionOption){
 
          switch (data.subscriptionOption.toLowerCase()) {
              case 'monthly':
-                 expiry_date = addMonths(currentDate, 1);  // Add 1 month
+                 expiry_date = addMonths(currentDate, 1);
                  break;
              case 'quarterly':
-                 expiry_date = addMonths(currentDate, 3);  // Add 3 months
+                 expiry_date = addMonths(currentDate, 3);
                  break;
-             case 'half yearly':
-                 expiry_date = addMonths(currentDate, 6);  // Add 6 months
+             case 'halfyearly':
+                 expiry_date = addMonths(currentDate, 6);
                  break;
              case 'yearly':
-                 expiry_date = addMonths(currentDate, 12); // Add 12 months
+                 expiry_date = addMonths(currentDate, 12);
                  break;
              default:
                  return res.status(400).json({ error: "Invalid subscription option" });
          }
      }
+
+       // Calculation logic based on plan and subscription
+    switch (data.planSelection) {
+        case 'A':
+            if (data.subscriptionOption === 'monthly') {
+                totalInterest = 11;
+                installments = 60;
+            } else if (data.subscriptionOption === 'quarterly') {
+                totalInterest = 10;
+                installments = 20;
+            } else if (data.subscriptionOption === 'halfyearly') {
+                totalInterest = 9;
+                installments = 10;
+            } else if (data.subscriptionOption === 'yearly') {
+                totalInterest = 8;
+                installments = 5;
+            }
+            break;
+        case 'B':
+            if (data.subscriptionOption === 'monthly') {
+                totalInterest = 10;
+                installments = 36;
+            } else if (data.subscriptionOption === 'quarterly') {
+                totalInterest = 9;
+                installments = 12;
+            } else if (data.subscriptionOption === 'halfyearly') {
+                totalInterest = 8;
+                installments = 6;
+            } else if (data.subscriptionOption === 'yearly') {
+                totalInterest = 7;
+                installments = 3;
+            }
+            break;
+        case 'C':
+            if (data.subscriptionOption === 'yearly') {
+                totalInterest = 5;
+                installments = 1;
+            } else {
+                return res.status(400).json({ error: "Plan C only supports yearly subscription." });
+            }
+            break;
+        default:
+            return res.status(400).json({ error: "Invalid plan selection" });
+    }
+
+    totalPrincipal = (amount * totalInterest) / 100;
+    totalAmount = amount + totalPrincipal;
+    perInstallmentAmount = totalAmount / installments;
 
     const query = `INSERT INTO applicant (
         appl_no, appl_date, name, gender, email, dateOfBirth, phoneNumber,
@@ -166,12 +213,12 @@ app.post('/submit', (req, res) => {
         nomineeName, nomineeDOB,nomineeGender, nomineeRelationship, nomineePhoneNumber, appointeeName, appointeeRelationship,
         paymentMode, planSelection, subscriptionOption, payor_name, payor_relation, payor_phone, payor_email, opt_option,
         with_name, with_relationship, with_address, with_city, 
-        with_state, with_country, with_pincode, with_landmark,from_date,expiry_date
+        with_state, with_country, with_pincode, with_landmark,from_date,expiry_date,amount
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
     ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
     ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
     ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
-    ?, ?, ?, ?, ?, ?, ?)`;
+    ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     const params = [
         appl_no, appl_date, data.name, data.gender, data.email,data.dateOfBirth, data.phoneNumber,
@@ -181,38 +228,50 @@ app.post('/submit', (req, res) => {
         data.Nom_Name, data.Nom_dob, data.Nom_gender, data.Nom_relationship, data.Nom_phoneNumber, data.appointeeName, data.appointeeRelationship,
         data.paymentMode, data.planSelection, data.subscriptionOption,data.Payor_name, data.payor_relation, data.payor_phone,data.Payor_email, data.optOption, 
         data.with_name, data.with_relationship, data.with_address, data.with_city, 
-        data.with_state, data.with_country, data.with_pincode, data.with_landmark,from_date,expiry_date
+        data.with_state, data.with_country, data.with_pincode, data.with_landmark,from_date,expiry_date,amount
     ];
+    const subscriptionQuery = `SELECT * FROM subscription WHERE subscription_type = ?`;
+    const subscriptionOption = data.subscriptionOption;  // E.g., "monthly"
 
+    db.get(subscriptionQuery, [subscriptionOption], (err, row) => {
+        if (err) {
+            console.error('Error fetching subscription:', err.message);
+            return res.status(500).json({ error: err.message });
+        }
+        if (row) {
+            console.log('Subscription fetched:', row);
+            // Continue with your logic, e.g., use row.subscription_id
+        } else {
+            console.log('No subscription found for the provided option');
+        }
+
+    const subscriptionId = row.subscription_id;
+    debugger
     db.run(query, params, function(err) {
         if (err) {
             console.error('Error inserting data:', err.message);
             return res.status(500).json({ error: err.message });
         }
         console.log('Data inserted successfully');
+        for (let i = 0; i < installments; i++) {
+            const dueDate = addMonths(currentDate, i + 1);
+            const installmentQuery = `INSERT INTO installment (applicant_id, subscription_id, installment_id, due_date, amount, status) VALUES (?, ?, ?, ?, ?, ?)`;
+            const installmentParams = [this.lastID, subscriptionId,i + 1, dueDate, perInstallmentAmount,"not paid"];
+            
+            db.run(installmentQuery, installmentParams, function(err) {
+                if (err) {
+                    console.error('Error inserting data into installment:', err.message);
+                }
+            });
+        }
         res.status(200).json({ message: 'Form submitted successfully!' });
     });
-    console.log('SQL Query:', query);
-    console.log('Params:', params);
 });
 
-// Route to get users with expiry date greater than today
-// app.get('/expiry-user', (req, res) => {
-//     debugger
-//     const today = new Date().toISOString().split('T')[0]; 
-//     // Get today's date in YYYY-MM-DD format
-//     const query = `SELECT name, email, expiry_date FROM applicants WHERE expiry_date > ?`;
 
-//     db.all(query, [today], (err, rows) => {
-//         if (err) {
-//             console.error(err);
-//             return res.status(500).json({ error: 'Failed to fetch data' });
-//         }
-//         res.json(rows);
-//     });
-// });
-
-
+    console.log('SQL Query:', query);
+     console.log('Params:', params);
+});
 
 app.get('/applicants', isAdmin, (req, res) => {
     db.all('SELECT * FROM applicant', [], (err, rows) => {
@@ -370,8 +429,8 @@ app.post('/logout', (req, res) => {
         if (err) {
             return res.status(500).send('Could not log out.');
         }
-        res.clearCookie('connect.sid'); // Adjust this based on your cookie name
-        res.sendStatus(200); // Success
+        res.clearCookie('connect.sid');
+        res.sendStatus(200);
     });
 });
 

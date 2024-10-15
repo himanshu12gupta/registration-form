@@ -9,6 +9,10 @@ function showPage(page) {
 document.getElementById('multiPageForm').addEventListener('submit', function(event) {
     event.preventDefault();
     const formData = new FormData(this);
+    const selectedPlan = document.querySelector('input[name="planSelection"]:checked');
+    if (selectedPlan) {
+      formData.append('planSelection', selectedPlan.value); // Append the selected plan to the form data
+    }
     const data = Object.fromEntries(formData.entries());
 
     fetch('/submit', {

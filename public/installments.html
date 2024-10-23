@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Installments for Applicant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        #pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #pagination button {
+            margin: 0;
+        }
+
+        #noDataMessage {
+            color: #d9534f; /* Bootstrap danger color */
+        }
+    </style>
+</head>
+<body>
+    
+    <section>
+        <br>
+        <h1>Installments for Applicant ID: <span id="applicantId"></span></h1>
+        <button id="backButton">Back to Applicants</button>
+
+        <!-- Message when no data is present -->
+        <p id="noDataMessage" style="display: none;">No installments data is present.</p>
+
+        <table id="installmentsTable" style="display: none;">
+            <thead>
+                <tr>
+                    <th>Installment ID</th>
+                    <th>Due Date</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rows will be populated dynamically -->
+            </tbody>
+        </table>
+
+        <div id="pagination" style="display: none;">
+            <button id="prevPage" disabled>Previous</button>
+            <span id="pageInfo"></span>
+            <button id="nextPage">Next</button>
+        </div>
+    </section>
+
+    <script>
+        const applicantId = window.location.pathname.split('/')[2]; // Extract applicantId from URL
+        document.getElementById('applicantId').textContent = applicantId;
+
+        let currentPage = 1;
+        const limit = 10;
+
+        function fetchInstallments(page) {
+            fetch(`/applicant/${applicantId}/installments/data?page=${page}&limit=${limit}`)
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.getElementById('installmentsTable').querySelector('tbody');
+                    tbody.innerHTML = ''; // Clear previous rows
+
+                    if (data.installments.length === 0) {
+                        document.getElementById('noDataMessage').style.display = 'block';
+                        document.getElementById('installmentsTable').style.display = 'none';
+                        document.getElementById('pagination').style.display = 'none';
+                    } else {
+                        document.getElementById('noDataMessage').style.display = 'none';
+                        document.getElementById('installmentsTable').style.display = 'table';
+                        document.getElementById('pagination').style.display = 'flex';
+
+                        data.installments.forEach(installment => {
+                            const row = `
+                                <tr>
+                                    <td>${installment.installment_id}</td>
+                                    <td>${installment.due_date}</td>
+                                    <td>${installment.amount}</td>
+                                    <td>${installment.status}</td>
+                                </tr>
+                            `;
+                            tbody.innerHTML += row;
+                        });
+
+                        // Update pagination buttons
+                        document.getElementById('pageInfo').textContent = `Page ${data.currentPage} of ${data.totalPages}`;
+                        document.getElementById('prevPage').disabled = data.currentPage === 1;
+                        document.getElementById('nextPage').disabled = data.currentPage === data.totalPages;
+                    }
+                })
+                .catch(error => console.error('Error fetching installments:', error));
+        }
+
+        // Pagination controls
+        document.getElementById('prevPage').addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                fetchInstallments(currentPage);
+            }
+        });
+
+        document.getElementById('nextPage').addEventListener('click', () => {
+            currentPage++;
+            fetchInstallments(currentPage);
+        });
+
+        // Back button
+        document.getElementById('backButton').addEventListener('click', () => {
+            window.location.href = '/applicants-page';
+        });
+
+        // Fetch the first page of installments on load
+        fetchInstallments(currentPage);
+    </script>
+</body>
+</html>

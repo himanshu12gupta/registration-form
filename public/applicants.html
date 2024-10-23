@@ -92,6 +92,7 @@
         <table id="applicantsTable">
             <thead>
                 <tr>
+                    <th>Serial No</th>
                     <th>Application No</th>
                     <th>Application Date</th>
                     <th>Name</th>
@@ -143,7 +144,7 @@
                     <th>With Country</th>
                     <th>With Pincode</th>
                     <th>With Landmark</th>
-                    <th>Terms Accepted</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -153,17 +154,24 @@
     </div>
     <br>
     <button onclick="downloadExcel()">Download Excel</button>
+    <div id="pagination" style="display: none;">
+        <button id="prevPage" disabled>Previous</button>
+        <span id="pageInfo"></span>
+        <button id="nextPage">Next</button>
+    </div>
 </section>
 
 
     <script>
+         let currentPage = 1;
+         const limit = 10; 
         // Function to show toast notification
 function showToast(message) {
     const toast = document.createElement('div');
     toast.className = 'toast';
     toast.textContent = message;
     document.body.appendChild(toast);
-    
+
     // Remove the toast after 3 seconds
     setTimeout(() => {
         toast.remove();
@@ -205,9 +213,18 @@ fetch('/applicants')
             noDataMessage.style.display = 'block'; // Show the no data message
         } else {
             noDataMessage.style.display = 'none'; // Hide no data message
-            data.forEach(applicant => {
+            data.forEach((applicant,index) => {
                 const row = document.createElement('tr');
+                 // Attach the onclick event listener to each row
+                        row.onclick = function() {
+                            handleRowClick(applicant);
+                            debugger
+                            console.log(applicant)
+                            window.location.href = `/applicant/${index+1}/installments`; // Use the correct route for your server
+
+                        }
                 row.innerHTML = `
+                    <td>${index+1}</td>
                     <td>${applicant.appl_no}</td>
                     <td>${applicant.appl_date}</td>
                     <td>${applicant.name}</td>
@@ -259,7 +276,8 @@ fetch('/applicants')
                     <td>${applicant.with_country}</td>
                     <td>${applicant.with_pincode}</td>
                     <td>${applicant.with_landmark}</td>
-                    <td>${applicant.terms_accepted}</td>
+                    <td><button onclick="createInstallment(${applicant.appl_no})">Create Installment</button></td>
+
                 `;
                 tableBody.appendChild(row);
             });
@@ -269,6 +287,29 @@ fetch('/applicants')
 
         function downloadExcel() {
             window.location.href = '/download-excel';
+        }
+        function handleRowClick(applicant) {
+}
+function createInstallment(applicantId) {
+            // Make a POST request to create the installment
+            fetch(`/installments/${applicantId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ /* Your installment data */ })
+            })
+            .then(response => {
+                if (response.ok) {
+                    showToast('Installment created successfully');
+                } else {
+                    throw new Error('Failed to create installment');
+                }
+            })
+            .catch(error => {
+                console.error('Error creating installment:', error);
+                showToast('Failed to create installment');
+            });
         }
 
 fetch('/expiry-user')

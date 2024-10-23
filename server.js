@@ -391,7 +391,6 @@ app.get('/download-excel', (req, res) => {
 
 
 // Start server
-debugger
 app.post('/admin/login', (req, res) => {
     debugger
     const { email, password } = req.body;
@@ -438,6 +437,55 @@ app.get('/thank-you', (req, res) => {
     debugger
     res.sendFile(path.join(__dirname, 'public', 'thank-you.html'));
 });
+
+// API to fetch installments with pagination for a particular applicant
+// Serve the installments HTML page for a specific applicant
+app.get('/applicant/:applicantId/installments', isAdmin, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'installments.html'));
+});
+
+// Fetch paginated installments for a specific applicant
+app.get('/applicant/:applicantId/installments/data', (req, res) => {
+    const applicantId = req.params.applicantId;
+    const page = parseInt(req.query.page) || 1;  // Default to page 1
+    const limit = parseInt(req.query.limit) || 10;  // Default to limit 10
+    const offset = (page - 1) * limit;  // Calculate offset
+
+    // Query to fetch paginated installments
+    const installmentQuery = `
+        SELECT * FROM installment 
+        WHERE applicant_id = ? 
+        LIMIT ? OFFSET ?
+    `;
+
+    db.all(installmentQuery, [applicantId, limit, offset], (err, rows) => {
+        if (err) {
+            console.error('Error fetching installments:', err.message);
+            return res.status(500).json({ error: err.message });
+        }
+
+        // Fetch the total count of installments for pagination info
+        const countQuery = 'SELECT COUNT(*) AS total FROM installment WHERE applicant_id = ?';
+        db.get(countQuery, [applicantId], (err, countRow) => {
+            if (err) {
+                console.error('Error fetching total installments count:', err.message);
+                return res.status(500).json({ error: err.message });
+            }
+
+            const totalInstallments = countRow.total;
+            const totalPages = Math.ceil(totalInstallments / limit);
+
+            res.json({
+                installments: rows,
+                currentPage: page,
+                totalPages,
+                totalInstallments
+            });
+        });
+    });
+});
+
+
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });

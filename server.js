@@ -121,7 +121,8 @@ app.get('/get-application-info', (req, res) => {
 app.post('/submit', (req, res) => {
     const data = req.body;
     const appl_no = data.Appl_No;
-    const amount = data.amount;
+    const amount = parseInt(data.amount);
+
     const appl_date = data.Appl_date;
      const currentDate = new Date();
      const from_date = currentDate.toISOString().split('T')[0];
@@ -164,13 +165,13 @@ app.post('/submit', (req, res) => {
                 totalInterest = 11;
                 installments = 60;
             } else if (data.subscriptionOption === 'quarterly') {
-                totalInterest = 10;
+                totalInterest = 11;
                 installments = 20;
             } else if (data.subscriptionOption === 'halfyearly') {
-                totalInterest = 9;
+                totalInterest = 11;
                 installments = 10;
             } else if (data.subscriptionOption === 'yearly') {
-                totalInterest = 8;
+                totalInterest = 12;
                 installments = 5;
             }
             break;
@@ -179,19 +180,20 @@ app.post('/submit', (req, res) => {
                 totalInterest = 10;
                 installments = 36;
             } else if (data.subscriptionOption === 'quarterly') {
-                totalInterest = 9;
+                totalInterest = 10;
                 installments = 12;
+
             } else if (data.subscriptionOption === 'halfyearly') {
-                totalInterest = 8;
+                totalInterest = 10;
                 installments = 6;
             } else if (data.subscriptionOption === 'yearly') {
-                totalInterest = 7;
+                totalInterest = 11;
                 installments = 3;
             }
             break;
         case 'C':
             if (data.subscriptionOption === 'yearly') {
-                totalInterest = 5;
+                totalInterest = 9;
                 installments = 1;
             } else {
                 return res.status(400).json({ error: "Plan C only supports yearly subscription." });
@@ -201,9 +203,15 @@ app.post('/submit', (req, res) => {
             return res.status(400).json({ error: "Invalid plan selection" });
     }
 
+    console.log("total installment ->",installments);
     totalPrincipal = (amount * totalInterest) / 100;
     totalAmount = amount + totalPrincipal;
     perInstallmentAmount = totalAmount / installments;
+    console.log("calc",totalAmount / installments);
+    console.log("calc sd",totalAmount / installments);
+    console.log("total principa",totalPrincipal);
+    console.log("total total Amount",totalAmount);
+    console.log("per installment",perInstallmentAmount);
 
     const query = `INSERT INTO applicant (
         appl_no, appl_date, name, gender, email, dateOfBirth, phoneNumber,
@@ -267,10 +275,6 @@ app.post('/submit', (req, res) => {
         res.status(200).json({ message: 'Form submitted successfully!' });
     });
 });
-
-
-    console.log('SQL Query:', query);
-     console.log('Params:', params);
 });
 
 app.get('/applicants', isAdmin, (req, res) => {

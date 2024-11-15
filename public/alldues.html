@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Due Installments</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <h1>All Due Installments</h1>
+
+    <!-- Table to display all the rows from 'pending' table -->
+    <table id="pending-table">
+        <thead>
+            <tr>
+                <th>Appl No</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Amount</th>
+                <th>Payment Mode</th>
+                <th>Plan Selection</th>
+                <th>Subscription Option</th>
+                <th>Installment ID</th>
+                <th>Due Date</th>
+                <th>Due Amount</th>
+                <th>Bank Name</th>
+                <th>Account Number</th>
+                <th>MICR</th>
+                <th>IFSC Code</th>
+                <th>Account Type</th>
+                <th>Branch Address</th>
+                <th>Status</th>
+                <th>Payment Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be populated here by JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        // Function to fetch data from the 'pending' table and display in the table
+        function fetchPendingData() {
+            fetch('/get-pending-data')
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.querySelector('#pending-table tbody');
+                    tableBody.innerHTML = '';  // Clear any previous data
+
+                    if (data.length === 0) {
+                        const row = document.createElement('tr');
+                        const cell = document.createElement('td');
+                        cell.colSpan = 19;  // Total number of columns
+                        cell.textContent = 'No pending installments available.';
+                        row.appendChild(cell);
+                        tableBody.appendChild(row);
+                    } else {
+                        // Create table rows for each entry in the 'pending' table
+                        data.forEach(entry => {
+                            const row = document.createElement('tr');
+
+                            const cell1 = document.createElement('td');
+                            cell1.textContent = entry.appl_no;
+                            row.appendChild(cell1);
+
+                            const cell2 = document.createElement('td');
+                            cell2.textContent = entry.name;
+                            row.appendChild(cell2);
+
+                            const cell3 = document.createElement('td');
+                            cell3.textContent = entry.email;
+                            row.appendChild(cell3);
+
+                            const cell4 = document.createElement('td');
+                            cell4.textContent = entry.phoneNumber;
+                            row.appendChild(cell4);
+
+                            const cell5 = document.createElement('td');
+                            cell5.textContent = entry.amount;
+                            row.appendChild(cell5);
+
+                            const cell6 = document.createElement('td');
+                            cell6.textContent = entry.paymentMode;
+                            row.appendChild(cell6);
+
+                            const cell7 = document.createElement('td');
+                            cell7.textContent = entry.planSelection;
+                            row.appendChild(cell7);
+
+                            const cell8 = document.createElement('td');
+                            cell8.textContent = entry.subscriptionOption;
+                            row.appendChild(cell8);
+
+                            const cell9 = document.createElement('td');
+                            cell9.textContent = entry.installment_id;
+                            row.appendChild(cell9);
+
+                            const cell10 = document.createElement('td');
+                            cell10.textContent = entry.due_date;
+                            row.appendChild(cell10);
+
+                            const cell11 = document.createElement('td');
+                            cell11.textContent = entry.due_amount;
+                            row.appendChild(cell11);
+
+                            const cell12 = document.createElement('td');
+                            cell12.textContent = entry.bankName;
+                            row.appendChild(cell12);
+
+                            const cell13 = document.createElement('td');
+                            cell13.textContent = entry.accountNumber;
+                            row.appendChild(cell13);
+
+                            const cell14 = document.createElement('td');
+                            cell14.textContent = entry.MICR;
+                            row.appendChild(cell14);
+
+                            const cell15 = document.createElement('td');
+                            cell15.textContent = entry.ifscCode;
+                            row.appendChild(cell15);
+
+                            const cell16 = document.createElement('td');
+                            cell16.textContent = entry.accountType;
+                            row.appendChild(cell16);
+
+                            const cell17 = document.createElement('td');
+                            cell17.textContent = entry.branchAddress;
+                            row.appendChild(cell17);
+
+                            const cell18 = document.createElement('td');
+                            cell18.textContent = entry.status;
+                            row.appendChild(cell18);
+
+                            const cell19 = document.createElement('td');
+                            cell19.textContent = entry.paymentDate;
+                            row.appendChild(cell19);
+
+                            tableBody.appendChild(row);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching pending data:', error);
+                });
+        }
+
+        window.onload = fetchPendingData;
+    </script>
+</body>
+</html>

@@ -52,51 +52,130 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .catch(error => console.error('Error fetching application info:', error));
 }); 
+
+document.getElementById('multiPageForm').addEventListener('submit', function (event) {
+  event.preventDefault(); // Prevent form from submitting
+
+  // Save form data to localStorage
+  saveData();
+
+  // Redirect to thank-you page
+  window.location.href = 'thank-you.html';
+});
+
+function saveData() {
+  // Gather data from form fields
+  const formData = {
+      appl_no: document.getElementById('appl_no').value,
+      appl_date: document.getElementById('appl_date').value,
+      form_name: document.getElementById('form_name').value,
+      form_email: document.getElementById('form_email').value,
+      phoneNumber: document.getElementById('phoneNumber').value,
+      paymentMode: document.querySelector('input[name="paymentMode"]:checked')?.value || '',
+      planSelection: document.querySelector('input[name="planSelection"]:checked')?.value || '',
+      subscriptionOption: document.querySelector('input[name="subscriptionOption"]:checked')?.value || '',
+      amount: document.getElementById('amount').value,
+  };
+
+  // Save to localStorage
+  for (let key in formData) {
+      localStorage.setItem(key, formData[key]);
+  }
+}
+
+// function toggleWhatsAppInput() {
+//     var whatsappInputContainer = document.getElementById('whatsappInputContainer');
+//     var whatsappSameNo = document.getElementById('whatsappSameNo');
+//     whatsappInputContainer.style.display = whatsappSameNo.checked ? 'block' : 'none';
+//   }
+//   function togglePermanentAddress(show) {
+//     var permanentAddressContainer = document.getElementById('permanentAddressContainer');
+//     permanentAddressContainer.style.display = show ? 'block' : 'none';
+//   }
+//   function toggleFatcaForm() {
+//     var fatcaFormSection = document.getElementById('fatcaFormSection');
+//     fatcaFormSection.style.display = document.getElementById('foreignNationalYes').checked ? 'block' : 'none';
+//   }
+//   function hideFatcaForm() {
+//     document.getElementById('fatcaFormSection').style.display = 'none';
+//   }
+//   function toggleAddendum() {
+//     var addendumSection = document.getElementById('addendumSection');
+//     addendumSection.style.display = document.getElementById('pepYes').checked ? 'block' : 'none';
+//   }
+//   function hideAddendum() {
+//     document.getElementById('addendumSection').style.display = 'none';
+//   }
+
+//   function updateTable() {
+//     // tables 
+//     document.querySelectorAll('div[id^="plan"]').forEach(function (div) {
+//       div.classList.add('hidden');
+//     });
+
+//     // selected plan
+//     const selectedPlan = document.querySelector('input[name="planSelection"]:checked');
+//     // selected subscription option
+//     const selectedOption = document.querySelector('input[name="subscriptionOption"]:checked');
+
+//     if (selectedPlan && selectedOption) {
+//       const plan = selectedPlan.value;
+//       const option = selectedOption.value;
+
+//       //  table to show
+//       const tableId = `${plan}-${option}`;
+//       const tableToShow = document.getElementById(tableId);
+
+//       if (tableToShow) {
+//         tableToShow.classList.remove('hidden');
+//       }
+//     }
+//   }
+
 function toggleWhatsAppInput() {
-    var whatsappInputContainer = document.getElementById('whatsappInputContainer');
-    var whatsappSameNo = document.getElementById('whatsappSameNo');
-    whatsappInputContainer.style.display = whatsappSameNo.checked ? 'block' : 'none';
-  }
-  function togglePermanentAddress(show) {
-    var permanentAddressContainer = document.getElementById('permanentAddressContainer');
-    permanentAddressContainer.style.display = show ? 'block' : 'none';
-  }
-  function toggleFatcaForm() {
-    var fatcaFormSection = document.getElementById('fatcaFormSection');
-    fatcaFormSection.style.display = document.getElementById('foreignNationalYes').checked ? 'block' : 'none';
-  }
-  function hideFatcaForm() {
-    document.getElementById('fatcaFormSection').style.display = 'none';
-  }
-  function toggleAddendum() {
-    var addendumSection = document.getElementById('addendumSection');
-    addendumSection.style.display = document.getElementById('pepYes').checked ? 'block' : 'none';
-  }
-  function hideAddendum() {
-    document.getElementById('addendumSection').style.display = 'none';
-  }
+  var whatsappYes = document.getElementById('whatsappSameYes');
+  var whatsappNo = document.getElementById('whatsappSameNo');
+  var whatsappInputContainer = document.getElementById('whatsappInputContainer');
 
-  function updateTable() {
-    // tables 
-    document.querySelectorAll('div[id^="plan"]').forEach(function (div) {
-      div.classList.add('hidden');
-    });
+  if (whatsappNo.checked) {
+    // Show WhatsApp input field when 'No' is clicked
+    whatsappInputContainer.style.display = 'block';
+  } else {
+    // Hide WhatsApp input field when 'Yes' is clicked
+    whatsappInputContainer.style.display = 'none';
+  }
+}
 
-    // selected plan
-    const selectedPlan = document.querySelector('input[name="planSelection"]:checked');
-    // selected subscription option
-    const selectedOption = document.querySelector('input[name="subscriptionOption"]:checked');
+function togglePermanentAddress(show) {
+  var permanentAddressContainer = document.getElementById('permanentAddressContainer');
 
-    if (selectedPlan && selectedOption) {
-      const plan = selectedPlan.value;
-      const option = selectedOption.value;
+  if (show) {
+    // Show permanent address input field when 'No' is clicked
+    permanentAddressContainer.style.display = 'block';
+  } else {
+    // Hide permanent address input field when 'Yes' is clicked
+    permanentAddressContainer.style.display = 'none';
+  }
+}
 
-      //  table to show
-      const tableId = `${plan}-${option}`;
-      const tableToShow = document.getElementById(tableId);
 
-      if (tableToShow) {
-        tableToShow.classList.remove('hidden');
-      }
+// Function to handle table visibility based on plan and subscription
+function updateTable() {
+  // Get selected plan and subscription
+  const selectedPlan = document.querySelector("input[name='planSelection']:checked")?.value;
+  const selectedSubscription = document.querySelector("input[name='subscriptionOption']:checked")?.value;
+
+  // Hide all tables
+  const allTables = document.querySelectorAll("[id^='plan']");
+  allTables.forEach((table) => table.classList.add("hidden"));
+
+  // Show the corresponding table
+  if (selectedPlan && selectedSubscription) {
+    const tableId = `plan${selectedPlan}-${selectedSubscription}`;
+    const table = document.getElementById(tableId);
+    if (table) {
+      table.classList.remove("hidden");
     }
   }
+}
+

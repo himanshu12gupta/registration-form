@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Base Styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f6f9;
+            color: #333;
+        }
+
+        /* Admin Login Section */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(45deg, #4e73df, #1cc88a);
+            flex-direction: column;
+        }
+
+        .login-form {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-form h3 {
+            font-weight: 700;
+            color: #4e73df;
+            font-size: 2rem;
+            margin-bottom: 30px;
+        }
+
+        .form-control {
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background-color: #4e73df;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            font-size: 1.2rem;
+            color: white;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #3751ff;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 20px;
+            display: none;
+            font-weight: 500;
+        }
+
+        /* Admin Dashboard */
+        #adminDashboard {
+            display: none;
+            background: #f5f6f9;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background-color: #4e73df;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .navbar-nav .nav-link {
+            color: white;
+            padding: 15px 25px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #1cc88a;
+            transform: scale(1.1);
+        }
+
+        .container {
+            margin-top: 40px;
+        }
+
+        /* Cards Style for Admin Dashboard */
+        .card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-body {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #4e73df;
+        }
+
+        .card-text {
+            font-size: 1.1rem;
+            color: #6c757d;
+            margin-top: 10px;
+        }
+
+        iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+            margin-top: 30px;
+            border-radius: 12px;
+        }
+
+        .footer {
+            background-color: #4e73df;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 50px;
+            font-size: 1rem;
+            border-radius: 0px 0px 15px 15px;
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- Admin Login Panel -->
+<div id="loginPanel" class="login-container">
+    <div class="login-form">
+        <h3>Admin Login</h3>
+        <input type="text" id="adminId" class="form-control" placeholder="Admin ID" required>
+        <input type="password" id="adminPassword" class="form-control" placeholder="Password" required>
+        <button id="loginButton" class="btn btn-primary">Login</button>
+        <p id="errorMessage" class="error-message">Invalid credentials. Please try again.</p>
+    </div>
+</div>
+
+<!-- Admin Dashboard -->
+<div id="adminDashboard">
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="#">Admin Panel</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="expiry-user.html">Today Payment</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="pending.html">Pending Payment</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="alldues.html">All Dues</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="logoutButton">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h3>Welcome to the Admin Panel</h3>
+        <p>This page shows when you are logged in as admin.</p>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card shadow-sm" onclick="loadPage('expiry-user.html')">
+                    <div class="card-body">
+                        <h5 class="card-title">Today Payments</h5>
+                        <p class="card-text">View today's payments and their status.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm" onclick="loadPage('pending.html')">
+                    <div class="card-body">
+                        <h5 class="card-title">Pending Payments</h5>
+                        <p class="card-text">View pending payments and follow up.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm" onclick="loadPage('alldues.html')">
+                    <div class="card-body">
+                        <h5 class="card-title">All Dues</h5>
+                        <p class="card-text">View all dues and their status.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Iframe for loading pages -->
+        <iframe id="contentFrame" src="expiry-user.html"></iframe>
+    </div>
+
+    <footer class="footer">
+        &copy; 2024 Admin Dashboard | All Rights Reserved
+    </footer>
+</div>
+
+<script>
+    // Admin login credentials
+    const validAdminId = "admin";
+    const validPassword = "123456";
+
+    // Check login status
+    document.getElementById("loginButton").addEventListener("click", function () {
+        const adminId = document.getElementById("adminId").value;
+        const adminPassword = document.getElementById("adminPassword").value;
+
+        if (adminId === validAdminId && adminPassword === validPassword) {
+            // Hide login panel and show dashboard
+            document.getElementById("loginPanel").style.display = "none";
+            document.getElementById("adminDashboard").style.display = "block";
+            localStorage.setItem("isLoggedIn", "true");
+        } else {
+            // Show error message
+            document.getElementById("errorMessage").style.display = "block";
+        }
+    });
+
+    // Check login status
+    if (localStorage.getItem("isLoggedIn") !== "true") {
+        document.getElementById("loginPanel").style.display = "flex";
+        document.getElementById("adminDashboard").style.display = "none";
+    }
+
+    // Logout functionality
+    document.getElementById("logoutButton").addEventListener("click", function () {
+        localStorage.removeItem("isLoggedIn");
+        document.getElementById("loginPanel").style.display = "flex";
+        document.getElementById("adminDashboard").style.display = "none";
+    });
+
+    // Function to load page into iframe
+    function loadPage(page) {
+        document.getElementById("contentFrame").src = page;
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

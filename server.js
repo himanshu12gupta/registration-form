@@ -6,7 +6,7 @@ const ExcelJS = require('exceljs');
 // const session = require('express-session');
 
 const app = express();
-const port = 3006;
+const port = 3002;
 
 // Middleware
 app.use(bodyParser.json());
@@ -262,7 +262,18 @@ app.post('/submit', (req, res) => {
         }
         console.log('Data inserted successfully');
         for (let i = 0; i < installments; i++) {
-            const dueDate = addMonths(currentDate, i + 1);
+            // const dueDate = addMonths(currentDate, i + 1);
+            let dueDate;  // Initialize dueDate outside the if-else blocks
+
+            if (data.subscriptionOption === 'monthly') {
+                dueDate = addMonths(currentDate, i + 1);
+            } else if (data.subscriptionOption === 'quarterly') {
+                dueDate = addMonths(currentDate, (i + 1) * 3);
+            } else if (data.subscriptionOption === 'halfyearly') {
+                dueDate = addMonths(currentDate, (i + 1) * 6);
+            } else if (data.subscriptionOption === 'yearly') {
+                dueDate = addMonths(currentDate, (i + 1) * 12);
+            }
             const installmentQuery = `INSERT INTO installment (applicant_id, subscription_id, installment_id, due_date, amount, status) VALUES (?, ?, ?, ?, ?, ?)`;
             const installmentParams = [this.lastID, subscriptionId,i + 1, dueDate, perInstallmentAmount,"not paid"];
             
@@ -459,6 +470,7 @@ app.get('/applicant/:applicantId/installments/data', (req, res) => {
     const installmentQuery = `
         SELECT * FROM installment 
         WHERE applicant_id = ? 
+        ORDER BY due_date ASC 
         LIMIT ? OFFSET ?
     `;
 
@@ -486,6 +498,364 @@ app.get('/applicant/:applicantId/installments/data', (req, res) => {
                 totalInstallments
             });
         });
+    });
+});
+
+// app.get('/api/due-installments', (req, res) => {
+//     const today = new Date();
+//     const next30Days = new Date(today);
+//     next30Days.setDate(today.getDate() + 30);
+
+//     const todayStr = today.toISOString().split('T')[0];
+//     const next30DaysStr = next30Days.toISOString().split('T')[0];
+
+//     const query = `
+//         SELECT installment_id, applicant_id, due_date, amount, status
+//         FROM installment
+//         WHERE due_date BETWEEN ? AND ?
+//     `;
+
+//     db.all(query, [todayStr, next30DaysStr], (err, rows) => {
+//         if (err) {
+//             console.error('Error querying database:', err.message);
+//             return res.status(500).json({ error: 'Database error' });
+//         }
+//         res.json(rows);
+//     });
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// // Endpoint to fetch installments due exactly 30 days from today
+// app.get('/api/due-installments', (req, res) => {
+//     const today = new Date();
+//     const next30Days = new Date(today);
+//     next30Days.setDate(today.getDate() + 30);
+
+//     const todayStr = today.toISOString().split('T')[0];
+//     const next30DaysStr = next30Days.toISOString().split('T')[0];
+
+//     const query = `
+//         SELECT installment_id, applicant_id, due_date, amount, status
+//         FROM installment
+//         WHERE due_date = ?
+//     `;
+
+//     db.all(query, [next30DaysStr], (err, rows) => {
+//         if (err) {
+//             console.error('Error querying database:', err.message);
+//             return res.status(500).json({ error: 'Database error' });
+//         }
+//         res.json(rows);
+//     });
+// });
+
+// ==========================================================================for alldue table data store=======================================
+
+app.get('/api/due-installments', (req, res) => {
+    const today = new Date();
+    const next30Days = new Date(today);
+    next30Days.setDate(today.getDate() + 30);
+
+    const todayStr = today.toISOString().split('T')[0];
+    const next30DaysStr = next30Days.toISOString().split('T')[0];
+
+    const query = `
+        SELECT installment_id, applicant_id, due_date, amount, status
+        FROM installment
+        WHERE due_date = ?
+    `;
+
+    db.all(query, [next30DaysStr], (err, rows) => {
+        if (err) {
+            console.error('Error querying database:', err.message);
+            return res.status(500).json({ error: 'Database error' });
+        }
+
+        // Insert the fetched rows into the 'alldue' table, ensuring no duplicates
+        const insertQuery = `
+            INSERT OR IGNORE INTO alldue (
+                installment_id, applicant_id, due_date, due_amount, status
+            ) VALUES (?, ?, ?, ?, ?)
+        `;
+
+        rows.forEach(row => {
+            // Check if the applicant_id already exists in alldue table
+            const checkQuery = `SELECT 1 FROM alldue WHERE applicant_id = ? LIMIT 1`;
+
+            db.get(checkQuery, [row.applicant_id], (err, existingRow) => {
+                if (err) {
+                    console.error('Error checking for duplicates:', err.message);
+                    return;
+                }
+
+                if (!existingRow) {
+                    // Insert the row only if applicant_id doesn't exist
+                    db.run(insertQuery, [row.installment_id, row.applicant_id, row.due_date, row.amount, row.status], (err) => {
+                        if (err) {
+                            console.error('Error inserting into alldue table:', err.message);
+                        }
+                    });
+                }
+            });
+        });
+
+        // Respond with the data that was inserted
+        res.json(rows);
+    });
+});
+app.get('/api/update-alldue-with-applicant-info', (req, res) => {
+    // Query to fetch all rows from the applicant table with a row number (serial number)
+    const applicantQuery = `
+        SELECT rowid AS serial_no, appl_no, name, email, phoneNumber, amount, 
+               paymentMode, planSelection, subscriptionOption, bankName, 
+               accountNumber, MICR, ifscCode, accountType, branchAddress
+        FROM applicant
+        ORDER BY rowid
+    `;
+
+    db.all(applicantQuery, (err, applicantRows) => {
+        if (err) {
+            console.error('Error fetching applicant data:', err.message);
+            return res.status(500).json({ error: 'Database error' });
+        }
+
+        // Map serial_no to applicant data for easier lookup
+        const applicantMap = applicantRows.reduce((map, row) => {
+            map[row.serial_no] = row;
+            return map;
+        }, {});
+
+        // Query to fetch all rows from the alldue table
+        const alldueQuery = `
+            SELECT installment_id, applicant_id
+            FROM alldue
+        `;
+
+        db.all(alldueQuery, (err, alldueRows) => {
+            if (err) {
+                console.error('Error fetching alldue data:', err.message);
+                return res.status(500).json({ error: 'Database error' });
+            }
+
+            // Update each row in the alldue table with corresponding applicant data
+            const updateQuery = `
+                UPDATE alldue
+                SET appl_no = ?, name = ?, email = ?, phoneNumber = ?, amount = ?, 
+                    paymentMode = ?, planSelection = ?, subscriptionOption = ?, 
+                    bankName = ?, accountNumber = ?, MICR = ?, ifscCode = ?, 
+                    accountType = ?, branchAddress = ?
+                WHERE installment_id = ?
+            `;
+
+            alldueRows.forEach(row => {
+                const applicantData = applicantMap[row.applicant_id]; // Find matching applicant by serial_no
+                if (applicantData) {
+                    db.run(updateQuery, [
+                        applicantData.appl_no, applicantData.name, applicantData.email,
+                        applicantData.phoneNumber, applicantData.amount, applicantData.paymentMode,
+                        applicantData.planSelection, applicantData.subscriptionOption, applicantData.bankName,
+                        applicantData.accountNumber, applicantData.MICR, applicantData.ifscCode,
+                        applicantData.accountType, applicantData.branchAddress,
+                        row.installment_id
+                    ], (err) => {
+                        if (err) {
+                            console.error(`Error updating alldue for installment_id ${row.installment_id}:`, err.message);
+                        }
+                    });
+                } else {
+                    console.warn(`No matching applicant found for applicant_id ${row.applicant_id}`);
+                }
+            });
+
+            res.json({ message: 'alldue table updated with applicant information based on serial number.' });
+        });
+    });
+});
+
+// ================================================================for pending table data store=========================================================
+
+
+// Route to get data from the alldue table
+app.get('/get-pending', (req, res) => {
+    const currentDate = new Date();
+    const next30Days = new Date();
+    next30Days.setDate(currentDate.getDate() + 30);
+
+    const query = `
+        SELECT * FROM alldue
+        WHERE due_date BETWEEN ? AND ?
+    `;
+
+    db.all(query, [currentDate.toISOString().split('T')[0], next30Days.toISOString().split('T')[0]], (err, rows) => {
+        if (err) {
+            return res.status(500).send(err.message);
+        }
+
+        // Return all rows with due_date within 30 days
+        res.json(rows);
+    });
+});
+
+// Route to get data from the alldue table
+app.get('/get-pending', (req, res) => {
+    const currentDate = new Date();
+    const next30Days = new Date();
+    next30Days.setDate(currentDate.getDate() + 30);
+
+    const query = `
+        SELECT * FROM alldue
+        WHERE due_date BETWEEN ? AND ?
+    `;
+
+    db.all(query, [currentDate.toISOString().split('T')[0], next30Days.toISOString().split('T')[0]], (err, rows) => {
+        if (err) {
+            return res.status(500).send(err.message);
+        }
+
+        // Return all rows with due_date within 30 days
+        res.json(rows);
+    });
+});
+
+// Route to mark payment as completed and move data to 'pending' table
+app.post('/mark-paid', (req, res) => {
+    const { applicant_id, due_date, payment_date, installment_id } = req.body;
+
+    const query = `
+        INSERT INTO pending (
+            appl_no, name, email, phoneNumber, amount, paymentMode, planSelection, subscriptionOption,
+            installment_id, due_date, due_amount, bankName, accountNumber, MICR, ifscCode, accountType, branchAddress,
+            status, paymentDate
+        )
+        SELECT appl_no, name, email, phoneNumber, amount, paymentMode, planSelection, subscriptionOption,
+            installment_id, due_date, due_amount, bankName, accountNumber, MICR, ifscCode, accountType, branchAddress,
+            'Paid', ?
+        FROM alldue
+        WHERE applicant_id = ? AND due_date = ?;
+    `;
+
+    db.run(query, [payment_date, applicant_id, due_date], function (err) {
+        if (err) {
+            return res.status(500).send(err.message);
+        }
+        res.send('Payment recorded successfully');
+    });
+});
+
+
+
+// ============================================================for show alldues table====================================================================
+
+
+// Route to fetch data from 'pending' table
+app.get('/get-pending-data', (req, res) => {
+    const query = `SELECT * FROM pending`;
+    db.all(query, (err, rows) => {
+        if (err) {
+            return res.status(500).send(err.message);
+        }
+        res.json(rows);  // Return rows from 'pending' table
+    });
+});
+
+// Endpoint to fetch expiry applicants
+app.get('/dashboard', isAdmin,(req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Endpoint to save payment confirmation data to the database
+app.post('/savePaymentDetails', (req, res) => {
+    const paymentDetails = req.body;
+
+    const query = `INSERT INTO payments (appl_no, appl_date, form_name, form_email, phoneNumber, paymentMode, planSelection, subscriptionOption, amount, chosenPaymentMethod, transactionId) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+    const params = [
+        paymentDetails.appl_no,
+        paymentDetails.appl_date,
+        paymentDetails.form_name,
+        paymentDetails.form_email,
+        paymentDetails.phoneNumber,
+        paymentDetails.paymentMode,
+        paymentDetails.planSelection,
+        paymentDetails.subscriptionOption,
+        paymentDetails.amount,
+        paymentDetails.chosenPaymentMethod,
+        paymentDetails.transactionId
+    ];
+
+    db.run(query, params, function(err) {
+        if (err) {
+            console.error("Error inserting data:", err);
+            res.status(500).send('Database error');
+        } else {
+            res.status(200).send('Payment details saved successfully');
+        }
+    });
+});
+
+app.get('/getPayments', (req, res) => {
+    const query = `SELECT * FROM payments`;
+    
+    db.all(query, [], (err, rows) => {
+        if (err) {
+            console.error("Error fetching payments:", err);
+            res.status(500).send('Database error');
+        } else {
+            res.json(rows);
+        }
     });
 });
 

@@ -1,0 +1,146 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #1E90FF, #ADD8E6);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .login-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+
+  .login-box {
+    background-color: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); 
+    width: 600px;
+    max-width: 450px;
+    transition: all 0.3s ease-in-out;
+    text-align: center;
+  }
+  
+  .login-box:hover {
+    transform: scale(1.02);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2); 
+  }
+  
+  
+  .header-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+  }
+  
+  .logo {
+    margin-right: 15px;
+  }
+  
+  .logo-img {
+    width: 60px; 
+  }
+  
+  h2 {
+    font-size: 26px;
+    color: #333;
+    font-weight: bold;
+  }
+  
+
+  .input-container {
+    margin-bottom: 20px;
+  }
+  
+  input {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #f9f9f9;
+    transition: all 0.3s ease;
+  }
+  
+  input:focus {
+    border-color: #1E90FF; 
+    box-shadow: 0 0 8px rgba(30, 144, 255, 0.5);
+    outline: none;
+  }
+  
+  
+  ::placeholder {
+    color: #999;
+  }
+  
+  
+  .login-btn {
+    width: 100%;
+    padding: 14px;
+    background-color: #1E90FF; 
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .login-btn:hover {
+    background-color: #005fbd; 
+    box-shadow: 0 5px 15px rgba(0, 95, 189, 0.4); 
+  }
+  
+
+  @media (max-width: 768px) {
+    .login-box {
+      width: 80%; 
+      padding: 30px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .login-box {
+      width: 90%;
+      padding: 20px;
+    }
+  
+    h2 {
+      font-size: 22px;
+    }
+  
+    .login-btn {
+      font-size: 16px; 
+      padding: 12px;
+    }
+  }
+
+
+  /* ===================================================================DASHBOARD Sublogin======================================================================== */
+
+  .container-fluid {
+    width: 500px; 
+    margin: auto; 
+}
+
+@media (max-width: 768px) {
+    .container-fluid {
+        width: 157px; 
+    }
+}
+
+

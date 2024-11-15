@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pending Payments</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        .hidden {
+            display: none;
+        }
+        .date-input {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Pending Payments (Due within 30 days)</h1>
+    <table id="pending-table">
+        <thead>
+            <tr>
+                <th>Installment ID</th>
+                <th>Applicant ID</th>
+                <th>Due Date</th>
+                <th>Due Amount</th>
+                <th>Status</th>
+                <th>Appl No</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Amount</th>
+                <th>Payment Mode</th>
+                <th>Plan Selection</th>
+                <th>Subscription Option</th>
+                <th>Bank Name</th>
+                <th>Account Number</th>
+                <th>MICR</th>
+                <th>IFSC Code</th>
+                <th>Account Type</th>
+                <th>Branch Address</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Rows will be inserted here dynamically -->
+        </tbody>
+    </table>
+
+    <script>
+        // Fetch the pending data from backend when page loads
+        fetch('/get-pending')
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.querySelector('#pending-table tbody');
+
+                // Dynamically add rows to the table
+                data.forEach(row => {
+                    const tr = document.createElement('tr');
+                    tr.dataset.applicantId = row.applicant_id;
+                    tr.dataset.dueDate = row.due_date;
+
+                    tr.innerHTML = `
+                        <td>${row.installment_id}</td>
+                        <td>${row.applicant_id}</td>
+                        <td>${row.due_date}</td>
+                        <td>${row.due_amount}</td>
+                        <td>${row.status}</td>
+                        <td>${row.appl_no}</td>
+                        <td>${row.name}</td>
+                        <td>${row.email}</td>
+                        <td>${row.phoneNumber}</td>
+                        <td>${row.amount}</td>
+                        <td>${row.paymentMode}</td>
+                        <td>${row.planSelection}</td>
+                        <td>${row.subscriptionOption}</td>
+                        <td>${row.bankName}</td>
+                        <td>${row.accountNumber}</td>
+                        <td>${row.MICR}</td>
+                        <td>${row.ifscCode}</td>
+                        <td>${row.accountType}</td>
+                        <td>${row.branchAddress}</td>
+                        <td>
+                            <button class="paid-btn">Mark as Paid</button>
+                            <div class="date-input">
+                                <input type="date" class="payment-date" />
+                                <button class="ok-btn">OK</button>
+                            </div>
+                        </td>
+                    `;
+                    tableBody.appendChild(tr);
+
+                    // Add event listener to the "Mark as Paid" button
+                    const paidBtn = tr.querySelector('.paid-btn');
+                    const dateInputDiv = tr.querySelector('.date-input');
+                    const paymentDateInput = tr.querySelector('.payment-date');
+                    const okBtn = tr.querySelector('.ok-btn');
+
+                    paidBtn.addEventListener('click', () => {
+                        // Show the date input field and OK button
+                        dateInputDiv.style.display = 'block';
+                        paidBtn.disabled = true; // Disable the button after clicking once
+                    });
+
+                    // Add event listener to the "OK" button
+                    okBtn.addEventListener('click', () => {
+                        const paymentDate = paymentDateInput.value;
+                        if (paymentDate) {
+                            // Send data to backend to update the payment
+                            fetch('/mark-paid', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    applicant_id: row.applicant_id,
+                                    due_date: row.due_date,
+                                    payment_date: paymentDate,
+                                    installment_id: row.installment_id
+                                })
+                            })
+                            .then(response => response.text())
+                            .then(() => {
+                                // Hide the row once payment is confirmed
+                                tr.classList.add('hidden');
+                            })
+                            .catch(error => console.error('Error updating payment:', error));
+                        } else {
+                            alert("Please enter a payment date.");
+                        }
+                    });
+                });
+            })
+            .catch(error => console.error('Error fetching pending data:', error));
+    </script>
+</body>
+</html>

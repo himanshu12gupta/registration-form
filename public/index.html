@@ -6,16 +6,16 @@
   <title>Multi-page Form</title>
   <link rel="stylesheet" href="./style.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 </head>
 
 <body>
   <section class="ctn">
-
     <div>
       <div class="row">
         <div class="col-lg-12 col-md-12">
-          <form id="multiPageForm">
+          <form id="multiPageForm" onsubmit="saveData(); return false;">
             <!-- Page 1 -->
             <div class="form-page height" id="page1">
               <div class="yy">
@@ -35,7 +35,7 @@
                   <div class="form-group">
                     <label for="name">Name</label>
                     <input id="form_name" type="text" name="name" class="form-control"
-                      placeholder="Please enter your Name*">
+                      placeholder="Please enter your Name*" required>
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
@@ -43,25 +43,25 @@
                   <div class="form-group">
                     <label for="form_email">Email *</label>
                     <input id="form_email" type="email" name="email" class="form-control"
-                      placeholder="Please enter your email *">
+                      placeholder="Please enter your email *" required>
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
-               
+
               </div>
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="dateOfBirth">Date of Birth (DD/MM/YYYY):</label>
                     <input type="text" id="dateOfBirth" name="dateOfBirth" placeholder="DD/MM/YYYY" id="form_name"
-                      title="Please enter a valid date in DD/MM/YYYY format." class="form-control">
+                      title="Please enter a valid date in DD/MM/YYYY format." class="form-control" required>
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="gender">Gender:</label>
-                    <select name="gender" class="form-control" id="form_name">
+                    <select name="gender" class="form-control" id="form_name" required>
                       <option value="male">Male</option>
                       <option value="female">Female</option>
                     </select>
@@ -70,91 +70,100 @@
                 </div>
               </div>
 
-
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="phoneNumber">Phone Number:</label>
                     <input type="tel" id="phoneNumber" name="phoneNumber" id="form_name" class="form-control"
-                      title="Please enter a valid 10-digit phone number.">
+                      title="Please enter a valid 10-digit phone number." required>
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
                     <p>
-                    <div id="whatsappInputContainer" style="display: none;">
-                      <label for="whatsappNumber">WhatsApp Number:</label>
-                      <input type="tel" id="whatsappNumber" name="whatsappNumber" id="form_name" class="form-control"
-                        title="Please enter a valid 10-digit WhatsApp number.">
-                    </div>
+                      <div class="checkbox-container">
+                        <label for="whatsappSameYes">Is this number used for WhatsApp?</label>
+                        <div class="rad">
+                          <input type="radio" id="whatsappSameYes" name="whatsappSame" value="yes"
+                            onclick="toggleWhatsAppInput()" required> Yes
+                          <span style="margin: 0 80px;"> </span>
+                          <input type="radio" id="whatsappSameNo" name="whatsappSame" value="no"
+                            onclick="toggleWhatsAppInput()" required>
+                          No
+                        </div>
+                      </div>
+                   
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
               </div>
 
-              <div class="checkbox-container">
-                <label for="whatsappSameYes">Is this number used for WhatsApp?</label>
-                <div class="rad">
-                  <input type="radio" id="whatsappSameYes" name="whatsappSame" value="yes"
-                    onclick="toggleWhatsAppInput()"> Yes
-                  <span style="margin: 0 80px;"> </span>
-                  <input type="radio" id="whatsappSameNo" name="whatsappSame" value="no"
-                    onclick="toggleWhatsAppInput()">
-                  No
-                </div>
-              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <div id="whatsappInputContainer" style="display: none;">
+                      <label for="whatsappNumber">WhatsApp Number:</label>
+                      <input type="tel" id="whatsappNumber" name="whatsappNumber" id="form_name" class="form-control"
+                        title="Please enter a valid 10-digit WhatsApp number.">
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
                     <lebel for="panCardNumber">Pan Card:</lebel>
                     <input type="text" id="panCardNumber" name="panCardNumber" class="form-control"
                       placeholder="Enter your PAN Card Number"
-                      title="PAN Card number must be in the format: 5 uppercase letters, followed by 4 digits, and ending with 1 uppercase letter.">
+                      title="PAN Card number must be in the format: 5 uppercase letters, followed by 4 digits, and ending with 1 uppercase letter." required>
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
-              </div>
-
-
-              <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="aadhaarNumber">Aadhaar Number:</label>
                     <input type="text" id="aadhaarNumber" name="aadhaarNumber" class="form-control"
-                      placeholder="Enter your Aadhaar Number" title="Aadhaar number must be exactly 12 digits long.">
+                      placeholder="Enter your Aadhaar Number" title="Aadhaar number must be exactly 12 digits long." required>
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
+              </div>
+               
+              <div class="row">
+               
+
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="currentAddress">Current Address:</label>
                     <input type="text" id="currentAddress" name="currentAddress" class="form-control"
                       placeholder="Enter your current address"
-                      title="Please enter a valid address. It should contain only letters, numbers, spaces, commas, periods, and hyphens.">
+                      title="Please enter a valid address. It should contain only letters, numbers, spaces, commas, periods, and hyphens." required>
                     <div class="help-block with-errors"></div>
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
-              </div>
-
-              <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
                     <div class="checkbox-container">
                       <div class="rad">
-                        <!-- <label>Is your current address the same as your permanent address?</label> -->
                         <h5><b>Is your current address the same as your permanent address?</b></h5>
                         <input type="radio" id="addressYes" name="sameAddress" value="yes"
-                          onclick="togglePermanentAddress(false)"> Yes
+                          onclick="togglePermanentAddress(false)" required> Yes
                         <span style="margin: 0 80px;"> </span>
                         <input type="radio" id="addressNo" name="sameAddress" value="no"
-                          onclick="togglePermanentAddress(true)"> No
+                          onclick="togglePermanentAddress(true)" required> No
                       </div>
                     </div>
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
+
+              </div>
+
+              <div class="row">
+                
                 <div class="col-md-6">
                   <div class="form-group">
                     <div id="permanentAddressContainer" style="display: none;">
@@ -168,13 +177,12 @@
                 </div>
               </div>
 
-
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="pinCode">PIN Code:</label>
                     <input type="text" id="pinCode" name="pinCode" class="form-control"
-                      placeholder="Enter your 6-digit PIN code" title="Please enter a 6-digit PIN code">
+                      placeholder="Enter your 6-digit PIN code" title="Please enter a 6-digit PIN code" required>
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
@@ -182,14 +190,14 @@
                   <div class="form-group">
                     <label for="city">City:</label>
                     <input type="text" id="city" name="city" class="form-control" placeholder="Enter your city"
-                      title="Please enter a valid city name. Only letters and spaces are allowed.">
+                      title="Please enter a valid city name. Only letters and spaces are allowed." required>
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
               </div>
               <!-- ... other fields ... -->
               <div class="next-button-container">
-                <button type="button" class="next-button btn btn-primary right" style="background-color: green;"
+                <button type="button" id="one" class="next-button btn btn-primary right " style="background-color: green;"
                   onclick="showPage(2)">Next>></button><br><br>
               </div>
             </div>
@@ -203,7 +211,7 @@
                     <div class="form-group">
                       <label for="bankName">Bank Name:</label>
                       <input type="text" id="bankName" name="bankName" class="form-control"
-                        placeholder="Enter the bank name">
+                        placeholder="Enter the bank name" required>
                       <div class="help-block with-errors"></div>
                     </div>
                   </div>
@@ -211,7 +219,7 @@
                     <div class="form-group">
                       <label for="accountNumber">Account Number:</label>
                       <input type="number" id="accountNumber" name="accountNumber" class="form-control"
-                        placeholder="Only numbers">
+                        placeholder="Only numbers" required>
                       <div class="help-block with-errors"></div>
                     </div>
                   </div>
@@ -221,7 +229,7 @@
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="chequeDDNumber">MICR</label>
-                      <input type="text" id="MICR" name="MICR" class="form-control" placeholder="Enter MICR code">
+                      <input type="text" id="MICR" name="MICR" class="form-control" placeholder="Enter MICR code" required>
                       <div class="help-block with-errors"></div>
                     </div>
                   </div>
@@ -229,7 +237,7 @@
                     <div class="form-group">
                       <label for="ifscCode">IFSC Code:</label>
                       <input type="text" id="ifscCode" name="ifscCode" placeholder="e.g., HDFC0001234"
-                        class="form-control">
+                        class="form-control" required>
                       <div class="help-block with-errors"></div>
                     </div>
                   </div>
@@ -239,9 +247,9 @@
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="accountType">Account Type:</label>
-                      <select id="accountType" name="accountType" id="form_name" class="form-control">
+                      <select id="accountType" name="accountType" id="form_name" class="form-control" required>
                         <option value="">Select Account Type</option>
-                        <option value="saving">Saving</option>
+                        <option value="saving" >Saving</option>
                         <option value="current">Current</option>
                       </select>
                       <div class="help-block with-errors"></div>
@@ -251,7 +259,7 @@
                     <div class="form-group">
                       <label for="branchAddress">Branch Address:</label>
                       <input type="text" id="branchAddress" name="branchAddress" class="form-control"
-                        placeholder="Enter branch address here...">
+                        placeholder="Enter branch address here..." required>
                       <div class="help-block with-errors"></div>
                     </div>
                   </div>
@@ -261,7 +269,7 @@
                 <div class="button-box">
                   <button type="button" class="prev-button btn btn-primary" style="background-color: red;"
                     onclick="showPage(2)"> Previous</button>
-                  <button type="button" class="next-button btn btn-primary" style="background-color: green;"
+                  <button type="button" id="two" class="next-button btn btn-primary" style="background-color: green;"
                     onclick="showPage(4)">Next>></button>
 
                 </div>
@@ -272,14 +280,13 @@
             <!-- Page 3 -->
             <div class="form-page height" id="page2" style="display: none;">
               <h2>Plan Details</h2><br>
-
               <div class="controls">
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group">
                       <label>
                         <input type="radio" id="paymentMode" name="paymentMode" value="regular"
-                          onclick="handlePaymentModeChange()">
+                          onclick="handlePaymentModeChange()" required>
                         Regular
                       </label>
                       <div class="help-block with-errors"></div>
@@ -289,7 +296,7 @@
                     <div class="form-group">
                       <label>
                         <input type="radio" id="paymentMode" name="paymentMode" value="single"
-                          onclick="handlePaymentModeChange()">
+                          onclick="handlePaymentModeChange()" required>
                         Single
                       </label>
                       <div class="help-block with-errors"></div>
@@ -299,7 +306,7 @@
                 <div class="row">
                   <div class="col-md-12">
                     <label for="amount">Enter Amount:</label>
-<input type="number" id="amount" name="amount" required>
+                    <input type="number" id="amount" name="amount" required>
                   </div>
                 </div>
               </div>
@@ -320,21 +327,21 @@
                     <td>5 YEARS</td>
                     <td>5 YEARS</td>
                     <td>11%</td>
-                    <td><input type="radio" name="planSelection" value="A" onclick="updateTable();"></td>
+                    <td><input type="radio" name="planSelection" value="A" onclick="updateTable();" required></td>
                   </tr>
                   <tr>
                     <td>PLAN B</td>
                     <td>5 YEARS</td>
                     <td>3 YEARS</td>
                     <td>10%</td>
-                    <td><input type="radio" name="planSelection" value="B" onclick="updateTable();"></td>
+                    <td><input type="radio" name="planSelection" value="B" onclick="updateTable();" required></td>
                   </tr>
                   <tr>
                     <td>PLAN C</td>
                     <td>3 YEARS</td>
                     <td>1 YEAR</td>
                     <td>9%</td>
-                    <td><input type="radio" name="planSelection" value="C" onclick="updateTable();"></td>
+                    <td><input type="radio" name="planSelection" value="C" onclick="updateTable();" required></td>
                   </tr>
                 </tbody>
               </table>
@@ -347,22 +354,22 @@
                 <label>
                   Monthly
                   <input type="radio" id="subscriptionOption" name="subscriptionOption" value="monthly"
-                    onclick="updateTable();">
+                    onclick="updateTable();" required>
                 </label>
                 <label>
                   Quarterly
                   <input type="radio" id="subscriptionOption" name="subscriptionOption" value="quarterly"
-                    onclick="updateTable();">
+                    onclick="updateTable();" required>
                 </label>
                 <label>
                   Half Yearly
                   <input type="radio" id="subscriptionOption" name="subscriptionOption" value="halfyearly"
-                    onclick="updateTable();">
+                    onclick="updateTable();" required>
                 </label>
                 <label>
                   Yearly
                   <input type="radio" id="subscriptionOption" name="subscriptionOption" value="yearly"
-                    onclick="updateTable();">
+                    onclick="updateTable();" required>
                 </label>
               </div>
 
@@ -393,7 +400,7 @@
 
               <div id="planA-quarterly" class="hidden">
                 <h4>PLAN A - Quarterly</h4>
-                
+
                 <table>
                   <thead>
                     <tr>
@@ -584,7 +591,7 @@
               <div class="button-box">
                 <button type="button" class="prev-button btn btn-primary" style="background-color: red;"
                   onclick="showPage(1)"> Previous</button>
-                <button type="button" class="next-button btn btn-primary" style="background-color: green;"
+                <button type="button" id="three" class="next-button btn btn-primary" style="background-color: green;"
                   onclick="showPage(3)">Next>></button>
               </div>
               <br><br>
@@ -597,7 +604,6 @@
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group">
-
                       <label for="applicantName">Name:</label>
                       <input type="text" id="applicantName" name="Nom_Name" class="form-control"
                         placeholder="Enter nominee's name">
@@ -636,7 +642,6 @@
                   </div>
                 </div>
 
-
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group">
@@ -673,7 +678,6 @@
                   onclick="showPage(5)">Next>></button>
               </div>
             </div>
-
 
             <!-- Page 5 -->
             <div class="form-page height" id="page5" style="display: none;">
@@ -749,7 +753,6 @@
                   onclick="showPage(4)"> Previous</button>
                 <button type="button" class="next-button btn btn-primary" style="background-color: green;"
                   onclick="showPage(6)">Next>></button>
-
               </div>
             </div>
 
@@ -808,7 +811,6 @@
                   </div>
                 </div>
 
-
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group">
@@ -845,15 +847,13 @@
                     onclick="showPage(5)"> Previous</button>
                   <button type="submit" class="next-button btn btn-primary"
                     style="background-color: green;">Submit</button>
-
                 </div>
           </form>
         </div>
       </div>
     </div>
   </section>
-
   <script src="index.js"></script>
+  
 </body>
-
 </html>

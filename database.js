@@ -78,7 +78,7 @@ db.run(`CREATE TABLE IF NOT EXISTS subscription (
 )`);
 
 db.run(`CREATE TABLE IF NOT EXISTS installment (
-    installment_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    installment_id INTEGER ,
     applicant_id INTEGER NOT NULL,
     subscription_id INTEGER NOT NULL,
     due_date TEXT NOT NULL,
@@ -103,7 +103,7 @@ db.run(`ALTER TABLE applicant ADD COLUMN from_date TEXT`, (err) => {
 db.run(`ALTER TABLE applicant ADD COLUMN expiry_date TEXT`, (err) => {
     if (err) {
         if (err.message.includes("duplicate column name")) {
-            // console.log("Column 'expiry_date' already exists.");
+            // console.log("Colu`mn 'expiry_date' already exists.");
         } else {
             console.error("Error adding 'expiry_date':", err.message);
         }
@@ -122,5 +122,105 @@ db.serialize(() => {
     )`);
 });
 
+
+
+
+
+
+
+
+
+// Create the payments table if it doesn't exist
+db.run(`CREATE TABLE IF NOT EXISTS payments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    appl_no TEXT NOT NULL,
+    appl_date TEXT NOT NULL,
+    form_name TEXT NOT NULL,
+    form_email TEXT NOT NULL,
+    phoneNumber TEXT NOT NULL,
+    paymentMode TEXT NOT NULL,
+    planSelection TEXT NOT NULL,
+    subscriptionOption TEXT NOT NULL,
+    amount REAL NOT NULL,
+    chosenPaymentMethod TEXT NOT NULL,
+    transactionId TEXT NOT NULL
+)`)
+
+
+
+// db.run(`
+//     CREATE TABLE IF NOT EXISTS alldue (
+//         id INTEGER PRIMARY KEY AUTOINCREMENT,
+//         installment_id TEXT NOT NULL,
+//         applicant_id TEXT NOT NULL,
+//         due_date TEXT NOT NULL,
+//         amount REAL NOT NULL,
+//         status TEXT NOT NULL
+//     )
+// `);
+
+db.run(`
+   CREATE TABLE IF NOT EXISTS alldue (
+    installment_id INTEGER,
+    applicant_id INTEGER UNIQUE,
+    due_date DATE,
+    due_amount REAL,
+    status TEXT,
+    appl_no INTEGER,
+    name TEXT,
+    email TEXT,
+    phoneNumber TEXT,
+    amount REAL,
+    paymentMode TEXT,
+    planSelection TEXT,
+    subscriptionOption TEXT,
+    bankName TEXT,
+    accountNumber TEXT,
+    MICR TEXT,
+    ifscCode TEXT,
+    accountType TEXT,
+    branchAddress TEXT,
+    FOREIGN KEY (applicant_id) REFERENCES applicant(appl_no)
+    )
+`);
+
+
+
+
+
+
+
+
+
+
+
+
+// Create 'pending' table if not exists
+db.run(`
+    CREATE TABLE IF NOT EXISTS pending (
+      appl_no INTEGER,
+      name TEXT,
+      email TEXT,
+      phoneNumber TEXT,
+      amount REAL,
+      paymentMode TEXT,
+      planSelection TEXT,
+      subscriptionOption TEXT,
+      installment_id INTEGER,
+      due_date DATE,
+      due_amount REAL,
+      bankName TEXT,
+      accountNumber TEXT,
+      MICR TEXT,
+      ifscCode TEXT,
+      accountType TEXT,
+      branchAddress TEXT,
+      status TEXT,
+      paymentDate DATE,
+      FOREIGN KEY (appl_no) REFERENCES applicant(appl_no)
+    )
+  `);
+  
+  
 
 module.exports = db;

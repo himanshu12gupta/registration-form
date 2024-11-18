@@ -754,6 +754,11 @@ app.get('/get-pending', (req, res) => {
 // Route to mark payment as completed and move data to 'pending' table
 app.post('/mark-paid', (req, res) => {
     const { applicant_id, due_date, payment_date, installment_id } = req.body;
+    // const { installment_id, payment_date, amount } = req.body;
+    console.log("instamment",installment_id
+        
+    )
+    console.log(req.body)
 
     const query = `
         INSERT INTO pending (

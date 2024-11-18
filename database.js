@@ -221,6 +221,13 @@ db.run(`
     )
   `);
   
-  
+  db.run(`CREATE TABLE IF NOT EXISTS installment_payment (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    installment_id INTEGER NOT NULL,
+    payment_date TEXT NOT NULL,
+    amount REAL NOT NULL,
+    FOREIGN KEY (installment_id) REFERENCES alldue(installment_id)
+)`);
+
 
 module.exports = db;

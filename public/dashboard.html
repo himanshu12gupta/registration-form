@@ -3,44 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Base Styles */
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
-            padding: 0;
             background-color: #f5f6f9;
             color: #333;
+            height: 100vh;
+            overflow: hidden;
         }
 
-        /* Admin Login Section */
-        .login-container {
+        /* Admin Panel */
+        #adminPanel {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: linear-gradient(45deg, #4e73df, #1cc88a);
-            flex-direction: column;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
         }
 
-        .login-form {
-            background-color: #fff;
+        .login-container {
+            background-color: white;
             padding: 40px;
             border-radius: 15px;
-            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
             text-align: center;
+            width: 100%;
+            max-width: 450px;
         }
 
-        .login-form h3 {
-            font-weight: 700;
-            color: #4e73df;
-            font-size: 2rem;
+        .login-container h2 {
             margin-bottom: 30px;
+            font-size: 2rem;
+            color: #2575fc;
+            font-weight: bold;
         }
 
         .form-control {
@@ -50,233 +49,251 @@
         }
 
         .btn-primary {
-            background-color: #4e73df;
+            background-color: #2575fc;
             border: none;
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             font-size: 1.2rem;
             color: white;
             border-radius: 8px;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         .btn-primary:hover {
-            background-color: #3751ff;
+            background-color: #1c54d6;
         }
 
         .error-message {
             color: red;
-            margin-top: 20px;
             display: none;
-            font-weight: 500;
+            margin-top: 15px;
         }
 
-        /* Admin Dashboard */
-        #adminDashboard {
+        /* Dashboard */
+        #dashboard {
             display: none;
-            background: #f5f6f9;
-            padding: 20px;
-            min-height: 100vh;
+            height: 100vh;
+            overflow: hidden;
+            transition: transform 0.3s ease-in-out;
         }
 
         .navbar {
-            background-color: #4e73df;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background-color: #2575fc;
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 20px;
+            align-items: center;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .navbar-brand {
             color: white;
-            font-size: 1.8rem;
-            font-weight: 700;
+            font-weight: bold;
+            font-size: 1.6rem;
         }
 
-        .navbar-nav .nav-link {
+        .main-content {
+            display: flex;
+            height: calc(100vh - 60px);
+            background: #f8f9fc;
+            transition: margin-right 0.3s ease;
+        }
+
+        .sidebar {
+            width: 270px;
+            background: linear-gradient(135deg, #2575fc, #6a11cb);
             color: white;
-            padding: 15px 25px;
-            font-weight: 500;
-            transition: 0.3s;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            right: 0;
+            z-index: 10;
+            transition: transform 0.3s ease-in-out;
+            padding-top: 40px; /* Space for the X button */
         }
 
-        .navbar-nav .nav-link:hover {
-            color: #1cc88a;
-            transform: scale(1.1);
-        }
-
-        .container {
-            margin-top: 40px;
-        }
-
-        /* Cards Style for Admin Dashboard */
-        .card {
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .card-body {
-            background-color: #fff;
-            border-radius: 12px;
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            text-align: center;
-        }
-
-        .card-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #4e73df;
-        }
-
-        .card-text {
+        .sidebar a {
+            text-decoration: none;
+            color: white;
             font-size: 1.1rem;
-            color: #6c757d;
-            margin-top: 10px;
+            margin: 12px 0;
+            padding: 10px 15px;
+            border-radius: 8px;
+            transition: background 0.3s ease, transform 0.2s;
+        }
+
+        .sidebar a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            transition: margin-right 0.3s ease;
         }
 
         iframe {
             width: 100%;
-            height: 500px;
+            height: 100%;
             border: none;
-            margin-top: 30px;
-            border-radius: 12px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
         }
 
-        .footer {
-            background-color: #4e73df;
+        /* Search Bar */
+        .search-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 10px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Hamburger and X Button */
+        .hamburger, .close-btn {
+            font-size: 2rem;
             color: white;
-            text-align: center;
-            padding: 20px 0;
-            margin-top: 50px;
-            font-size: 1rem;
-            border-radius: 0px 0px 15px 15px;
+            cursor: pointer;
+            display: inline-block;
         }
 
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 20;
+            font-size: 2rem;
+            color: white;
+            cursor: pointer;
+        }
+
+        .sidebar-hidden .sidebar {
+            transform: translateX(100%);
+        }
+
+        .sidebar-hidden .main-content {
+            margin-right: 0;
+        }
+
+        .sidebar-visible .main-content {
+            margin-right: 270px;
+        }
+
+        /* Logout button fixed at the left */
+        .logout-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, #1c54d6, #2575fc);
+            padding: 14px 30px;
+            border-radius: 25px;
+            color: white;
+            font-size: 1.2rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: linear-gradient(135deg, #1c54d6, #0d47a1);
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .logout-icon {
+            font-size: 1.5rem;
+            color: white;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .logout-text {
+            font-size: 1.1rem;
+            color: white;
+            display: inline-block;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            .navbar-brand {
+                font-size: 1.2rem;
+            }
+
+            .main-content {
+                flex-direction: column;
+            }
+
+            .sidebar a {
+                font-size: 1rem;
+            }
+
+            .content {
+                padding: 15px;
+            }
+        }
     </style>
 </head>
 <body>
-
-<!-- Admin Login Panel -->
-<div id="loginPanel" class="login-container">
-    <div class="login-form">
-        <h3>Admin Login</h3>
-        <input type="text" id="adminId" class="form-control" placeholder="Admin ID" required>
-        <input type="password" id="adminPassword" class="form-control" placeholder="Password" required>
-        <button id="loginButton" class="btn btn-primary">Login</button>
-        <p id="errorMessage" class="error-message">Invalid credentials. Please try again.</p>
+    <!-- Admin Panel -->
+    <div id="adminPanel">
+        <div class="login-container">
+            <h2>Admin Panel Login</h2>
+            <input type="text" id="adminId" class="form-control" placeholder="Admin ID" required>
+            <input type="password" id="adminPassword" class="form-control" placeholder="Password" required>
+            <button id="loginButton" class="btn btn-primary">Login</button>
+            <p id="errorMessage" class="error-message">Invalid credentials. Please try again.</p>
+        </div>
     </div>
-</div>
 
-<!-- Admin Dashboard -->
-<div id="adminDashboard">
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <a class="navbar-brand" href="#">Admin Panel</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+    <!-- Dashboard -->
+    <div id="dashboard" class="sidebar-hidden">
+        <div class="navbar">
+            <span class="navbar-brand">Anytime Invest</span>
+            <span class="hamburger" onclick="toggleSidebar()">&#9776;</span>
+        </div>
+        <div class="main-content">
+            <div class="sidebar">
+                <span class="close-btn" onclick="hideSidebar()">&#10005;</span>
+                <a href="#" data-key="todayPayments">Today Payments</a>
+                <a href="#" data-key="pendingPayments">Pending Payments</a>
+                <a href="#" data-key="completedDues">Completed Dues</a>
+                <a href="#" data-key="applicants">Applicants</a>
+                <a href="#" data-key="installment">Installments</a>
+                <a href="#" data-key="payments">Payments</a>
+            </div>
+            <div class="content">
+                <div class="search-container">
+                    <input type="text" id="searchBar" placeholder="Search on this page..." oninput="filterContent()">
+                </div>
+                <iframe id="contentFrame" src=""></iframe>
+            </div>
+        </div>
+        <button id="logoutButton" class="logout-btn" onclick="logout()" style="display:none;">
+            <span class="logout-icon">&#x21B6;</span>
+            <span class="logout-text">Logout</span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="expiry-user.html">Today Payment</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="pending.html">Pending Payment</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="alldues.html">All Dues</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" id="logoutButton">Logout</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-
-    <div class="container">
-        <h3>Welcome to the Admin Panel</h3>
-        <p>This page shows when you are logged in as admin.</p>
-
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card shadow-sm" onclick="loadPage('expiry-user.html')">
-                    <div class="card-body">
-                        <h5 class="card-title">Today Payments</h5>
-                        <p class="card-text">View today's payments and their status.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card shadow-sm" onclick="loadPage('pending.html')">
-                    <div class="card-body">
-                        <h5 class="card-title">Pending Payments</h5>
-                        <p class="card-text">View pending payments and follow up.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card shadow-sm" onclick="loadPage('alldues.html')">
-                    <div class="card-body">
-                        <h5 class="card-title">All Dues</h5>
-                        <p class="card-text">View all dues and their status.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Iframe for loading pages -->
-        <iframe id="contentFrame" src="expiry-user.html"></iframe>
     </div>
 
-    <footer class="footer">
-        &copy; 2024 Admin Dashboard | All Rights Reserved
-    </footer>
-</div>
+    <script src="das.js">
+    </script>
 
-<script>
-    // Admin login credentials
-    const validAdminId = "admin";
-    const validPassword = "123456";
-
-    // Check login status
-    document.getElementById("loginButton").addEventListener("click", function () {
-        const adminId = document.getElementById("adminId").value;
-        const adminPassword = document.getElementById("adminPassword").value;
-
-        if (adminId === validAdminId && adminPassword === validPassword) {
-            // Hide login panel and show dashboard
-            document.getElementById("loginPanel").style.display = "none";
-            document.getElementById("adminDashboard").style.display = "block";
-            localStorage.setItem("isLoggedIn", "true");
-        } else {
-            // Show error message
-            document.getElementById("errorMessage").style.display = "block";
-        }
-    });
-
-    // Check login status
-    if (localStorage.getItem("isLoggedIn") !== "true") {
-        document.getElementById("loginPanel").style.display = "flex";
-        document.getElementById("adminDashboard").style.display = "none";
-    }
-
-    // Logout functionality
-    document.getElementById("logoutButton").addEventListener("click", function () {
-        localStorage.removeItem("isLoggedIn");
-        document.getElementById("loginPanel").style.display = "flex";
-        document.getElementById("adminDashboard").style.display = "none";
-    });
-
-    // Function to load page into iframe
-    function loadPage(page) {
-        document.getElementById("contentFrame").src = page;
-    }
-</script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

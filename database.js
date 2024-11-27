@@ -131,20 +131,61 @@ db.serialize(() => {
 
 
 // Create the payments table if it doesn't exist
-db.run(`CREATE TABLE IF NOT EXISTS payments (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    appl_no TEXT NOT NULL,
-    appl_date TEXT NOT NULL,
-    form_name TEXT NOT NULL,
-    form_email TEXT NOT NULL,
-    phoneNumber TEXT NOT NULL,
-    paymentMode TEXT NOT NULL,
-    planSelection TEXT NOT NULL,
-    subscriptionOption TEXT NOT NULL,
-    amount REAL NOT NULL,
-    chosenPaymentMethod TEXT NOT NULL,
-    transactionId TEXT NOT NULL
-)`)
+// db.run(`CREATE TABLE IF NOT EXISTS payments (
+//     id INTEGER PRIMARY KEY AUTOINCREMENT,
+//     appl_no TEXT NOT NULL,
+//     appl_date TEXT NOT NULL,
+//     form_name TEXT NOT NULL,
+//     form_email TEXT NOT NULL,
+//     phoneNumber TEXT NOT NULL,
+//     paymentMode TEXT NOT NULL,
+//     planSelection TEXT NOT NULL,
+//     subscriptionOption TEXT NOT NULL,
+//     amount REAL NOT NULL,
+//     chosenPaymentMethod TEXT NOT NULL,
+//     transactionId TEXT NOT NULL
+// )`)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Create the payments table if it doesn't exist
+db.serialize(() => {
+    db.run(`
+        CREATE TABLE IF NOT EXISTS payments (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            application_number TEXT,
+            application_date TEXT,
+            name TEXT,
+            email TEXT,
+            phone_number TEXT,
+            payment_mode TEXT,
+            plan_selected TEXT,
+            subscription_option TEXT,
+            amount TEXT,
+            transaction_id TEXT,
+            screenshot BLOB
+        )
+    `);
+});
+
+
+
+
+
+
+
 
 
 
@@ -228,6 +269,90 @@ db.run(`
     amount REAL NOT NULL,
     FOREIGN KEY (installment_id) REFERENCES alldue(installment_id)
 )`);
+
+
+
+
+
+
+
+
+db.serialize(() => {
+    db.run(`CREATE TABLE IF NOT EXISTS bank (
+        appl_no INTEGER NOT NULL UNIQUE,
+        appl_date TEXT NOT NULL,
+        name TEXT,
+        amount INTEGER,
+        gender TEXT,
+        materialStatus TEXT,
+        educationQualification TEXT,
+        email TEXT,
+        dateOfBirth TEXT,
+        phoneNumber TEXT,
+        whatsappNumber TEXT,
+        isWhatsapp TEXT,
+        father TEXT,
+        mother TEXT,
+        occupation TEXT,
+        designation TEXT,
+        natureOfDuties TEXT,
+        presentEmployer TEXT,
+        lengthOfServiceBusiness TEXT,
+        workLocation TEXT,
+        annualIncome INTEGER,
+        panCardNumber TEXT,
+        aadhaarNumber TEXT,
+        currentAddress TEXT,
+        sameAddress TEXT,
+        permanentAddress TEXT,
+        pinCode TEXT,
+        city TEXT,
+        state TEXT,
+        country TEXT,
+        landmark TEXT,
+        foreignNational TEXT,
+        pepStatus TEXT,
+        bankName TEXT,
+        accountNumber TEXT,
+        MICR TEXT,
+        ifscCode TEXT,
+        accountType TEXT,
+        branchAddress TEXT,
+        nomineeName TEXT,
+        nomineeDOB TEXT,            
+        nomineeGender TEXT,
+        nomineeRelationship TEXT,
+        nomineePhoneNumber TEXT,
+        appointeeName TEXT,
+        appointeeRelationship TEXT,
+        paymentMode TEXT,  
+        planSelection TEXT,
+        subscriptionOption TEXT,
+        payor_name TEXT,
+        payor_relation TEXT,
+        payor_phone TEXT,
+        payor_email TEXT,
+        opt_option TEXT,
+        with_name TEXT,
+        with_relationship TEXT,
+        with_address TEXT,
+        with_city TEXT,
+        with_state TEXT,
+        with_country TEXT,
+        with_pincode TEXT,
+        with_landmark TEXT,
+        terms_accepted BOOLEAN, NEWbankName TEXT,
+        NEWaccountNumber TEXT,
+        NEWMICR TEXT,
+        NEWifscCode TEXT,
+        NEWaccountType TEXT,
+        NEWbranchAddress TEXT,DATE
+    )`);
+});
+
+
+
+
 
 
 module.exports = db;

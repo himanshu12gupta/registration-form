@@ -1,0 +1,522 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>ATIS Elite Club</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(to bottom, #002b5b, #00509e);
+        color: #ffffff;
+        overflow-x: hidden;
+      }
+  
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        text-align: center;
+      }
+  
+      h1 {
+        font-size: 3rem;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        animation: fadeIn 2s;
+      }
+  
+      p {
+        font-size: 1.2rem;
+        line-height: 1.6;
+        animation: fadeIn 3s;
+      }
+  
+      .cta-buttons {
+        margin-top: 30px;
+      }
+  
+      .cta-buttons a {
+        display: inline-block;
+        margin: 10px;
+        padding: 15px 30px;
+        font-size: 1.2rem;
+        color: #00509e;
+        background: #ffffff;
+        text-decoration: none;
+        border-radius: 5px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s, background-color 0.3s;
+      }
+  
+      .cta-buttons a:hover {
+        transform: scale(1.1);
+        background-color: #ffd700;
+      }
+  
+      .benefits {
+        margin-top: 40px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+      }
+  
+      .benefit-item {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        position: relative;
+        text-align: left;
+      }
+  
+      .benefit-item h3 {
+        margin: 0;
+        color: #ffd700;
+        font-size: 1.3rem;
+      }
+  
+      .benefit-item p {
+        margin: 10px 0 0;
+        font-size: 1rem;
+        line-height: 1.5;
+      }
+  
+      .benefit-item:hover {
+        transform: translateY(-5px);
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.15);
+      }
+  
+      .terms {
+        margin-top: 20px;
+        font-size: 0.9rem;
+        color: #ffd700;
+        text-align: center;
+      }
+  
+      footer {
+        margin-top: 50px;
+        padding: 30px 20px;
+        background: #003366;
+        text-align: center;
+      }
+  
+      footer p {
+        font-size: 1rem;
+        color: #ffffff;
+        margin: 5px 0;
+      }
+  
+      .social-icons {
+        margin-top: 20px;
+      }
+  
+      .social-icons a {
+        display: inline-block;
+        margin: 0 15px;
+        width: 40px;
+        height: 40px;
+        background: #ffffff;
+        color: #00509e;
+        border-radius: 50%;
+        line-height: 40px;
+        text-align: center;
+        font-size: 1.5rem;
+        transition: background 0.3s, color 0.3s, transform 0.3s;
+      }
+  
+      .social-icons a:hover {
+        background: #ffd700;
+        color: #00509e;
+        transform: scale(1.2);
+      }
+  
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+  
+      @media screen and (max-width: 768px) {
+        h1 {
+          font-size: 2rem;
+        }
+  
+        p {
+          font-size: 1rem;
+        }
+  
+        .cta-buttons a {
+          font-size: 1rem;
+          padding: 10px 20px;
+        }
+      }
+  
+      /* New styles for radio buttons and input fields */
+      .search-section {
+        margin-top: 30px;
+        display: none; /* Hidden by default */
+        text-align: center;
+      }
+  
+      .search-section input {
+        padding: 10px;
+        font-size: 1rem;
+        border-radius: 5px;
+        border: none;
+        margin-right: 10px;
+        width: 250px;
+      }
+  
+      .search-section button {
+        padding: 10px 20px;
+        font-size: 1rem;
+        background-color: #ffd700;
+        color: #00509e;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+  
+      .search-section button:hover {
+        background-color: #f9a825;
+      }
+  
+      .radio-buttons {
+        margin-top: 20px;
+        text-align: center;
+      }
+  
+      .radio-buttons label {
+        font-size: 1rem;
+        margin-right: 20px;
+      }
+  
+      /* Responsive adjustments for buttons */
+      .cta-buttons a {
+        display: inline-block;
+        width: 200px;
+        text-align: center;
+      }
+  
+      @media (max-width: 768px) {
+        .cta-buttons a {
+          width: 100%;
+          font-size: 1rem;
+          padding: 12px 0;
+        }
+      }
+      .table-container {
+        width: 100%;
+        margin: 30px auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow-x: auto; /* Makes the table horizontally scrollable if needed */
+      }
+  
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+  
+      th, td {
+        padding: 12px;
+        text-align: left;
+        border: 1px solid #ddd;
+      }
+  
+      th {
+        background-color: #004d99;
+        color: #fff;
+        font-weight: bold;
+      }
+  
+      td {
+        background-color: #f9f9f9;
+      }
+  
+      tr:nth-child(even) td {
+        background-color: #f2f2f2;
+      }
+  
+      tr:hover td {
+        background-color: #e6f2ff;
+      }
+  
+      /* Responsive styles for mobile view */
+      @media screen and (max-width: 768px) {
+        th, td {
+          padding: 8px;
+        }
+  
+        table {
+          font-size: 0.9rem;
+        }
+  
+        .table-container {
+          margin: 15px;
+          padding: 10px;
+        }
+      }
+  
+      .empty-table-message {
+        text-align: center;
+        padding: 20px;
+        font-size: 1.5rem;
+        color: #555;
+      }
+    </style>
+  </head>
+  <body>
+    <section id="jdu">
+    <div class="container">
+      <h1>Welcome to ATIS Elite Club</h1>
+      <p>Let’s Plan Today To Prepare Your Dreams For Tomorrow With “Anytime Invest”</p>
+      <p><strong>Features:</strong> Higher Returns, Dedicated RM, 100% Safety, Easy Withdrawal, Guaranteed Returns, Easy Login Process</p>
+      
+      <!-- Buttons for New Applicant and Resume Applicant -->
+      <div class="cta-buttons">
+        <a href="in" id="new-applicant-btn" onclick="handleButtonClick('new')">New Applicant</a>
+        <a href="#resumeApplicant" id="resume-applicant-btn" onclick="handleButtonClick('resume')">Resume Applicant</a>
+      </div>
+  
+<!-- HTML -->
+<div class="search-section" id="resume-search">
+  <input type="text" id="application-input" placeholder="Enter Application No" required>
+  <input type="text" id="pan-input" placeholder="Enter PAN No" required>
+  <button onclick="searchApplicant()">Search</button>
+</div>
+
+  
+      <div class="benefits">
+        <div class="benefit-item">
+          <h3>Guaranteed Returns</h3>
+          <p>Guaranteed return on the investment made with us under ATIS ELITE scheme.</p>
+        </div>
+        <div class="benefit-item">
+          <h3>No Tax Deduction</h3>
+          <p>Returns more than any bank fix deposits without any tax deduction source.</p>
+        </div>
+        <div class="benefit-item">
+          <h3>Diversify Portfolio</h3>
+          <p>Explore opportunities to diversify your portfolio beyond traditional market-linked instruments.</p>
+        </div>
+        <div class="benefit-item">
+          <h3>Small Investment</h3>
+          <p>Begin your investment journey with as little as Rs 50,000.</p>
+        </div>
+        <div class="benefit-item">
+          <h3>Safeguard Investments</h3>
+          <p>Ensure compliance and safeguard your investments with ease.</p>
+        </div>
+        <div class="benefit-item">
+          <h3>Consistent Growth</h3>
+          <p>Experience consistent portfolio performance across platforms.</p>
+        </div>
+        <div class="benefit-item">
+          <h3>Equity Holding</h3>
+          <p>Option to have an equity holding in the company.</p>
+        </div>
+      </div>
+  
+      <div class="terms">
+        <p>* Apply terms and conditions</p>
+      </div>
+  
+      <footer>
+        <p>Contact Us: 91 - 9818393867 | enquiry@anytimeinvest.com</p>
+        <p>Visit us at: <a href="http://www.anytimeinvest.com" target="_blank" style="color: #ffd700;">www.anytimeinvest.com</a></p>
+        <div class="social-icons">
+          <a href="#" title="Twitter">T</a>
+          <a href="#" title="Instagram">I</a>
+          <a href="#" title="Facebook">F</a>
+          <a href="#" title="LinkedIn">L</a>
+        </div>
+        <p>Thank you for considering ATIS Elite Club. We look forward to exceeding your expectations.</p>
+      </footer>
+    </div>
+  </section>
+  <section id="irj" style="display:none;">
+    <div class="table-container">
+      <h2>Applicant Table</h2>
+  
+      <table id="applicant-table">
+        <thead>
+          <tr>
+            <th>Appl No</th>
+            <th>Appl Date</th>
+            <th>Name</th>
+            <th>Amount</th>
+            <th>Gender</th>
+            <th>Material Status</th>
+            <th>Education Qualification</th>
+            <th>Email</th>
+            <th>Date of Birth</th>
+            <th>Phone Number</th>
+            <th>Whatsapp Number</th>
+            <th>Is Whatsapp</th>
+            <th>Father</th>
+            <th>Mother</th>
+            <th>Occupation</th>
+            <th>Designation</th>
+            <th>Nature of Duties</th>
+            <th>Present Employer</th>
+            <th>Length of Service</th>
+            <th>Work Location</th>
+            <th>Annual Income</th>
+            <th>Pan Card Number</th>
+            <th>Aadhaar Number</th>
+            <th>Current Address</th>
+            <th>Same Address</th>
+            <th>Permanent Address</th>
+            <th>Pin Code</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Country</th>
+            <th>Landmark</th>
+            <th>Foreign National</th>
+            <th>PEP Status</th>
+            <th>Bank Name</th>
+            <th>Account Number</th>
+            <th>MICR</th>
+            <th>IFSC Code</th>
+            <th>Account Type</th>
+            <th>Branch Address</th>
+            <th>Nominee Name</th>
+            <th>Nominee DOB</th>
+            <th>Nominee Gender</th>
+            <th>Nominee Relationship</th>
+            <th>Nominee Phone Number</th>
+            <th>Appointee Name</th>
+            <th>Appointee Relationship</th>
+            <th>Payment Mode</th>
+            <th>Plan Selection</th>
+            <th>Subscription Option</th>
+            <th>Payor Name</th>
+            <th>Payor Relation</th>
+            <th>Payor Phone</th>
+            <th>Payor Email</th>
+            <th>Opt Option</th>
+            <th>With Name</th>
+            <th>With Relationship</th>
+            <th>With Address</th>
+            <th>With City</th>
+            <th>With State</th>
+            <th>With Country</th>
+            <th>With Pincode</th>
+            <th>With Landmark</th>
+            <th>Terms Accepted</th>
+          </tr>
+        </thead>
+        <tbody>
+  
+        </tbody>
+      </table>
+    </div>
+  
+  </section>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+  
+    <script>
+function handleButtonClick(type) {
+  const resumeSearch = document.getElementById('resume-search');
+
+  if (type === 'resume') {
+    resumeSearch.style.display = 'block'; // Show the search inputs
+  } else {
+    resumeSearch.style.display = 'none'; // Hide the search inputs
+  }
+}
+
+  
+      function toggleSearchField(option) {
+        if (option === 'application') {
+          document.getElementById('application-search').style.display = 'block';
+          document.getElementById('pan-search').style.display = 'none';
+        } else if (option === 'pan') {
+          document.getElementById('application-search').style.display = 'none';
+          document.getElementById('pan-search').style.display = 'block';
+        }
+      }
+  
+
+
+
+//       function searchApplication() {
+//     const applNo = document.getElementById('application-input').value.trim();
+
+//     if (!applNo) {
+//         alert('Please enter an application number');
+//         return;
+//     }
+
+//     // Make an AJAX POST request to the server
+//     $.ajax({
+//         url: '/search-applicant',
+//         method: 'POST',
+//         contentType: 'application/json',
+//         data: JSON.stringify({ appl_no: applNo }),
+//         success: (response) => {
+//             if (response.success) {
+//                 // Store the fetched data in localStorage or sessionStorage
+//                 sessionStorage.setItem('applicantData', JSON.stringify(response.data));
+                
+//                 // Redirect to resumeApplicant.html
+//                 window.location.href = 'resumeApplicant.html';
+//             } else {
+//                 // Show error message
+//                 alert(response.message);
+//             }
+//         },
+//         error: () => {
+//             alert('An error occurred while searching for the application number.');
+//         }
+//     });
+// }
+
+
+function searchApplicant() {
+    const applNo = document.getElementById('application-input').value.trim();
+    const panNo = document.getElementById('pan-input').value.trim();
+
+    if (!applNo || !panNo) {
+      alert('Please enter both Application No and PAN No');
+      return;
+    }
+
+    // Make an AJAX POST request to the server
+    $.ajax({
+      url: '/search-applicant',
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({ appl_no: applNo, pan_no: panNo }),
+      success: (response) => {
+        if (response.success) {
+          // Store the fetched data in sessionStorage
+          sessionStorage.setItem('applicantData', JSON.stringify(response.data));
+
+          // Redirect to resumeApplicant.html
+          window.location.href = 'resumeApplicant.html';
+        } else {
+          // Show error message
+          alert(response.message);
+        }
+      },
+      error: () => {
+        alert('An error occurred while searching. Please try again.');
+      }
+    });
+  }
+    </script>
+
+  </body>
+  </html>

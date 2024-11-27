@@ -1,4 +1,6 @@
 const express = require('express');
+const multer = require('multer'); // For handling file uploads
+
 const bodyParser = require('body-parser');
 const path = require('path');
 const db = require('./database'); // Include the database connection
@@ -7,6 +9,16 @@ const ExcelJS = require('exceljs');
 
 const app = express();
 const port = 3002;
+
+
+
+// Set up Multer for file uploads
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+
+
+
 
 // Middleware
 app.use(bodyParser.json());
@@ -29,6 +41,8 @@ const saltRounds = 10;
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
+
+
 
 // Logout route
 app.post('/logout', (req, res) => {
@@ -820,51 +834,328 @@ app.get('/dashboard', isAdmin,(req, res) => {
 
 
 
-// Endpoint to save payment confirmation data to the database
-app.post('/savePaymentDetails', (req, res) => {
-    const paymentDetails = req.body;
+// // Endpoint to save payment confirmation data to the database
+// app.post('/savePaymentDetails', (req, res) => {
+//     const paymentDetails = req.body;
 
-    const query = `INSERT INTO payments (appl_no, appl_date, form_name, form_email, phoneNumber, paymentMode, planSelection, subscriptionOption, amount, chosenPaymentMethod, transactionId) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+//     const query = `INSERT INTO payments (appl_no, appl_date, form_name, form_email, phoneNumber, paymentMode, planSelection, subscriptionOption, amount, chosenPaymentMethod, transactionId) 
+//                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
+//     const params = [
+//         paymentDetails.appl_no,
+//         paymentDetails.appl_date,
+//         paymentDetails.form_name,
+//         paymentDetails.form_email,
+//         paymentDetails.phoneNumber,
+//         paymentDetails.paymentMode,
+//         paymentDetails.planSelection,
+//         paymentDetails.subscriptionOption,
+//         paymentDetails.amount,
+//         paymentDetails.chosenPaymentMethod,
+//         paymentDetails.transactionId
+//     ];
+
+//     db.run(query, params, function(err) {
+//         if (err) {
+//             console.error("Error inserting data:", err);
+//             res.status(500).send('Database error');
+//         } else {
+//             res.status(200).send('Payment details saved successfully');
+//         }
+//     });
+// });
+
+// app.get('/getPayments', (req, res) => {
+//     const query = `SELECT * FROM payments`;
+    
+//     db.all(query, [], (err, rows) => {
+//         if (err) {
+//             console.error("Error fetching payments:", err);
+//             res.status(500).send('Database error');
+//         } else {
+//             res.json(rows);
+//         }
+//     });
+// });
+
+
+
+
+
+
+
+
+
+
+
+// API to save payment confirmation data
+app.post('/api/save-payment', upload.single('screenshot'), (req, res) => {
+    const {
+        application_number,
+        application_date,
+        name,
+        email,
+        phone_number,
+        payment_mode,
+        plan_selected,
+        subscription_option,
+        amount,
+        transaction_id,
+    } = req.body;
+
+    const screenshot = req.file ? req.file.buffer : null; // Get the screenshot file as a binary blob
+
+    // Save data to the database
+    const query = `
+        INSERT INTO payments (
+            application_number, 
+            application_date, 
+            name, 
+            email, 
+            phone_number, 
+            payment_mode, 
+            plan_selected, 
+            subscription_option, 
+            amount, 
+            transaction_id, 
+            screenshot
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
     const params = [
-        paymentDetails.appl_no,
-        paymentDetails.appl_date,
-        paymentDetails.form_name,
-        paymentDetails.form_email,
-        paymentDetails.phoneNumber,
-        paymentDetails.paymentMode,
-        paymentDetails.planSelection,
-        paymentDetails.subscriptionOption,
-        paymentDetails.amount,
-        paymentDetails.chosenPaymentMethod,
-        paymentDetails.transactionId
+        application_number,
+        application_date,
+        name,
+        email,
+        phone_number,
+        payment_mode,
+        plan_selected,
+        subscription_option,
+        amount,
+        transaction_id,
+        screenshot,
     ];
 
-    db.run(query, params, function(err) {
+    db.run(query, params, function (err) {
         if (err) {
-            console.error("Error inserting data:", err);
-            res.status(500).send('Database error');
+            console.error('Error saving payment:', err);
+            res.status(500).json({ error: 'Failed to save payment' });
         } else {
-            res.status(200).send('Payment details saved successfully');
+            res.status(200).json({ success: true, message: 'Payment saved successfully', id: this.lastID });
         }
     });
 });
 
-app.get('/getPayments', (req, res) => {
-    const query = `SELECT * FROM payments`;
-    
+
+
+
+
+
+
+
+// Endpoint to save payment data
+app.post('/save-payment', (req, res) => {
+    const paymentData = req.body;
+
+    const query = `
+        INSERT INTO payments (
+            application_number,
+            application_date,
+            name,
+            email,
+            phone_number,
+            payment_mode,
+            plan_selected,
+            subscription_option,
+            amount,
+            transaction_id,
+            screenshot
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    // Convert base64 image to binary
+    const screenshotBuffer = Buffer.from(paymentData.screenshot.split(',')[1], 'base64');
+
+    // Insert data into the database
+    db.run(query, [
+        paymentData.application_number,
+        paymentData.application_date,
+        paymentData.name,
+        paymentData.email,
+        paymentData.phone_number,
+        paymentData.payment_mode,
+        paymentData.plan_selected,
+        paymentData.subscription_option,
+        paymentData.amount,
+        paymentData.transaction_id,
+        screenshotBuffer
+    ], function(err) {
+        if (err) {
+            console.error(err.message);
+            res.status(500).json({ error: 'Failed to save payment data' });
+            return;
+        }
+        res.status(200).json({ message: 'Payment data saved successfully!' });
+    });
+});
+
+
+
+
+
+
+// Fetch payments data
+app.get("/payments", (req, res) => {
+    const query = `
+        SELECT 
+            id,
+            application_number AS appl_no,
+            application_date AS appl_date,
+            name,
+            email,
+            phone_number AS phoneNumber,
+            payment_mode AS paymentMode,
+            plan_selected AS planSelection,
+            subscription_option AS subscriptionOption,
+            amount,
+            transaction_id AS transactionId,
+            screenshot
+        FROM payments
+    `;
+
     db.all(query, [], (err, rows) => {
         if (err) {
-            console.error("Error fetching payments:", err);
-            res.status(500).send('Database error');
-        } else {
-            res.json(rows);
+            console.error("Error fetching payments:", err.message);
+            return res.status(500).json({ error: "Failed to fetch payments" });
         }
+
+        // Map rows for frontend
+        const formattedRows = rows.map(row => ({
+            id: row.id,
+            appl_no: row.appl_no,
+            appl_date: row.appl_date,
+            name: row.name,
+            email: row.email,
+            phoneNumber: row.phoneNumber,
+            paymentMode: row.paymentMode,
+            planSelection: row.planSelection,
+            subscriptionOption: row.subscriptionOption,
+            amount: row.amount,
+            transactionId: row.transactionId,
+            screenshot: row.screenshot
+                ? Buffer.from(row.screenshot, "binary").toString("base64")
+                : null
+        }));
+
+        res.json(formattedRows);
     });
 });
 
 
+
+// // Route to search applicant by application number
+// app.post('/search-applicant', (req, res) => {
+//     const { appl_no } = req.body;
+    
+//     db.get(`SELECT * FROM applicant WHERE appl_no = ?`, [appl_no], (err, row) => {
+//         if (err) {
+//             return res.status(500).json({ error: 'Database error' });
+//         }
+//         if (row) {
+//             return res.json({ success: true, data: row });
+//         } else {
+//             return res.json({ success: false, message: 'Invalid application number' });
+//         }
+//     });
+// });
+
+
+// Search applicant route
+app.post('/search-applicant', (req, res) => {
+    const { appl_no, pan_no } = req.body;
+  
+    if (!appl_no || !pan_no) {
+      return res.status(400).json({ success: false, message: 'Application No and PAN No are required.' });
+    }
+  
+    // Query the database
+    const query = `SELECT * FROM applicant WHERE appl_no = ? AND panCardNumber = ?`;
+    db.get(query, [appl_no, pan_no], (err, row) => {
+      if (err) {
+        console.error(err.message);
+        return res.status(500).json({ success: false, message: 'Database error.' });
+      }
+  
+      if (row) {
+        // Match found
+        res.json({ success: true, data: row });
+      } else {
+        // No match
+        res.json({ success: false, message: 'Invalid Application No or PAN No.' });
+      }
+    });
+  });
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+ 
+// API to search for an applicant
+app.post("/searchApplicant", (req, res) => {
+    const { appl_no, panCardNumber } = req.body;
+    db.get(
+        "SELECT * FROM applicant WHERE appl_no = ? AND panCardNumber = ?",
+        [appl_no, panCardNumber],
+        (err, row) => {
+            if (err) return res.status(500).send("Database error");
+            if (!row) return res.status(404).send("Invalid application number or PAN card number");
+            res.json(row);
+        }
+    );
+});
+
+// API to update bank details
+app.post("/updateBankDetails", (req, res) => {
+    const { appl_no, bankName, accountNumber, MICR, ifscCode, accountType, branchAddress } = req.body;
+    db.run(
+        `UPDATE applicant SET bankName = ?, accountNumber = ?, MICR = ?, ifscCode = ?, accountType = ?, branchAddress = ? WHERE appl_no = ?`,
+        [bankName, accountNumber, MICR, ifscCode, accountType, branchAddress, appl_no],
+        function (err) {
+            if (err) return res.status(500).send("Database error");
+            res.send("Bank details updated successfully");
+        }
+    );
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applicant Resume</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .note {
+            background-color: #f0f0f0;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .pay-btn, .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .pay-btn:hover, .btn:hover {
+            background-color: #0056b3;
+        }
+        .hidden {
+            display: none;
+        }
+        .table-wrapper table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .table-wrapper th, .table-wrapper td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        input[type="text"], input[type="file"], button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px;
+            width: 80%;
+        }
+        input[type="text"] {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        #qr-code {
+            margin: 20px auto;
+        }
+        #confirmationPage img {
+            max-width: 100px;
+            max-height: 100px;
+            display: block;
+            margin: 10px auto;
+        }
+    </style>
+</head> 
+<body>
+<section id="iei">
+    <div class="container step1">
+        <h1>Applicant Resume</h1>
+        <div class="note">Please ensure all details below are correct before proceeding to payment.</div>
+        <div id="applicant-details" class="table-wrapper">
+            <!-- Applicant details table will be inserted here -->
+        </div>
+        <a class="pay-btn">Pay to Proceed</a>
+    </div>
+
+    <div class="container step2 hidden">
+        <h1>Payment Options</h1>
+        <div id="payment-methods">
+            <button class="btn" id="qr-payment">QR Payment</button>
+            <button class="btn" id="imps-payment">IMPS Payment</button>
+            <button class="btn" id="upi-payment">UPI Payment</button>
+            <button class="btn" id="neft-payment">NEFT/RTGS Payment</button>
+            <button class="btn" id="cheque-payment">Cheque Payment</button>
+        </div>
+        <div id="payment-details" class="hidden">
+            <!-- Dynamic payment details will be shown here -->
+        </div>
+        <button id="confirm-payment" disabled>Confirm Payment</button>
+    </div>
+
+    <div id="confirmationPage" class="hidden container step3">
+        <h3>Payment Confirmation</h3>
+        <ul class="list-unstyled">
+            <li><strong>Application Number:</strong> <span id="confirm_appl_no"></span></li>
+            <li><strong>Date:</strong> <span id="confirm_appl_date"></span></li>
+            <li><strong>Name:</strong> <span id="confirm_name"></span></li>
+            <li><strong>Email:</strong> <span id="confirm_email"></span></li>
+            <li><strong>Phone Number:</strong> <span id="confirm_phoneNumber"></span></li>
+            <li><strong>Payment Mode:</strong> <span id="confirm_paymentMode"></span></li>
+            <li><strong>Plan Selected:</strong> <span id="confirm_planSelection"></span></li>
+            <li><strong>Subscription Option:</strong> <span id="confirm_subscriptionOption"></span></li>
+            <li><strong>Amount:</strong> ₹<span id="confirm_amount"></span></li>
+            <li><strong>Payment Method Chosen:</strong> <span id="chosenPaymentMethod"></span></li>
+            <li><strong>Transaction ID:</strong> <span id="confirm_transactionId"></span></li>
+            <li><strong>Upload Screenshot:</strong> <img id="confirm_screenshot" src="" alt="Screenshot"></li>
+        </ul>
+        <button id="downloadPDFButton" class="btn btn-primary w-100 mt-3" onclick="downloadPDF()">Download PDF</button>
+    </div>
+    <div class="step4"></div>  
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const payToProceedButton = document.querySelector(".pay-btn");
+    const step1 = document.querySelector(".step1");
+    const step2 = document.querySelector(".step2");
+    const step3 = document.querySelector("#confirmationPage");
+    const applicantData = JSON.parse(sessionStorage.getItem("applicantData"));
+    const paymentDetails = document.getElementById("payment-details");
+    const confirmPaymentButton = document.getElementById("confirm-payment");
+    let selectedPaymentMethod = "";  // Variable to track the selected payment method
+    
+    if (applicantData) {
+        let table = '<table>';
+            table += `<tr><th>Application No</th><td>${applicantData.appl_no}</td></tr>`;
+                table += `<tr><th>Application Date</th><td>${applicantData.appl_date}</td></tr>`;
+                table += `<tr><th>Name</th><td>${applicantData.name}</td></tr>`;
+                table += `<tr><th>Amount</th><td>${applicantData.amount}</td></tr>`;
+                table += `<tr><th>Gender</th><td>${applicantData.gender}</td></tr>`;
+                table += `<tr><th>Material Status</th><td>${applicantData.materialStatus}</td></tr>`;
+                table += `<tr><th>Education Qualification</th><td>${applicantData.educationQualification}</td></tr>`;
+                table += `<tr><th>Email</th><td>${applicantData.email}</td></tr>`;
+                table += `<tr><th>Date of Birth</th><td>${applicantData.dateOfBirth}</td></tr>`;
+                table += `<tr><th>Phone Number</th><td>${applicantData.phoneNumber}</td></tr>`;
+                table += `<tr><th>Whatsapp Number</th><td>${applicantData.whatsappNumber}</td></tr>`;
+                table += `<tr><th>Pan Card Number</th><td>${applicantData.panCardNumber}</td></tr>`;
+                table += `<tr><th>Aadhaar Number</th><td>${applicantData.aadhaarNumber}</td></tr>`;
+                table += `<tr><th>Current Address</th><td>${applicantData.currentAddress}</td></tr>`;
+                table += `<tr><th>Permanent Address</th><td>${applicantData.permanentAddress}</td></tr>`;
+                table += `<tr><th>Nominee Name</th><td>${applicantData.nomineeName}</td></tr>`;
+                table += `<tr><th>Nominee Relationship</th><td>${applicantData.nomineeRelationship}</td></tr>`;
+                table += `<tr><th>Payment Mode</th><td>${applicantData.paymentMode}</td></tr>`;
+                table += `<tr><th>Plan Selection</th><td>${applicantData.planSelection}</td></tr>`;
+
+                // Add all other columns as required
+                table += `<tr><th>Father</th><td>${applicantData.father}</td></tr>`;
+                table += `<tr><th>Mother</th><td>${applicantData.mother}</td></tr>`;
+                table += `<tr><th>Occupation</th><td>${applicantData.occupation}</td></tr>`;
+                table += `<tr><th>Designation</th><td>${applicantData.designation}</td></tr>`;
+                table += `<tr><th>Nature of Duties</th><td>${applicantData.natureOfDuties}</td></tr>`;
+                table += `<tr><th>Present Employer</th><td>${applicantData.presentEmployer}</td></tr>`;
+                table += `<tr><th>Length of Service</th><td>${applicantData.lengthOfServiceBusiness}</td></tr>`;
+                table += `<tr><th>Work Location</th><td>${applicantData.workLocation}</td></tr>`;
+                table += `<tr><th>Annual Income</th><td>${applicantData.annualIncome}</td></tr>`;
+                table += `<tr><th>Bank Name</th><td>${applicantData.bankName}</td></tr>`;
+                table += `<tr><th>Account Number</th><td>${applicantData.accountNumber}</td></tr>`;
+                table += `<tr><th>MICR</th><td>${applicantData.MICR}</td></tr>`;
+                table += `<tr><th>IFSC Code</th><td>${applicantData.ifscCode}</td></tr>`;
+                table += `<tr><th>Account Type</th><td>${applicantData.accountType}</td></tr>`;
+                table += `<tr><th>Branch Address</th><td>${applicantData.branchAddress}</td></tr>`;
+                table += `<tr><th>Nominee Date of Birth</th><td>${applicantData.nomineeDOB}</td></tr>`;
+                table += `<tr><th>Nominee Gender</th><td>${applicantData.nomineeGender}</td></tr>`;
+                table += `<tr><th>Nominee Phone Number</th><td>${applicantData.nomineePhoneNumber}</td></tr>`;
+                table += `<tr><th>Appointee Name</th><td>${applicantData.appointeeName}</td></tr>`;
+                table += `<tr><th>Appointee Relationship</th><td>${applicantData.appointeeRelationship}</td></tr>`;
+                table += `<tr><th>Subscription Option</th><td>${applicantData.subscriptionOption}</td></tr>`;
+                table += `<tr><th>Payor Name</th><td>${applicantData.payor_name}</td></tr>`;
+                table += `<tr><th>Payor Relation</th><td>${applicantData.payor_relation}</td></tr>`;
+                table += `<tr><th>Payor Phone</th><td>${applicantData.payor_phone}</td></tr>`;
+                table += `<tr><th>Payor Email</th><td>${applicantData.payor_email}</td></tr>`;
+                table += `<tr><th>Opt Option</th><td>${applicantData.opt_option}</td></tr>`;
+                table += `<tr><th>With Name</th><td>${applicantData.with_name}</td></tr>`;
+                table += `<tr><th>With Relationship</th><td>${applicantData.with_relationship}</td></tr>`;
+                table += `<tr><th>With Address</th><td>${applicantData.with_address}</td></tr>`;
+                table += `<tr><th>With City</th><td>${applicantData.with_city}</td></tr>`;
+                table += `<tr><th>With State</th><td>${applicantData.with_state}</td></tr>`;
+                table += `<tr><th>With Country</th><td>${applicantData.with_country}</td></tr>`;
+                table += `<tr><th>With Pincode</th><td>${applicantData.with_pincode}</td></tr>`;
+                table += `<tr><th>With Landmark</th><td>${applicantData.with_landmark}</td></tr>`;
+                table += `<tr><th>Terms Accepted</th><td>${applicantData.terms_accepted ? 'Yes' : 'No'}</td></tr>`;
+
+                table += `</table>`;
+
+
+        // Insert the table into the page
+        document.getElementById('applicant-details').innerHTML = table;
+    } else {
+        document.getElementById('applicant-details').innerHTML = "<p>No applicant found.</p>";
+    }
+
+    payToProceedButton.addEventListener("click", function () {
+        step1.classList.add("hidden");
+        step2.classList.remove("hidden");
+    });
+
+    function createInputFields() {
+        return `
+            <input type="text" id="transaction-id" placeholder="Transaction ID">
+            <input type="file" id="screenshot">
+        `;
+    }
+
+    // Define payment methods
+    document.getElementById("qr-payment").addEventListener("click", function () {
+        const amount = applicantData.amount;
+        selectedPaymentMethod = "QR Payment"; // Set selected payment method as QR
+        paymentDetails.innerHTML = `
+            <h3>Scan the QR Code to Pay</h3>
+            <img id="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=750523150523@ybl&am=${amount}" alt="QR Code">
+            ${createInputFields()}
+        `;
+        paymentDetails.classList.remove("hidden");
+        confirmPaymentButton.disabled = false;
+    });
+
+    document.getElementById("imps-payment").addEventListener("click", function () {
+        selectedPaymentMethod = "IMPS Payment"; // Set selected payment method as IMPS
+        paymentDetails.innerHTML = `
+            <h3>IMPS Payment</h3>
+            <strong>Name:</strong> AnytimeInvest<br>
+            <strong>Account No.:</strong> 120410110002280<br>
+            <strong>IFSC Code:</strong> BKID0ARYAGB<br>
+            <strong>MICR Code:</strong> 110013254<br>
+            ${createInputFields()}
+        `;
+        paymentDetails.classList.remove("hidden");
+        confirmPaymentButton.disabled = false;
+    });
+
+    document.getElementById("upi-payment").addEventListener("click", function () {
+        selectedPaymentMethod = "UPI Payment"; // Set selected payment method as UPI
+        paymentDetails.innerHTML = `
+            <h3>UPI Payment</h3>
+            <strong>UPI ID:</strong> example@upi<br>
+            <strong>Amount:</strong> ₹${applicantData.amount}<br>
+            ${createInputFields()}
+        `;
+        paymentDetails.classList.remove("hidden");
+        confirmPaymentButton.disabled = false;
+    });
+
+    document.getElementById("neft-payment").addEventListener("click", function () {
+        selectedPaymentMethod = "NEFT/RTGS Payment"; // Set selected payment method as NEFT
+        paymentDetails.innerHTML = `
+            <h3>NEFT/RTGS Payment</h3>
+            <strong>Bank Name:</strong> AnyBank<br>
+            <strong>Account No.:</strong> 123456789012<br>
+            <strong>IFSC Code:</strong> ANYBANK123<br>
+            ${createInputFields()}
+        `;
+        paymentDetails.classList.remove("hidden");
+        confirmPaymentButton.disabled = false;
+    });
+
+    document.getElementById("cheque-payment").addEventListener("click", function () {
+        selectedPaymentMethod = "Cheque Payment"; // Set selected payment method as Cheque
+        paymentDetails.innerHTML = `
+            <h3>Cheque Payment</h3>
+            <strong>Cheque No.:</strong> 123456<br>
+            <strong>Bank Name:</strong> AnyBank<br>
+            ${createInputFields()}
+        `;
+        paymentDetails.classList.remove("hidden");
+        confirmPaymentButton.disabled = false;
+    });
+
+    confirmPaymentButton.addEventListener("click", function () {
+        step2.classList.add("hidden");
+        step3.classList.remove("hidden");
+        const todayDate = new Date().toLocaleDateString();
+
+        // Show data on step 3 confirmation page
+        document.getElementById("confirm_appl_no").textContent = applicantData.appl_no;
+        document.getElementById("confirm_appl_date").textContent = todayDate; // Use today's date here
+        document.getElementById("confirm_name").textContent = applicantData.name;
+        document.getElementById("confirm_email").textContent = applicantData.email;
+        document.getElementById("confirm_phoneNumber").textContent = applicantData.phoneNumber;
+        document.getElementById("confirm_paymentMode").textContent = selectedPaymentMethod; // Use dynamically set payment method
+        document.getElementById("confirm_planSelection").textContent = applicantData.planSelection;
+        document.getElementById("confirm_subscriptionOption").textContent = applicantData.subscriptionOption;
+        document.getElementById("confirm_amount").textContent = applicantData.amount;
+        document.getElementById("chosenPaymentMethod").textContent = selectedPaymentMethod; // Use dynamically set payment method
+        document.getElementById("confirm_transactionId").textContent = document.getElementById("transaction-id").value;
+        const screenshotFile = document.getElementById("screenshot").files[0];
+        if (screenshotFile) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById("confirm_screenshot").src = e.target.result;
+            };
+            reader.readAsDataURL(screenshotFile);
+        }
+    });
+
+
+
+    function savePaymentData() {
+    const formData = new FormData();
+    formData.append('application_number', document.getElementById("confirm_appl_no").textContent);
+    formData.append('application_date', new Date().toLocaleDateString()); // Use today's date here
+    formData.append('name', document.getElementById("confirm_name").textContent);
+    formData.append('email', document.getElementById("confirm_email").textContent);
+    formData.append('phone_number', document.getElementById("confirm_phoneNumber").textContent);
+    formData.append('payment_mode', document.getElementById("confirm_paymentMode").textContent);
+    formData.append('plan_selected', document.getElementById("confirm_planSelection").textContent);
+    formData.append('subscription_option', document.getElementById("confirm_subscriptionOption").textContent);
+    formData.append('amount', document.getElementById("confirm_amount").textContent);
+    formData.append('transaction_id', document.getElementById("confirm_transactionId").textContent);
+    const screenshotFile = document.getElementById("screenshot").files[0];
+    if (screenshotFile) {
+        formData.append('screenshot', screenshotFile);
+    }
+
+    fetch('/api/save-payment', {
+        method: 'POST',
+        body: formData,
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.success) {
+                alert('Payment saved successfully!');
+            } else {
+                alert('Failed to save payment. Please try again.');
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            alert('An error occurred while saving payment.');
+        });
+}
+
+// Call `savePaymentData()` after confirming the payment
+confirmPaymentButton.addEventListener("click", function () {
+    savePaymentData();
+});
+
+});
+</script>
+</body>
+</html>

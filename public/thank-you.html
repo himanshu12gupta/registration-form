@@ -106,8 +106,15 @@
             <p id="paymentMethodDetails"></p>
             <label for="transactionId">Enter Transaction ID:</label>
             <input type="text" id="transactionId" class="form-control mb-3" placeholder="Enter Transaction ID">
+            
+            <!-- Add the screenshot upload input field -->
+            <label for="screenshot">Upload Screenshot:</label>
+            <input type="file" id="screenshot" class="form-control mb-3" accept="image/*">
+            
+            <!-- Button to confirm payment -->
             <button id="confirmPaymentButton" class="btn btn-success w-100" disabled onclick="confirmPayment()">Confirm Payment</button>
         </div>
+        
     </div>
 
     <div id="confirmationPage" class="hidden container step3">
@@ -124,6 +131,8 @@
             <li><strong>Amount:</strong> ₹<span id="confirm_amount"></span></li>
             <li><strong>Payment Method Chosen:</strong> <span id="chosenPaymentMethod"></span></li>
             <li><strong>Transaction ID:</strong> <span id="confirm_transactionId"></span></li>
+            <li><strong>Uploaded Screenshot:</strong></li>
+            <li><img id="screenshotPreview" class="img-fluid" alt="Uploaded Screenshot" style="max-width: 100%;"></li>
         </ul>
         <button id="downloadPDFButton" class="btn btn-primary w-100 mt-3" onclick="downloadPDF()">Download PDF</button>
     </div>
@@ -235,6 +244,20 @@ function handleChequePayment() {
     showPaymentDetailsSection();
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         function showPaymentDetailsSection() {
             document.getElementById('paymentDetailsSection').classList.remove('hidden');
         }
@@ -250,42 +273,41 @@ function handleChequePayment() {
             }
         });
 
-        function confirmPayment() {
+ 
+
+        document.addEventListener('DOMContentLoaded', function () {
+    const fields = ['appl_no', 'appl_date', 'form_name', 'form_email', 'phoneNumber', 'paymentMode', 'planSelection', 'subscriptionOption', 'amount'];
+    fields.forEach(field => {
+        document.getElementById(field).textContent = localStorage.getItem(field) || 'N/A';
+    });
+
+    // Disable confirm payment until both fields are filled
+    document.getElementById('transactionId').addEventListener('input', checkPaymentDetails);
+    document.getElementById('screenshot').addEventListener('change', checkPaymentDetails);
+});
+
+function checkPaymentDetails() {
     const transactionId = document.getElementById('transactionId').value;
-    const paymentDetails = {
-        appl_no: localStorage.getItem('appl_no'),
-        appl_date: localStorage.getItem('appl_date'),
-        form_name: localStorage.getItem('form_name'),
-        form_email: localStorage.getItem('form_email'),
-        phoneNumber: localStorage.getItem('phoneNumber'),
-        paymentMode: localStorage.getItem('paymentMode'),
-        planSelection: localStorage.getItem('planSelection'),
-        subscriptionOption: localStorage.getItem('subscriptionOption'),
-        amount: localStorage.getItem('amount'),
-        chosenPaymentMethod: localStorage.getItem('chosenPaymentMethod'),
-        transactionId: transactionId
-    };
+    const screenshot = document.getElementById('screenshot').files.length > 0;
+    const confirmPaymentButton = document.getElementById('confirmPaymentButton');
 
-    // Send POST request to save the data in the database
-    fetch('/savePaymentDetails', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(paymentDetails)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            console.log('Payment details saved successfully');
-            // Optionally, redirect to a confirmation page or display a thank you message
-        } else {
-            console.log('Error saving payment details');
-        }
-    })
-    .catch(error => console.error('Error:', error));
+    // Enable Confirm Payment button only if both Transaction ID and Screenshot are filled
+    if (transactionId.length > 0 && screenshot) {
+        confirmPaymentButton.removeAttribute('disabled');
+    } else {
+        confirmPaymentButton.setAttribute('disabled', true);
+    }
+}
 
-    // Populate confirmation page                             
+function confirmPayment() {
+    // Store the transaction ID
+    localStorage.setItem('transactionId', document.getElementById('transactionId').value);
+
+    // Show the confirmation page (Step 3)
+    document.getElementById('paymentSection').classList.add('hidden');
+    document.getElementById('confirmationPage').classList.remove('hidden');
+
+    // Set the confirmation page details from localStorage
     document.getElementById('confirm_appl_no').textContent = localStorage.getItem('appl_no');
     document.getElementById('confirm_appl_date').textContent = localStorage.getItem('appl_date');
     document.getElementById('confirm_name').textContent = localStorage.getItem('form_name');
@@ -296,12 +318,68 @@ function handleChequePayment() {
     document.getElementById('confirm_subscriptionOption').textContent = localStorage.getItem('subscriptionOption');
     document.getElementById('confirm_amount').textContent = localStorage.getItem('amount');
     document.getElementById('chosenPaymentMethod').textContent = localStorage.getItem('chosenPaymentMethod');
-    document.getElementById('confirm_transactionId').textContent = transactionId;
+    document.getElementById('confirm_transactionId').textContent = localStorage.getItem('transactionId');
 
-    document.getElementById('paymentSection').classList.add('hidden');
-    document.getElementById('confirmationPage').classList.remove('hidden');
+    // Show the uploaded screenshot
+    const screenshotFile = document.getElementById('screenshot').files[0];
+    if (screenshotFile) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            document.getElementById('screenshotPreview').src = e.target.result;
+            
+            // Convert screenshot to base64
+            const screenshotBase64 = e.target.result;
+
+            // Send the data to the backend (including the screenshot)
+            sendPaymentData(screenshotBase64);
+        };
+        reader.readAsDataURL(screenshotFile);
+    }
 }
 
+function sendPaymentData(screenshotBase64) {
+    const paymentData = {
+        application_number: localStorage.getItem('appl_no'),
+        application_date: localStorage.getItem('appl_date'),
+        name: localStorage.getItem('form_name'),
+        email: localStorage.getItem('form_email'),
+        phone_number: localStorage.getItem('phoneNumber'),
+        payment_mode: localStorage.getItem('chosenPaymentMethod'),
+        // payment_mode: localStorage.getItem('paymentMode'),
+        plan_selected: localStorage.getItem('planSelection'),
+        subscription_option: localStorage.getItem('subscriptionOption'),
+        amount: localStorage.getItem('amount'),
+        transaction_id: localStorage.getItem('transactionId'),
+        screenshot: screenshotBase64, // The screenshot in base64 format
+    };
+
+    // Send data to the backend (e.g., using fetch or AJAX)
+    fetch('/save-payment', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(paymentData),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Payment data saved:', data);
+    })
+    .catch(error => {
+        console.error('Error saving payment data:', error);
+    });
+}
+
+
+
+
+
+
+
+
+
+
+        
 
         function downloadPDF() {
     const { jsPDF } = window.jspdf;

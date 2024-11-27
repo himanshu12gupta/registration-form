@@ -1,3 +1,53 @@
+
+
+// ================================================================for pending payment=======================================================================
+
+
+  // Show the resume options when the button is clicked
+  function showResumeOptions() {
+    document.getElementById("resume-options").style.display = "block";
+  }
+
+  // Toggle between showing input fields based on radio selection
+  function toggleInputField() {
+    var selectedOption = document.querySelector('input[name="resumeOption"]:checked');
+    
+    if (selectedOption) {
+      if (selectedOption.value === "application") {
+        document.getElementById("applicationNoField").style.display = "block";
+        document.getElementById("panNoField").style.display = "none";
+      } else if (selectedOption.value === "pan") {
+        document.getElementById("panNoField").style.display = "block";
+        document.getElementById("applicationNoField").style.display = "none";
+      }
+      document.getElementById("searchBtn").style.display = "block";
+    } else {
+      document.getElementById("applicationNoField").style.display = "none";
+      document.getElementById("panNoField").style.display = "none";
+      document.getElementById("searchBtn").style.display = "none";
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+
+
+
 let currentPage = 1;
 
 function showPage(page) {
@@ -179,3 +229,43 @@ function updateTable() {
   }
 }
 
+
+
+
+
+
+
+
+
+function showPreview() {
+  const form = document.getElementById('multiPageForm');
+  const previewContent = document.getElementById('previewContent');
+
+  // Clear existing preview content
+  previewContent.innerHTML = '';
+
+  // Get all inputs, selects, and textareas
+  const inputs = form.querySelectorAll('input, select, textarea');
+  
+  // Loop through all form elements
+  inputs.forEach(element => {
+    if (element.name) {
+      const label = element.previousElementSibling?.innerText || element.name; // Try to find label
+      const value = element.value || 'N/A'; // Get value or default to 'N/A'
+      previewContent.innerHTML += `<p><strong>${label}:</strong> ${value}</p>`;
+    }
+  });
+
+  // Show the preview modal
+  document.getElementById('previewModal').style.display = 'block';
+}
+
+function closePreview() {
+  // Hide the preview modal
+  document.getElementById('previewModal').style.display = 'none';
+}
+
+function submitForm() {
+  // Submit the form programmatically
+  document.getElementById('multiPageForm').submit();
+}

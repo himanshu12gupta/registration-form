@@ -30,10 +30,8 @@
         }
         .toast {
             position: fixed;
-            top: 0px; /* Position it at the top */
-            /* left: 50%; Center horizontally */
-            /* transform: translateX(-50%); Adjust for centering */
-            background-color: #f44336; /* Red */
+            top: 0px; 
+            background-color: #f44336;
             color: white;
             padding: 16px;
             border-radius: 5px;
@@ -63,13 +61,19 @@
                 <a class="nav-link text-light" href="/payment.html"  style="font-weight: bold;">Payments <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link text-light" href="/expiry-user.html"  style="font-weight: bold;">today <span class="sr-only">(current)</span></a>
+                <a class="nav-link text-light" href="/expiry-user.html"  style="font-weight: bold;">Today <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link text-light" href="/pending.html"  style="font-weight: bold;">pending <span class="sr-only">(current)</span></a>
+                <a class="nav-link text-light" href="/pending.html"  style="font-weight: bold;">Investment Amount <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link text-light" href="/alldues.html"  style="font-weight: bold;">complete <span class="sr-only">(current)</span></a>
+                <a class="nav-link text-light" href="/alldues.html"  style="font-weight: bold;">Paid <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link text-light" href="/change-bank.html"  style="font-weight: bold;">Update Account <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link text-light" href="/unpaid.html"  style="font-weight: bold;">Unpaid Users<span class="sr-only">(current)</span></a>
             </li>
           </ul>
          
@@ -87,10 +91,11 @@
         </div>
         <div>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>
+                <span class="navbar-toggler-icon">        </span>
+            </button> 
         </div>
       </nav>
+      
       <section>
         <br>
     <h1>Applicants</h1>
@@ -102,25 +107,28 @@
                 <tr>
                     <th>Serial No</th>
                     <th>Application No</th>
-                    <th>Application Date</th>
+                    <th>Application Purchasing Date</th>
                     <th>Name</th>
                     <th>Gender</th>
                     <th>Email</th>
                     <th>Date of Birth</th>
                     <th>Phone Number</th>
-                    <th>From Date</th>
-                    <th>Expiry Date</th>
+                    <th>Agreement Start Date</th>
+                    <th>Agreement End date</th>
+                    <th>LockIN Free Date</th>
+                    <th>Due Date</th>
                     <th>Whatsapp Number</th>
                     <th>Pan Card Number</th>
                     <th>Aadhaar Number</th>
                     <th>Current Address</th>
-                    <th>Same Address</th>
-                    <th>Permanent Address</th>
+                    <th>Landmark</th>
+                    <th>Area</th>
                     <th>Pin Code</th>
                     <th>City</th>
                     <th>State</th>
                     <th>Country</th>
-                    <th>Landmark</th>
+                    <th>Permanent Address Same as Current Address</th>
+                    <th>Permanent Address</th>
                     <th>Foreign National</th>
                     <th>PEP Status</th>
                     <th>Bank Name</th>
@@ -137,22 +145,31 @@
                     <th>Appointee Name</th>
                     <th>Appointee Relationship</th>
                     <th>Payment Mode</th>
+                    <th>Invested Amount</th>
                     <th>Plan Selection</th>
-                    <th>Subscription Option</th>
+                    <th>Income Option</th>
+                    <th>Scheme Name</th>
+                    <th>Tenure</th>
+                    <th>lock In</th>
+                    <th>Interest</th>
+                    <th>Loyality Bonus</th>
+                    <th>LockIn Free date</th>
                     <th>Payor Name</th>
-                    <th>Payor Relation</th>
-                    <th>Payor Phone</th>
+                    <th>Payor Relationship</th>
+                    <th>Payor Phone no</th>
                     <th>Payor Email</th>
-                    <th>Opt Option</th>
-                    <th>With Name</th>
-                    <th>With Relationship</th>
-                    <th>With Address</th>
-                    <th>With City</th>
-                    <th>With State</th>
-                    <th>With Country</th>
-                    <th>With Pincode</th>
-                    <th>With Landmark</th>
-                    <th>Action</th>
+                    <th>Online Agreement opt option</th>
+                    <th>withness Name</th>
+                    <th>Withness Relationship</th>
+                    <th>Withness Address</th>
+                    <th>Withness Landmark</th>
+                    <th>Withness Pincode</th>
+                    <th>Withness City</th>
+                    <th>Withness State</th>
+                    <th>Withness Country</th>
+                    <th>Agreement Term & Condition Accepted</th>
+                    <th>Status</th>
+                    <th>Installments</th>
                 </tr>
             </thead>
             <tbody>
@@ -200,6 +217,64 @@ function logout() {
 }
 
 
+
+
+
+
+
+
+
+// Function to handle the logic and set scheme details based on conditions
+function getSchemeDetails(planSelection, subscriptionOption) {
+    let schemeName = '';
+    let tenure = '';
+    let lockIn = '';
+    let interest = '';
+    let loyaltyBonus = '';
+
+    // Define the conditions and their respective values
+    const conditions = {
+        'A': {
+            'monthly': { schemeName: 'ELITE EXECUTIVE', tenure: '5 YEARS', lockIn: '5 YEARS', interest: '11%', loyaltyBonus: '0%' },
+            'quarterly': { schemeName: 'ELITE EXECUTIVE', tenure: '5 YEARS', lockIn: '5 YEARS', interest: '11%', loyaltyBonus: '0%' },
+            'halfyearly': { schemeName: 'ELITE EXECUTIVE', tenure: '5 YEARS', lockIn: '5 YEARS', interest: '11%', loyaltyBonus: '0%' },
+            'yearly': { schemeName: 'ELITE EXECUTIVE', tenure: '5 YEARS', lockIn: '5 YEARS', interest: '11%', loyaltyBonus: '1%' }
+        },
+        'B': {
+            'monthly': { schemeName: 'ELITE EXECUTIVE PRO', tenure: '5 YEARS', lockIn: '3 YEARS', interest: '10%', loyaltyBonus: '0%' },
+            'quarterly': { schemeName: 'ELITE EXECUTIVE PRO', tenure: '5 YEARS', lockIn: '3 YEARS', interest: '10%', loyaltyBonus: '0%' },
+            'halfyearly': { schemeName: 'ELITE EXECUTIVE PRO', tenure: '5 YEARS', lockIn: '3 YEARS', interest: '10%', loyaltyBonus: '0%' },
+            'yearly': { schemeName: 'ELITE EXECUTIVE PRO', tenure: '5 YEARS', lockIn: '3 YEARS', interest: '10%', loyaltyBonus: '1%' }
+        },
+        'D': {
+            'quarterly': { schemeName: 'ELITE EXECUTIVE PRO', tenure: '3 YEARS', lockIn: '1 YEAR', interest: '10%', loyaltyBonus: '2%' },
+            'halfyearly': { schemeName: 'ELITE EXECUTIVE PRO', tenure: '3 YEARS', lockIn: '1 YEAR', interest: '10%', loyaltyBonus: '2%' },
+            'yearly': { schemeName: 'ELITE EXECUTIVE PRO', tenure: '3 YEARS', lockIn: '1 YEAR', interest: '10%', loyaltyBonus: '2%' }
+        }
+    };
+
+    // Get the appropriate details based on planSelection and subscriptionOption
+    if (conditions[planSelection] && conditions[planSelection][subscriptionOption]) {
+        const schemeDetails = conditions[planSelection][subscriptionOption];
+        schemeName = schemeDetails.schemeName;
+        tenure = schemeDetails.tenure;
+        lockIn = schemeDetails.lockIn;
+        interest = schemeDetails.interest;
+        loyaltyBonus = schemeDetails.loyaltyBonus;
+    }
+
+    return { schemeName, tenure, lockIn, interest, loyaltyBonus };
+}
+
+
+
+
+
+
+
+
+
+
 // Fetch applicants data
 fetch('/applicants')
     .then(response => {
@@ -223,6 +298,13 @@ fetch('/applicants')
             noDataMessage.style.display = 'none'; // Hide no data message
             data.forEach((applicant,index) => {
                 const row = document.createElement('tr');
+
+
+
+                const { schemeName, tenure, lockIn, interest, loyaltyBonus } = getSchemeDetails(applicant.planSelection, applicant.subscriptionOption);
+
+
+
                  // Attach the onclick event listener to each row
                         row.onclick = function() {
                             handleRowClick(applicant);
@@ -231,6 +313,14 @@ fetch('/applicants')
                             window.location.href = `/applicant/${index+1}/installments`; // Use the correct route for your server
 
                         }
+
+
+                                            // Highlight rows with "unpaid" status
+                    if (applicant.status === 'unpaid') {
+                        row.style.backgroundColor = 'yellow';
+                    }
+
+
                 row.innerHTML = `
                     <td>${index+1}</td>
                     <td>${applicant.appl_no}</td>
@@ -241,18 +331,21 @@ fetch('/applicants')
                     <td>${applicant.dateOfBirth}</td>
                     <td>${applicant.phoneNumber}</td>
                     <td>${applicant.from_date}</td>
+                    <td>$                     </td>
+                    <td>$                     </td>
                     <td>${applicant.expiry_date}</td>
                     <td>${applicant.whatsappNumber}</td>
                     <td>${applicant.panCardNumber}</td>
                     <td>${applicant.aadhaarNumber}</td>
                     <td>${applicant.currentAddress}</td>
-                    <td>${applicant.sameAddress}</td>
-                    <td>${applicant.permanentAddress}</td>
+                    <td>${applicant.landmark}</td>
+                    <td>${applicant.area}</td>
                     <td>${applicant.pinCode}</td>
                     <td>${applicant.city}</td>
-                    <td>${applicant.state}</td>
+                    <td>${applicant.state}</td> 
                     <td>${applicant.country}</td>
-                    <td>${applicant.landmark}</td>
+                    <td>${applicant.sameAddress}</td>
+                    <td>${applicant.permanentAddress}</td>                    
                     <td>${applicant.foreignNational}</td>
                     <td>${applicant.pepStatus}</td>
                     <td>${applicant.bankName}</td>
@@ -269,8 +362,15 @@ fetch('/applicants')
                     <td>${applicant.appointeeName}</td>
                     <td>${applicant.appointeeRelationship}</td>
                     <td>${applicant.paymentMode}</td>
+                    <td>${applicant.amount}</td>
                     <td>${applicant.planSelection}</td>
                     <td>${applicant.subscriptionOption}</td>
+                    <td>${schemeName}</td>
+                    <td>${tenure}</td>
+                    <td>${lockIn}</td>
+                    <td>${interest}</td>
+                    <td>${loyaltyBonus}</td>  
+                    <td>$              </td>
                     <td>${applicant.payor_name}</td>
                     <td>${applicant.payor_relation}</td>
                     <td>${applicant.payor_phone}</td>
@@ -279,13 +379,15 @@ fetch('/applicants')
                     <td>${applicant.with_name}</td>
                     <td>${applicant.with_relationship}</td>
                     <td>${applicant.with_address}</td>
+                    <td>${applicant.with_landmark}</td>
+                    <td>${applicant.with_pincode}</td>
                     <td>${applicant.with_city}</td>
                     <td>${applicant.with_state}</td>
                     <td>${applicant.with_country}</td>
-                    <td>${applicant.with_pincode}</td>
-                    <td>${applicant.with_landmark}</td>
-                    <td><button onclick="createInstallment(${applicant.appl_no})">Create Installment</button></td>
-
+                   <td>${applicant.terms_accepted}</td>
+                    <td>${applicant.status}</td>
+                    <td><button onclick="createInstallment(${applicant.appl_no})">Create Installment</button>
+                     </td>
                 `;
                 tableBody.appendChild(row);
             });
@@ -320,6 +422,9 @@ function createInstallment(applicantId) {
             });
         }
 
+
+
+
 fetch('/expiry-user')
     .then(response => response.json())
     .then(data => {
@@ -345,6 +450,77 @@ fetch('/expiry-user')
         }
     })
     .catch(err => console.error(err));
+
+
+
+
+    // First, fetch the appl_no from the applicant table
+db.get("SELECT appl_no FROM applicant WHERE appl_no = ?", [yourApplNo], function(err, row) {
+    if (err) {
+        console.error(err);
+        return;
+    }
+
+    if (row) {
+        let appl_no = row.appl_no;
+
+        // Fetch the due_date for the first and last installment for this appl_no
+        db.all(`
+            SELECT due_date FROM installment
+            WHERE appl_no = ? 
+            ORDER BY installment_id ASC
+        `, [appl_no], function(err, rows) {
+            if (err) {
+                console.error(err);
+                return;
+            }
+
+            if (rows.length > 0) {
+                // Get the start_date (first installment due_date)
+                let start_date = rows[0].due_date;
+
+                // Get the end_date (last installment due_date)
+                let end_date = rows[rows.length - 1].due_date;
+
+                // Update the applicant table with the start_date and end_date
+                db.run(`
+                    UPDATE applicant
+                    SET start_date = ?, end_date = ?
+                    WHERE appl_no = ?
+                `, [start_date, end_date, appl_no], function(err) {
+                    if (err) {
+                        console.error(err);
+                    } else {
+                        console.log('Applicant table updated with start_date and end_date');
+                    }
+                });
+            } else {
+                console.log('No installments found for this applicant');
+            }
+        });
+    } else {
+        console.log('Applicant not found');
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     </script>
 </body>
 </html>

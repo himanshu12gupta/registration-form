@@ -1,210 +1,105 @@
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Due Installments</title>
+    <title>Upcoming Expiry</title>
     <style>
-        /* body {
+        body {
             font-family: Arial, sans-serif;
-            margin: 20px;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin: 20px 0;
         }
-        table, th, td {
+        th, td {
             border: 1px solid #ddd;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-        th {
-            background-color: #f4f4f4;
-        } */
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        table, th, td {
-            border: 1px solid black;
-        }
-        th, td {
             padding: 8px;
             text-align: left;
         }
         th {
-            background-color: #f2f2f2;
+            background-color: #f4f4f4;
         }
-        .scrollable-table {
-            height: 400px;
-            overflow-y: auto;
-            display: block;
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
         }
-        #noDataMessage {
-            display: none;
-            font-size: 18px;
-            color: red;
+        tr:hover {
+            background-color: #f1f1f1;
         }
-        .toast {
-            position: fixed;
-            top: 0px; /* Position it at the top */
-            /* left: 50%; Center horizontally */
-            /* transform: translateX(-50%); Adjust for centering */
-            background-color: #f44336; /* Red */
-            color: white;
-            padding: 16px;
-            border-radius: 5px;
-            z-index: 1000;
+        h1 {
+            text-align: center;
+            color: #333;
         }
     </style>
-     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
- </head>
+</head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-primary d-flex">
-        <div>
-            <a class="navbar-brand text-light" href="#" style="font-weight: bold;">Admin</a>
-        </div>
-              
-        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-          <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-            <li class="nav-item active">
-              <a class="nav-link text-light" style="font-weight: bold;" href="/applicants-page">Applicants</a>
-            <!-- <li class="nav-item active">
-                <a class="nav-link text-light" href="/dashboard"  style="font-weight: bold;">Expiry users <span class="sr-only">(current)</span></a>
-            </li> -->
-            <li class="nav-item active">
-                <a class="nav-link text-light" href="/payment.html"  style="font-weight: bold;">Payments <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item active">
-                <a class="nav-link text-light" href="/expiry-user.html"  style="font-weight: bold;">today <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item active">
-                <a class="nav-link text-light" href="/pending.html"  style="font-weight: bold;">pending <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item active">
-                <a class="nav-link text-light" href="/alldues.html"  style="font-weight: bold;">complete <span class="sr-only">(current)</span></a>
-            </li>
-          </ul>
-         
-          <!-- <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-          </form> -->
-        </div>
-        <div>
-            <ul class="navbar-nav mt-2 mt-lg-0 text-primary" >
-                <li class="nav-item active" >
-                    <a class="nav-link text-light" onclick="logout()" style="cursor: pointer;font-weight: bold;">logout</a>
-                </li>
-              </ul>
-        </div>
-        <div>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>
-        </div>
-      </nav>
-      <section>
-        <br>
-
-    <h1>Installments Due in 30 Days</h1>
-
-    <!-- Table to display the due installments -->
-    <table id="installments-table">
+    <h1>Upcoming Expiry Records</h1>
+    <table id="expiryTable">
         <thead>
             <tr>
-                <th>Installment ID</th>
-                <th>Applicant ID</th>
-                <th>Due Date</th>
+                <th>Application No</th>
+                <th>Application Date</th>
+                <th>Name</th>
                 <th>Amount</th>
-                <th>Status</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Bank Name</th>
+                <th>Account Number</th>
+                <th>MICR</th>
+                <th>IFSC Code</th>
+                <th>Account Type</th>
+                <th>Branch Address</th>
+                <th>Installment ID</th>
+                <th>Due Date</th>
+                <th>Installment Amount</th>
+                <th>Created At</th>
             </tr>
         </thead>
         <tbody>
-            <!-- Data will be populated here by JavaScript -->
+            <!-- Data will be dynamically inserted here -->
         </tbody>
     </table>
-    </section>
+
     <script>
-        // Function to sort the due installments by due date (newest first)
-        function fetchDueInstallments() {
-            fetch('/api/due-installments')
-                .then(response => response.json())
-                .then(data => {
-                    const tableBody = document.querySelector('#installments-table tbody');
-                    tableBody.innerHTML = ''; // Clear any previous data
-    
-                    if (data.length === 0) {
-                        const row = document.createElement('tr');
-                        const cell = document.createElement('td');
-                        cell.colSpan = 5;
-                        cell.textContent = 'No installments due in the next 30 days.';
-                        row.appendChild(cell);
-                        tableBody.appendChild(row);
-                    } else {
-                        // Sort the data by due_date (newest first)
-                        data.sort((a, b) => new Date(b.due_date) - new Date(a.due_date));
-    
-                        // Create table rows for each installment
-                        data.forEach(installment => {
-                            const row = document.createElement('tr');
-    
-                            const cell1 = document.createElement('td');
-                            cell1.textContent = installment.installment_id;
-                            row.appendChild(cell1);
-    
-                            const cell2 = document.createElement('td');
-                            cell2.textContent = installment.applicant_id;
-                            row.appendChild(cell2);
-    
-                            const cell3 = document.createElement('td');
-                            cell3.textContent = installment.due_date;
-                            row.appendChild(cell3);
-    
-                            const cell4 = document.createElement('td');
-                            cell4.textContent = installment.amount;
-                            row.appendChild(cell4);
-    
-                            const cell5 = document.createElement('td');
-                            cell5.textContent = installment.status;
-                            row.appendChild(cell5);
-    
-                            tableBody.appendChild(row);
-                        });
-    
-                        // After displaying data, update alldue table with applicant info
-                        updateAlldueTable();
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching due installments:', error);
+        // Function to fetch and display expiry data
+        async function fetchExpiryData() {
+            try {
+                const response = await fetch('/api/upcoming-expiry');
+                const data = await response.json();
+
+                const tableBody = document.querySelector('#expiryTable tbody');
+                tableBody.innerHTML = ''; // Clear any existing rows
+
+                data.forEach(row => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${row.appl_no || ''}</td>
+                        <td>${row.appl_date || ''}</td>
+                        <td>${row.name || ''}</td>
+                        <td>${row.amount || ''}</td>
+                        <td>${row.email || ''}</td>
+                        <td>${row.phoneNumber || ''}</td>
+                        <td>${row.bankName || ''}</td>
+                        <td>${row.accountNumber || ''}</td>
+                        <td>${row.MICR || ''}</td>
+                        <td>${row.ifscCode || ''}</td>
+                        <td>${row.accountType || ''}</td>
+                        <td>${row.branchAddress || ''}</td>
+                        <td>${row.installment_id || ''}</td>
+                        <td>${row.due_date || ''}</td>
+                        <td>${row.installment_amount || ''}</td>
+                        <td>${row.created_at || ''}</td>
+                    `;
+                    tableBody.appendChild(tr);
                 });
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
         }
-    
-        // Function to update alldue table with additional information from applicant table
-        function updateAlldueTable() {
-            fetch('/api/update-alldue-with-applicant-info')
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data.message); // Confirmation message
-                })
-                .catch(error => {
-                    console.error('Error updating alldue table:', error);
-                });
-        }
-    
-        window.onload = fetchDueInstallments;
+
+        // Fetch data on page load
+        fetchExpiryData();
     </script>
-    
 </body>
 </html>

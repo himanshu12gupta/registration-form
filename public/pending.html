@@ -3,25 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pending Payments</title>
+    <title>Pending Installments</title>
     <style>
-        /* table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        table, th, td {
-            border: 1px solid black;
-        }
-        th, td {
-            padding: 8px;
-            text-align: left;
-        } */
-        .hidden {
-            display: none;
-        }
-        .date-input {
-            display: none;
-        }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -33,203 +16,94 @@
             padding: 8px;
             text-align: left;
         }
-        th {
-            background-color: #f2f2f2;
-        }
-        .scrollable-table {
-            height: 400px;
-            overflow-y: auto;
-            display: block;
-        }
-        #noDataMessage {
-            display: none;
-            font-size: 18px;
-            color: red;
-        }
-        .toast {
-            position: fixed;
-            top: 0px; /* Position it at the top */
-            /* left: 50%; Center horizontally */
-            /* transform: translateX(-50%); Adjust for centering */
-            background-color: #f44336; /* Red */
-            color: white;
-            padding: 16px;
-            border-radius: 5px;
-            z-index: 1000;
-        }
-
     </style>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-primary d-flex">
-        <div>
-            <a class="navbar-brand text-light" href="#" style="font-weight: bold;">Admin</a>
-        </div>
-              
-        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-          <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-            <li class="nav-item active">
-              <a class="nav-link text-light" style="font-weight: bold;" href="/applicants-page">Applicants</a>
-            <!-- <li class="nav-item active">
-                <a class="nav-link text-light" href="/dashboard"  style="font-weight: bold;">Expiry users <span class="sr-only">(current)</span></a>
-            </li> -->
-            <li class="nav-item active">
-                <a class="nav-link text-light" href="/payment.html"  style="font-weight: bold;">Payments <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item active">
-                <a class="nav-link text-light" href="/expiry-user.html"  style="font-weight: bold;">today <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item active">
-                <a class="nav-link text-light" href="/pending.html"  style="font-weight: bold;">pending <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item active">
-                <a class="nav-link text-light" href="/alldues.html"  style="font-weight: bold;">complete <span class="sr-only">(current)</span></a>
-            </li>
-          </ul>
-         
-          <!-- <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-          </form> -->
-        </div>
-        <div>
-            <ul class="navbar-nav mt-2 mt-lg-0 text-primary" >
-                <li class="nav-item active" >
-                    <a class="nav-link text-light" onclick="logout()" style="cursor: pointer;font-weight: bold;">logout</a>
-                </li>
-              </ul>
-        </div>
-        <div>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>
-        </div>
-      </nav>
-      <section>
-        <br>
-    <h1>Pending Payments (Due within 30 days)</h1>
-    <table id="pending-table">
+    <h2>Pending Installments</h2>
+    <table id="installmentsTable">
         <thead>
             <tr>
-                <th>Installment Id</th>
+                <th>Appl No</th>
+                <th>Appl Date</th>
                 <th>Name</th>
-                <th>Due Date</th>
-                <th>Due Amount</th>
-                <th>Status</th>
-                <th>Applicant No</th>
+                <th>Amount</th>
                 <th>Email</th>
-                <th>Phone Number</th>
-                <th>Total Amount</th>
-                <th>Payment Mode</th>
-                <th>Plan Selection</th>
-                <th>Subscription Option</th>
+                <th>Phone</th>
                 <th>Bank Name</th>
-                <th>Account Number</th>
-                <th>MICR</th>
-                <th>IFSC Code</th>
-                <th>Account Type</th>
-                <th>Branch Address</th>
+                <th>Account No</th>
+                <th>Installment ID</th>
+                <th>Due Date</th>
+                <th>Installment Amount</th>
+                <th>Paid Date</th>
                 <th>Action</th>
             </tr>
         </thead>
         <tbody>
-            <!-- Rows will be inserted dynamically -->
+            <!-- Data will be populated by JavaScript -->
         </tbody>
     </table>
-    
-</section>
-<script>
 
-        // Fetch the pending data from backend when page loads
-        fetch('/get-pending')
+    <script>
+        // Fetch pending installments from server
+        fetch('/fetch-pending-installments')
             .then(response => response.json())
             .then(data => {
-                const tableBody = document.querySelector('#pending-table tbody');
-
-                // Dynamically add rows to the table
+                const tableBody = document.querySelector('#installmentsTable tbody');
                 data.forEach(row => {
                     const tr = document.createElement('tr');
-                    tr.dataset.applicantId = row.applicant_id;
-                    tr.dataset.dueDate = row.due_date;
 
                     tr.innerHTML = `
-                        <td>${row.installment_id}</td>
-                        <td>${row.name}</td>
-
-                        <td>${row.due_date}</td>
-                        <td>${row.due_amount}</td>
-                        <td>${row.status}</td>
                         <td>${row.appl_no}</td>
+                        <td>${row.appl_date}</td>
+                        <td>${row.name}</td>
+                        <td>${row.amount}</td>
                         <td>${row.email}</td>
                         <td>${row.phoneNumber}</td>
-                        <td>${row.amount}</td>
-                        <td>${row.paymentMode}</td>
-                        <td>${row.planSelection}</td>
-                        <td>${row.subscriptionOption}</td>
                         <td>${row.bankName}</td>
                         <td>${row.accountNumber}</td>
-                        <td>${row.MICR}</td>
-                        <td>${row.ifscCode}</td>
-                        <td>${row.accountType}</td>
-                        <td>${row.branchAddress}</td>
-                        <td>
-                            <button class="paid-btn">Mark as Paid</button>
-                            <div class="date-input">
-                                <input type="date" class="payment-date" />
-                                <button class="ok-btn">OK</button>
-                            </div>
-                        </td>
+                        <td>${row.installment_id}</td>
+                        <td>${row.due_date}</td>
+                        <td>${row.installment_amount}</td>
+                        <td><input type="date" id="paidDate_${row.installment_id}" /></td>
+                        <td><button onclick="markPaid(${row.appl_no}, ${row.installment_id})">Mark as Paid</button></td>
                     `;
                     tableBody.appendChild(tr);
-
-                    // Add event listener to the "Mark as Paid" button
-                    const paidBtn = tr.querySelector('.paid-btn');
-                    const dateInputDiv = tr.querySelector('.date-input');
-                    const paymentDateInput = tr.querySelector('.payment-date');
-                    const okBtn = tr.querySelector('.ok-btn');
-
-                    paidBtn.addEventListener('click', () => {
-                        // Show the date input field and OK button
-                        dateInputDiv.style.display = 'block';
-                        paidBtn.disabled = true; // Disable the button after clicking once
-                    });
-
-                    // Add event listener to the "OK" button
-                    okBtn.addEventListener('click', () => {
-                        const paymentDate = paymentDateInput.value;
-                        if (paymentDate) {
-                            // Send data to backend to update the payment
-                            fetch('/mark-paid', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({
-                                    applicant_id: row.applicant_id,
-                                    due_date: row.due_date,
-                                    payment_date: paymentDate,
-                                    installment_id: row.installment_id
-                                })
-                            })
-                            .then(response => response.text())
-                            .then(() => {
-                                // Hide the row once payment is confirmed
-                                tr.classList.add('hidden');
-                            })
-                            .catch(error => console.error('Error updating payment:', error));
-                        } else {
-                            alert("Please enter a payment date.");
-                        }
-                    });
                 });
+            });
+
+        // Function to mark an installment as paid
+        function markPaid(appl_no, installment_id) {
+            const paidDate = document.getElementById(`paidDate_${installment_id}`).value;
+            if (!paidDate) {
+                alert('Please fill in the paid date.');
+                return;
+            }
+
+            const data = {
+                appl_no: appl_no,
+                installment_id: installment_id,
+                paid_date: paidDate
+            };
+
+            fetch('/mark-paid', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
             })
-            .catch(error => console.error('Error fetching pending data:', error));
+            .then(response => response.json())
+            .then(result => {
+                alert(result.message);
+                if (result.message === 'Installment marked as paid and moved to paided table.') {
+                    location.reload(); // Reload the page to remove the row
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred.');
+            });
+        }
     </script>
-
-
 </body>
 </html>

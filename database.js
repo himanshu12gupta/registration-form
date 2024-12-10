@@ -54,6 +54,11 @@ db.serialize(() => {
         paymentMode TEXT,  
         planSelection TEXT,
         subscriptionOption TEXT,
+        schemeName TEXT,
+        tenure TEXT, 
+        lockIn TEXT,
+        interest TEXT,
+        loyaltyBonus TEXT,
         payor_name TEXT,
         payor_relation TEXT,
         payor_phone TEXT,
@@ -67,8 +72,104 @@ db.serialize(() => {
         with_country TEXT,
         with_pincode TEXT,
         with_landmark TEXT,
-        terms_accepted BOOLEAN
+        terms_accepted BOOLEAN,
+        status TEXT DEFAULT 'unpaid',
+        agreement_date TEXT
     )`);
+    // Create the QR table
+    db.run(`
+        CREATE TABLE IF NOT EXISTS QR (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            application_no TEXT,
+            name TEXT,
+            choose_payment TEXT,
+            transaction_id_1 TEXT,
+            screenshot_1 TEXT,
+            transaction_id_2 TEXT,
+            screenshot_2 TEXT,
+            transaction_id_3 TEXT,
+            screenshot_3 TEXT
+        )
+    `);
+
+    // Create the UIN table
+    db.run(`
+        CREATE TABLE IF NOT EXISTS UIN (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            application_no TEXT,
+            name TEXT,
+            choose_payment TEXT,
+            amount_1 REAL,
+            transaction_id_1 TEXT,
+            screenshot_1 TEXT,
+            amount_2 REAL,
+            transaction_id_2 TEXT,
+            screenshot_2 TEXT,
+            amount_3 REAL,
+            transaction_id_3 TEXT,
+            screenshot_3 TEXT
+        )
+    `);
+
+    // Create the Cheque table
+    db.run(`
+        CREATE TABLE IF NOT EXISTS Cheque (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            application_no TEXT,
+            name TEXT,
+            choose_payment TEXT,
+            ifsc_1 TEXT,
+            bank_name_1 TEXT,
+            cheque_date_1 TEXT,
+            amount_1 REAL,
+            ifsc_2 TEXT,
+            bank_name_2 TEXT,
+            cheque_date_2 TEXT,
+            amount_2 REAL
+        )
+    `);
+
+    // Create Trigger for QR table
+    db.run(`
+        CREATE TRIGGER IF NOT EXISTS update_applicant_status_QR
+        AFTER INSERT ON QR
+        FOR EACH ROW
+        BEGIN
+            UPDATE applicant
+            SET status = 'paid'
+            WHERE appl_no = NEW.application_no;
+        END;
+    `);
+
+    // Create Trigger for UIN table
+    db.run(`
+        CREATE TRIGGER IF NOT EXISTS update_applicant_status_UIN
+        AFTER INSERT ON UIN
+        FOR EACH ROW
+        BEGIN
+            UPDATE applicant
+            SET status = 'paid'
+            WHERE appl_no = NEW.application_no;
+        END;
+    `);
+
+    // Create Trigger for Cheque table
+    db.run(`
+        CREATE TRIGGER IF NOT EXISTS update_applicant_status_Cheque
+        AFTER INSERT ON Cheque
+        FOR EACH ROW
+        BEGIN
+            UPDATE applicant
+            SET status = 'paid'
+            WHERE appl_no = NEW.application_no;
+        END;
+    `);
+
+    console.log("Tables and triggers created successfully!");
+
+
+
+    
 });
 
 db.run(`CREATE TABLE IF NOT EXISTS subscription (
@@ -77,16 +178,63 @@ db.run(`CREATE TABLE IF NOT EXISTS subscription (
     no_of_emi INTEGER NOT NULL
 )`);
 
-db.run(`CREATE TABLE IF NOT EXISTS installment (
-    installment_id INTEGER ,
-    applicant_id INTEGER NOT NULL,
-    subscription_id INTEGER NOT NULL,
-    due_date TEXT NOT NULL,
-    amount INTEGER NOT NULL,
-    status TEXT NOT NULL,
-    FOREIGN KEY (applicant_id) REFERENCES applicant(appl_no),
-    FOREIGN KEY (subscription_id) REFERENCES subscription(subscription_id)
-)`);
+
+
+
+// // Create tables if they don't exist
+// db.serialize(() => {
+//     db.run(`
+//         CREATE TABLE IF NOT EXISTS QR (
+//             id INTEGER PRIMARY KEY AUTOINCREMENT,
+//             application_no TEXT,
+//             name TEXT,
+//             choose_payment TEXT,
+//             transaction_id_1 TEXT,
+//             screenshot_1 TEXT,
+//             transaction_id_2 TEXT,
+//             screenshot_2 TEXT,
+//             transaction_id_3 TEXT,
+//             screenshot_3 TEXT
+//         )
+//     `);
+
+//     db.run(`
+//         CREATE TABLE IF NOT EXISTS UIN (
+//             id INTEGER PRIMARY KEY AUTOINCREMENT,
+//             application_no TEXT,
+//             name TEXT,
+//             choose_payment TEXT,
+//             amount_1 REAL,
+//             transaction_id_1 TEXT,
+//             screenshot_1 TEXT,
+//             amount_2 REAL,
+//             transaction_id_2 TEXT,
+//             screenshot_2 TEXT,
+//             amount_3 REAL,
+//             transaction_id_3 TEXT,
+//             screenshot_3 TEXT
+//         )
+//     `);
+
+//     db.run(`
+//         CREATE TABLE IF NOT EXISTS Cheque (
+//             id INTEGER PRIMARY KEY AUTOINCREMENT,
+//             application_no TEXT,
+//             name TEXT,
+//             choose_payment TEXT,
+//             ifsc_1 TEXT,
+//             bank_name_1 TEXT,
+//             cheque_date_1 TEXT,
+//             amount_1 REAL,
+//             ifsc_2 TEXT,
+//             bank_name_2 TEXT,
+//             cheque_date_2 TEXT,
+//             amount_2 REAL
+//         )
+//     `);
+// });
+
+
 
 db.run(`ALTER TABLE applicant ADD COLUMN from_date TEXT`, (err) => {
     if (err) {
@@ -160,25 +308,7 @@ db.serialize(() => {
 
 
 
-// Create the payments table if it doesn't exist
-db.serialize(() => {
-    db.run(`
-        CREATE TABLE IF NOT EXISTS payments (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            application_number TEXT,
-            application_date TEXT,
-            name TEXT,
-            email TEXT,
-            phone_number TEXT,
-            payment_mode TEXT,
-            plan_selected TEXT,
-            subscription_option TEXT,
-            amount TEXT,
-            transaction_id TEXT,
-            screenshot BLOB
-        )
-    `);
-});
+
 
 
 
@@ -199,83 +329,6 @@ db.serialize(() => {
 //         status TEXT NOT NULL
 //     )
 // `);
-
-db.run(`
-   CREATE TABLE IF NOT EXISTS alldue (
-    installment_id INTEGER,
-    applicant_id INTEGER UNIQUE,
-    due_date DATE,
-    due_amount REAL,
-    status TEXT,
-    appl_no INTEGER,
-    name TEXT,
-    email TEXT,
-    phoneNumber TEXT,
-    amount REAL,
-    paymentMode TEXT,
-    planSelection TEXT,
-    subscriptionOption TEXT,
-    bankName TEXT,
-    accountNumber TEXT,
-    MICR TEXT,
-    ifscCode TEXT,
-    accountType TEXT,
-    branchAddress TEXT,
-    FOREIGN KEY (applicant_id) REFERENCES applicant(appl_no)
-    )
-`);
-
-
-
-
-
-
-
-
-
-
-
-
-// Create 'pending' table if not exists
-db.run(`
-    CREATE TABLE IF NOT EXISTS pending (
-      appl_no INTEGER,
-      name TEXT,
-      email TEXT,
-      phoneNumber TEXT,
-      amount REAL,
-      paymentMode TEXT,
-      planSelection TEXT,
-      subscriptionOption TEXT,
-      installment_id INTEGER,
-      due_date DATE,
-      due_amount REAL,
-      bankName TEXT,
-      accountNumber TEXT,
-      MICR TEXT,
-      ifscCode TEXT,
-      accountType TEXT,
-      branchAddress TEXT,
-      status TEXT,
-      paymentDate DATE,
-      FOREIGN KEY (appl_no) REFERENCES applicant(appl_no)
-    )
-  `);
-  
-  db.run(`CREATE TABLE IF NOT EXISTS installment_payment (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    installment_id INTEGER NOT NULL,
-    payment_date TEXT NOT NULL,
-    amount REAL NOT NULL,
-    FOREIGN KEY (installment_id) REFERENCES alldue(installment_id)
-)`);
-
-
-
-
-
-
-
 
 db.serialize(() => {
     db.run(`CREATE TABLE IF NOT EXISTS bank (
@@ -351,6 +404,88 @@ db.serialize(() => {
 });
 
 
+
+// Add the created_at column to track when the record was inserted
+db.run(`CREATE TABLE IF NOT EXISTS today (
+    appl_no INTEGER,
+    appl_date TEXT,
+    name TEXT,
+    amount INTEGER,
+    email TEXT,
+    phoneNumber TEXT,
+    bankName TEXT,
+    accountNumber TEXT,
+    MICR TEXT,
+    ifscCode TEXT,
+    accountType TEXT,
+    branchAddress TEXT,
+    installment_id INTEGER,
+    due_date TEXT,
+    installment_amount INTEGER,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  
+)`);
+
+
+
+db.serialize(() => {
+    db.run(`
+        CREATE TABLE IF NOT EXISTS installment (
+            installment_id INTEGER,
+            applicant_id INTEGER NOT NULL,
+            subscription_id INTEGER NOT NULL,
+            due_date TEXT NOT NULL,
+            amount INTEGER NOT NULL,
+            status TEXT NOT NULL DEFAULT 'Unpaid',
+            appl_no TEXT NOT NULL,
+            paid_date TEXT,
+            FOREIGN KEY (applicant_id) REFERENCES applicant(appl_no),
+            FOREIGN KEY (subscription_id) REFERENCES subscription(subscription_id)
+        )
+    `);
+
+    db.run(`
+        CREATE TABLE IF NOT EXISTS paided (
+            appl_no INTEGER,
+            appl_date TEXT,
+            name TEXT,
+            amount INTEGER,
+            email TEXT,
+            phoneNumber TEXT,
+            bankName TEXT,
+            accountNumber TEXT,
+            MICR TEXT,
+            ifscCode TEXT,
+            accountType TEXT,
+            branchAddress TEXT,
+            installment_id INTEGER,
+            due_date TEXT,
+            installment_amount INTEGER,
+            paid_date TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    `);
+
+    db.run(`
+        CREATE TRIGGER IF NOT EXISTS update_installment_status
+        AFTER INSERT ON paided
+        BEGIN
+            UPDATE installment
+            SET status = CASE 
+                            WHEN NEW.paid_date IS NOT NULL THEN 'Paid'
+                            ELSE 'Unpaid'
+                        END,
+                paid_date = COALESCE(NEW.paid_date, 'Unpaid')
+            WHERE appl_no = NEW.appl_no
+              AND installment_id = NEW.installment_id;
+        END;
+    `, (err) => {
+        if (err) {
+            console.error("Error creating trigger:", err);
+        } else {
+            console.log("Trigger created successfully.");
+        }
+    });
+});
 
 
 

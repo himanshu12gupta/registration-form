@@ -1,4 +1,16 @@
+function handleReferralSelection() {
+  const referralSelect = document.getElementById("referral_partner");
+  const referralInput = document.getElementById("referral_code");
 
+  if (referralSelect.value === "yes") {
+      referralInput.placeholder = "Enter referral code";
+      referralInput.value = "";
+      referralInput.removeAttribute("readonly");
+  } else if (referralSelect.value === "no") {
+      referralInput.value = "199001";
+      referralInput.setAttribute("readonly", true);
+  }
+}
 
 // ================================================================for pending payment=======================================================================
 
@@ -117,14 +129,8 @@ function saveData() {
   // Gather data from form fields
   const formData = {
       appl_no: document.getElementById('appl_no').value,
-      appl_date: document.getElementById('appl_date').value,
+      
       form_name: document.getElementById('form_name').value,
-      form_email: document.getElementById('form_email').value,
-      phoneNumber: document.getElementById('phoneNumber').value,
-      paymentMode: document.querySelector('input[name="paymentMode"]:checked')?.value || '',
-      planSelection: document.querySelector('input[name="planSelection"]:checked')?.value || '',
-      subscriptionOption: document.querySelector('input[name="subscriptionOption"]:checked')?.value || '',
-      amount: document.getElementById('amount').value,
   };
 
   // Save to localStorage

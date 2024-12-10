@@ -70,13 +70,17 @@
         <!-- Message when no data is present -->
         <p id="noDataMessage" style="display: none;">No installments data is present.</p>
 
+        <button id="deleteInstallmentButton">DELETE INSTALLMENT</button>
+
         <table id="installmentsTable" style="display: none;">
             <thead>
                 <tr>
                     <th>Installment ID</th>
+                    <th>Applicatio No</th>
                     <th>Due Date</th>
                     <th>Amount</th>
                     <th>Status</th>
+                    <th>Paid Date</th>
                 </tr>
             </thead>
             <tbody>
@@ -118,9 +122,11 @@
                             const row = `
                                 <tr>
                                     <td>${installment.installment_id}</td>
+                                    <td>${installment.appl_no}</td>
                                     <td>${installment.due_date}</td>
                                     <td>${installment.amount}</td>
                                     <td>${installment.status}</td>
+                                    <td>${installment.paid_date}</td>
                                 </tr>
                             `;
                             tbody.innerHTML += row;
@@ -155,6 +161,36 @@
 
         // Fetch the first page of installments on load
         fetchInstallments(currentPage);
+
+
+
+
+
+        document.getElementById('deleteInstallmentButton').addEventListener('click', () => {
+    const applicantId = document.getElementById('applicantId').textContent.trim();
+
+    // Confirmation prompt
+    if (!confirm(`Are you sure you want to delete all installments for Applicant ID: ${applicantId}?`)) {
+        return;
+    }
+
+    // Sending DELETE request
+    fetch(`/applicant/${applicantId}/installments`, {
+        method: 'DELETE',
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (response.ok) {
+            alert(data.message);
+            // Refresh the table after deletion
+            fetchInstallments(1);
+        } else {
+            alert(data.error || 'Error deleting installments.');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+});
+
     </script>
 </body>
 </html>

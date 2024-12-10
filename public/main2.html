@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Applicant - Anytime Invest</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #002b5b, #00509e);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .form-container h2 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            animation: fadeIn 1.5s;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 1rem;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            color: #00509e;
+            background-color: #ffd700;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        button:hover {
+            background-color: #f9a825;
+            transform: scale(1.05);
+        }
+
+        .otp-group {
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form-container">
+        <h2>Welcome to Anytime Invest</h2>
+        <form id="newApplicantForm">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter your name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="mobile">Mobile Number</label>
+                <input type="tel" id="mobile" name="mobile" placeholder="Enter your mobile number" required>
+            </div>
+
+            <div class="otp-group" id="otpGroup">
+                <label for="otp">OTP</label>
+                <input type="text" id="otp" placeholder="Enter OTP" required>
+            </div>
+
+            <button type="button" id="otpBtn" onclick="sendOTP()">Send OTP</button>
+            <button type="button" id="verifyBtn" onclick="verifyOTP()" style="display:none;">Verify & Submit</button>
+        </form>
+    </div>
+
+    <script>
+        function sendOTP() {
+            const email = document.getElementById('email').value;
+            const mobile = document.getElementById('mobile').value;
+
+            if (email && mobile) {
+                alert('OTP sent to your Email and Mobile Number!');
+                document.getElementById('otpGroup').style.display = 'block';
+                document.getElementById('otpBtn').style.display = 'none';
+                document.getElementById('verifyBtn').style.display = 'inline-block';
+                // Simulate OTP for demonstration purposes
+                sessionStorage.setItem("otp", "123456");
+            } else {
+                alert('Please fill in both Email and Mobile fields.');
+            }
+        }
+
+        function verifyOTP() {
+            const otpInput = document.getElementById('otp').value;
+            const sentOTP = sessionStorage.getItem("otp");
+            if (otpInput === sentOTP) {
+                alert('OTP Verified Successfully!');
+                window.location.href = 'index.html';
+            } else {
+                alert('Invalid OTP. Please try again.');
+            }
+        }
+    </script>
+</body>
+
+</html>

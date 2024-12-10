@@ -5,7 +5,7 @@ const validPassword = "123456";
 const pageMap = {
     todayPayments: "expiry-user.html",
     pendingPayments: "pending.html",
-    completedDues: "alldues.html",
+    completedDues: "alldues.html",  
     applicants: "app.html",
     installment: "insta.html",
     payments: "payment.html"
@@ -31,7 +31,7 @@ function logout() {
 
 document.querySelectorAll('.sidebar a').forEach(link => {
     link.addEventListener('click', (event) => {
-        const key = event.target.getAttribute('data-key');
+       const key = event.target.getAttribute('data-key');
         const page = pageMap[key];
         if (page) {
             document.getElementById("contentFrame").src = page;

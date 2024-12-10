@@ -37,15 +37,6 @@
             font-size: 14px;
         }
 
-        .payment-option {
-            margin-bottom: 20px;
-        }
-
-        #transactionIdInput {
-            margin-bottom: 10px;
-        }
-
-        /* Simple Animation */
         .thank-you-page {
             text-align: center;
             padding: 50px;
@@ -62,386 +53,267 @@
         .form-check-label a {
             color: #007bff;
         }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-control {
+            width: 100%;
+        }
     </style>
 </head>
-
 <body>
-    <div class="container step1" >
+    <div class="container step1">
         <h1>Submitted Details</h1>
         <ul class="list-unstyled">
             <li><strong>Application Number:</strong> <span id="appl_no"></span></li>
-            <li><strong>Date:</strong> <span id="appl_date"></span></li>
             <li><strong>Name:</strong> <span id="form_name"></span></li>
-            <li><strong>Email:</strong> <span id="form_email"></span></li>
-            <li><strong>Phone Number:</strong> <span id="phoneNumber"></span></li>
-            <li><strong>Payment Mode:</strong> <span id="paymentMode"></span></li>
-            <li><strong>Plan Selected:</strong> <span id="planSelection"></span></li>
-            <li><strong>Subscription Option:</strong> <span id="subscriptionOption"></span></li>
-            <li><strong>Amount:</strong> ₹<span id="amount"></span></li>
         </ul>
 
         <div id="termsSection">
-            <h3 class="mt-4">Proceed to Payment</h3>
             <div class="form-check mt-3">
-                <input class="form-check-input" type="checkbox" id="termsCheckbox" onclick="togglePayButton()">
+                <input class="form-check-input" type="checkbox" id="termsCheckbox" onchange="togglePayButton()">
                 <label class="form-check-label" for="termsCheckbox">
                     I agree to the <a href="#" target="_blank">Terms and Conditions</a>
                 </label>
             </div>
-            <button id="payButton" class="btn btn-success w-100 mt-3 disabled" disabled onclick="startPaymentProcess()">Pay to Proceed</button>
+            <button id="payButton" class="btn btn-success w-100 mt-3 disabled" disabled onclick="startPaymentProcess()">Proceed To Payment</button>
         </div>
     </div>
 
     <div id="paymentSection" class="hidden container step2">
         <h3>Choose Payment Option</h3>
         <div class="mt-3">
-            <button class="btn btn-primary w-100 mb-3 payment-option" id="qrButton" onclick="handleQRPayment()">QR</button>
-            <button class="btn btn-info w-100 mb-3 payment-option" onclick="handleIMPSPayment()">IMPS</button>
-            <button class="btn btn-secondary w-100 mb-3 payment-option" onclick="handleRTGFPayment()">RTGF</button>
-            <button class="btn btn-warning w-100 mb-3 payment-option" onclick="handleNEFTRTGSPayment()">NEFT/RTGS</button>
-            <button class="btn btn-success w-100 mb-3 payment-option" onclick="handleChequePayment()">Cheque</button>
+            <button class="btn btn-primary w-100 mb-3 payment-option" onclick="showPaymentForm('qr')">QR</button>
+            <button class="btn btn-info w-100 mb-3 payment-option" onclick="showPaymentForm('upi')">UPI</button>
+            <button class="btn btn-secondary w-100 mb-3 payment-option" onclick="showPaymentForm('imps')">IMPS</button>
+            <button class="btn btn-warning w-100 mb-3 payment-option" onclick="showPaymentForm('neft')">NEFT/RTGS</button>
+            <button class="btn btn-success w-100 mb-3 payment-option" onclick="showPaymentForm('cheque')">Cheque</button>
         </div>
-        <div id="paymentDetailsSection" class="hidden">
-            <p><strong>Payment Method Details</strong></p>
-            <p id="paymentMethodDetails"></p>
-            <label for="transactionId">Enter Transaction ID:</label>
-            <input type="text" id="transactionId" class="form-control mb-3" placeholder="Enter Transaction ID">
-            
-            <!-- Add the screenshot upload input field -->
-            <label for="screenshot">Upload Screenshot:</label>
-            <input type="file" id="screenshot" class="form-control mb-3" accept="image/*">
-            
-            <!-- Button to confirm payment -->
-            <button id="confirmPaymentButton" class="btn btn-success w-100" disabled onclick="confirmPayment()">Confirm Payment</button>
-        </div>
-        
     </div>
 
-    <div id="confirmationPage" class="hidden container step3">
-        <h3>Payment Confirmation</h3>
-        <ul class="list-unstyled">
-            <li><strong>Application Number:</strong> <span id="confirm_appl_no"></span></li>
-            <li><strong>Date:</strong> <span id="confirm_appl_date"></span></li>
-            <li><strong>Name:</strong> <span id="confirm_name"></span></li>
-            <li><strong>Email:</strong> <span id="confirm_email"></span></li>
-            <li><strong>Phone Number:</strong> <span id="confirm_phoneNumber"></span></li>
-            <li><strong>Payment Mode:</strong> <span id="confirm_paymentMode"></span></li>
-            <li><strong>Plan Selected:</strong> <span id="confirm_planSelection"></span></li>
-            <li><strong>Subscription Option:</strong> <span id="confirm_subscriptionOption"></span></li>
-            <li><strong>Amount:</strong> ₹<span id="confirm_amount"></span></li>
-            <li><strong>Payment Method Chosen:</strong> <span id="chosenPaymentMethod"></span></li>
-            <li><strong>Transaction ID:</strong> <span id="confirm_transactionId"></span></li>
-            <li><strong>Uploaded Screenshot:</strong></li>
-            <li><img id="screenshotPreview" class="img-fluid" alt="Uploaded Screenshot" style="max-width: 100%;"></li>
-        </ul>
-        <button id="downloadPDFButton" class="btn btn-primary w-100 mt-3" onclick="downloadPDF()">Download PDF</button>
+    <div id="formSection" class="hidden container step3">
+        <form id="paymentForm" oninput="validateForm()"></form>
+        <button class="btn btn-success w-100 mt-3" id="confirmButton" onclick="confirmPayment()" disabled>Confirm Payment</button>
     </div>
 
-    <div id="thankYouPage" class="thank-you-page hidden  step4">
+    <div id="thankYouPage" class="thank-you-page hidden step4">
         <h2>Thank You for Your Payment!</h2>
         <p>Your payment has been successfully processed.</p>
+        <p><strong>Application Number:</strong> <span id="thankApplNo"></span></p>
     </div>
 
     <footer>
         &copy; 2024 Your Company Name. All rights reserved.
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
+        let applNo = 'N/A';
+
+        // Load application data
         document.addEventListener('DOMContentLoaded', function () {
-            const fields = ['appl_no', 'appl_date', 'form_name', 'form_email', 'phoneNumber', 'paymentMode', 'planSelection', 'subscriptionOption', 'amount'];
-            fields.forEach(field => {
-                document.getElementById(field).textContent = localStorage.getItem(field) || 'N/A';
-            });
+            applNo = localStorage.getItem('appl_no') || 'N/A';
+            document.getElementById('appl_no').textContent = applNo;
+            document.getElementById('form_name').textContent = localStorage.getItem('form_name') || 'N/A';
         });
 
+        // Enable/disable the Proceed to Payment button based on the checkbox
         function togglePayButton() {
             const checkbox = document.getElementById('termsCheckbox');
             const payButton = document.getElementById('payButton');
             if (checkbox.checked) {
+                payButton.disabled = false;
                 payButton.classList.remove('disabled');
-                payButton.removeAttribute('disabled');
             } else {
+                payButton.disabled = true;
                 payButton.classList.add('disabled');
-                payButton.setAttribute('disabled', true);
             }
         }
 
+        // Navigate to payment options
         function startPaymentProcess() {
-            const amount = parseFloat(localStorage.getItem('amount')) || 0;
-            document.getElementById('termsSection').classList.add('hidden');
-            document.getElementById('paymentSection').classList.remove('hidden');
-
-            if (amount <= 500000) {
-                document.getElementById('qrButton').disabled = false;
-            } else {
-                document.getElementById('qrButton').disabled = true;
-                document.getElementById('paymentMethodDetails').textContent = "QR Payment is only available for amounts less than ₹5,00,000. Please choose another payment method.";
-            }
+            document.querySelector('.step1').classList.add('hidden');
+            document.querySelector('.step2').classList.remove('hidden');
         }
 
-        function handleQRPayment() {
-    const amount = parseFloat(localStorage.getItem('amount')) || 0;
-    if (amount <= 500000) {
-           localStorage.setItem('chosenPaymentMethod', 'QR');
-    document.getElementById('paymentMethodDetails').innerHTML = `
-            <strong>Scan QR Code to make payment.</strong><br>
-            After completing the payment, please enter the transaction ID.<br><br>
-            <strong>Name:</strong>AnytimeInvest<br>
-            <strong>Account No.:</strong> 120410110002280<br>
-            <strong>IFSC Code:</strong> BKID0ARYAGB<br>
-            <strong>MICR Code:</strong> 110013254
-        `;
-        showPaymentDetailsSection();
-    }
-}
-
-function handleIMPSPayment() {
-    localStorage.setItem('chosenPaymentMethod', 'IMPS');
-    document.getElementById('paymentMethodDetails').innerHTML = `
-        <strong>Use IMPS to make a transfer to the following account:</strong><br><br>
-        <strong>Name:</strong>AnytimeInvest<br>
-        <strong>Account No.:</strong> 120410110002280<br>
-        <strong>IFSC Code:</strong> BKID0ARYAGB<br>
-        <strong>MICR Code:</strong> 110013254
-    `;
-    showPaymentDetailsSection();
-}
-
-function handleRTGFPayment() {
-    localStorage.setItem('chosenPaymentMethod', 'RTGF');
-    document.getElementById('paymentMethodDetails').innerHTML = `
-        <strong>Use RTGF for your payment. Make the payment and enter the transaction ID:</strong><br><br>
-        <strong>Name:</strong>AnytimeInvest<br>
-        <strong>Account No.:</strong> 120410110002280<br>
-        <strong>IFSC Code:</strong> BKID0ARYAGB<br>
-        <strong>MICR Code:</strong> 110013254
-    `;
-    showPaymentDetailsSection();
-}
-
-function handleNEFTRTGSPayment() {
-    localStorage.setItem('chosenPaymentMethod', 'NEFT');
-    document.getElementById('paymentMethodDetails').innerHTML = `
-        <strong>NEFT/RTGS payments are accepted. After making the payment, enter the transaction details:</strong><br><br>
-        <strong>Name:</strong>AnytimeInvest<br>
-        <strong>Account No.:</strong> 120410110002280<br>
-        <strong>IFSC Code:</strong> BKID0ARYAGB<br>
-        <strong>MICR Code:</strong> 110013254
-    `;
-    showPaymentDetailsSection();
-}
-
-function handleChequePayment() {
-    localStorage.setItem('chosenPaymentMethod', 'cheque');
-    document.getElementById('paymentMethodDetails').innerHTML = `
-        <strong>Make the payment via cheque and enter the transaction ID once processed:</strong><br><br>
-<strong>Name:</strong>AnytimeInvest<br>
-        <strong>Account No.:</strong> 120410110002280<br>
-        <strong>IFSC Code:</strong> BKID0ARYAGB<br>
-        <strong>MICR Code:</strong> 110013254
-    `;
-    showPaymentDetailsSection();
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        function showPaymentDetailsSection() {
-            document.getElementById('paymentDetailsSection').classList.remove('hidden');
+        // Show the payment form based on the selected option
+        function showPaymentForm(type) {
+            const formSection = document.getElementById('formSection');
+            const paymentForm = document.getElementById('paymentForm');
+            formSection.classList.remove('hidden');
+            paymentForm.innerHTML = '';
+            if (type === 'qr') {
+                paymentForm.innerHTML = generateQRForm();
+            } else if (type === 'upi' || type === 'imps' || type === 'neft') {
+                paymentForm.innerHTML = generateAmountTransactionForm();
+            } else if (type === 'cheque') {
+                paymentForm.innerHTML = generateChequeForm();
+            }
+            validateForm();
         }
 
-        // Enable Confirm Payment button when Transaction ID is entered
-        document.getElementById('transactionId').addEventListener('input', function () {
-            const transactionId = document.getElementById('transactionId').value;
-            const confirmPaymentButton = document.getElementById('confirmPaymentButton');
-            if (transactionId.length > 0) {
-                confirmPaymentButton.removeAttribute('disabled');
-            } else {
-                confirmPaymentButton.setAttribute('disabled', true);
-            }
-        });
+        // Generate QR Payment Form
+        function generateQRForm() {
+            return `
+                <div class="form-group">
+                    <label for="transaction_id_1">Transaction ID 1:</label>
+                    <input type="text" class="form-control" id="transaction_id_1">
+                </div>
+                <div class="form-group">
+                    <label for="screenshot_1">Screenshot 1:</label>
+                    <input type="file" class="form-control" id="screenshot_1">
+                </div>
+                <div class="form-group">
+                    <label for="transaction_id_2">Transaction ID 2:</label>
+                    <input type="text" class="form-control" id="transaction_id_2">
+                </div>
+                <div class="form-group">
+                    <label for="screenshot_2">Screenshot 2:</label>
+                    <input type="file" class="form-control" id="screenshot_2">
+                </div>
+                <div class="form-group">
+                    <label for="transaction_id_3">Transaction ID 3:</label>
+                    <input type="text" class="form-control" id="transaction_id_3">
+                </div>
+                <div class="form-group">
+                    <label for="screenshot_3">Screenshot 1:</label>
+                    <input type="file" class="form-control" id="screenshot_3">
+                </div>
+            `;
+        }
 
- 
+        // Generate Amount & Transaction Form for UPI, IMPS, and NEFT
+        function generateAmountTransactionForm() {
+            return `
+                <div class="form-group">
+                    <label for="amount_1">Amount 1:</label>
+                    <input type="number" class="form-control" id="amount_1">
+                </div>
+                <div class="form-group">
+                    <label for="transaction_id_1">Transaction ID 1:</label>
+                    <input type="text" class="form-control" id="transaction_id_1">
+                </div>
+                <div class="form-group">
+                    <label for="screenshot_1">Screenshot 1:</label>
+                    <input type="file" class="form-control" id="screenshot_1">
+                </div>
+                <div class="form-group">
+                    <label for="amount_2">Amount 2:</label>
+                    <input type="number" class="form-control" id="amount_2">
+                </div>
+                <div class="form-group">
+                    <label for="transaction_id_2">Transaction ID 2:</label>
+                    <input type="text" class="form-control" id="transaction_id_2">
+                </div>
+                <div class="form-group">
+                    <label for="screenshot_2">Screenshot 2:</label>
+                    <input type="file" class="form-control" id="screenshot_2">
+                </div>
+                <div class="form-group">
+                    <label for="amount_3">Amount 3:</label>
+                    <input type="number" class="form-control" id="amount_3">
+                </div>
+                <div class="form-group">
+                    <label for="transaction_id_3">Transaction ID 3:</label>
+                    <input type="text" class="form-control" id="transaction_id_3">
+                </div>
+                <div class="form-group">
+                    <label for="screenshot_3">Screenshot 3:</label>
+                    <input type="file" class="form-control" id="screenshot_3">
+                </div>
+            `;
+        }
 
-        document.addEventListener('DOMContentLoaded', function () {
-    const fields = ['appl_no', 'appl_date', 'form_name', 'form_email', 'phoneNumber', 'paymentMode', 'planSelection', 'subscriptionOption', 'amount'];
-    fields.forEach(field => {
-        document.getElementById(field).textContent = localStorage.getItem(field) || 'N/A';
+        // Generate Cheque Payment Form
+        function generateChequeForm() {
+            return `
+                <div class="form-group">
+                    <label for="ifsc_1">IFSC 1:</label>
+                    <input type="text" class="form-control" id="ifsc_1">
+                </div>
+                <div class="form-group">
+                    <label for="bank_name_1">Bank Name 1:</label>
+                    <input type="text" class="form-control" id="bank_name_1">
+                </div>
+                <div class="form-group">
+                    <label for="cheque_date_1">Cheque Date 1:</label>
+                    <input type="date" class="form-control" id="cheque_date_1">
+                </div>
+                <div class="form-group">
+                    <label for="amount_1">Amount 1:</label>
+                    <input type="number" class="form-control" id="amount_1">
+                </div>
+                <div class="form-group">
+                    <label for="ifsc_2">IFSC 2:</label>
+                    <input type="text" class="form-control" id="ifsc_2">
+                </div>
+                <div class="form-group">
+                    <label for="bank_name_2">Bank Name 2:</label>
+                    <input type="text" class="form-control" id="bank_name_2">
+                </div>
+                <div class="form-group">
+                    <label for="cheque_date_2">Cheque Date 2:</label>
+                    <input type="date" class="form-control" id="cheque_date_2">
+                </div>
+                <div class="form-group">
+                    <label for="amount_2">Amount 2:</label>
+                    <input type="number" class="form-control" id="amount_2">
+                </div>
+            `;
+        }
+
+
+        function validateForm() {
+    const paymentForm = document.getElementById('paymentForm');
+    const inputs = paymentForm.querySelectorAll('input');
+    const confirmButton = document.getElementById('confirmButton');
+
+    // Check if all fields are non-empty
+    let allFilled = true;
+    inputs.forEach(input => {
+        if (input.type !== 'file' && input.value.trim() === '') {
+            allFilled = false;
+        }
+        if (input.type === 'file' && !input.files.length) {
+            allFilled = false;
+        }
     });
 
-    // Disable confirm payment until both fields are filled
-    document.getElementById('transactionId').addEventListener('input', checkPaymentDetails);
-    document.getElementById('screenshot').addEventListener('change', checkPaymentDetails);
-});
-
-function checkPaymentDetails() {
-    const transactionId = document.getElementById('transactionId').value;
-    const screenshot = document.getElementById('screenshot').files.length > 0;
-    const confirmPaymentButton = document.getElementById('confirmPaymentButton');
-
-    // Enable Confirm Payment button only if both Transaction ID and Screenshot are filled
-    if (transactionId.length > 0 && screenshot) {
-        confirmPaymentButton.removeAttribute('disabled');
-    } else {
-        confirmPaymentButton.setAttribute('disabled', true);
-    }
+    // Enable or disable confirm button based on field completion
+    confirmButton.disabled = !allFilled;
 }
+
 
 function confirmPayment() {
-    // Store the transaction ID
-    localStorage.setItem('transactionId', document.getElementById('transactionId').value);
+    const paymentForm = document.getElementById("paymentForm");
+    const formData = new FormData(paymentForm);
 
-    // Show the confirmation page (Step 3)
-    document.getElementById('paymentSection').classList.add('hidden');
-    document.getElementById('confirmationPage').classList.remove('hidden');
+    formData.append("application_no", applNo);
+    formData.append("name", localStorage.getItem("form_name"));
+    const selectedPaymentButton = document.querySelector(".payment-option");
+    const selectedPaymentMethod = selectedPaymentButton?.textContent.trim();
+    formData.append("choose_payment", selectedPaymentMethod);
 
-    // Set the confirmation page details from localStorage
-    document.getElementById('confirm_appl_no').textContent = localStorage.getItem('appl_no');
-    document.getElementById('confirm_appl_date').textContent = localStorage.getItem('appl_date');
-    document.getElementById('confirm_name').textContent = localStorage.getItem('form_name');
-    document.getElementById('confirm_email').textContent = localStorage.getItem('form_email');
-    document.getElementById('confirm_phoneNumber').textContent = localStorage.getItem('phoneNumber');
-    document.getElementById('confirm_paymentMode').textContent = localStorage.getItem('paymentMode');
-    document.getElementById('confirm_planSelection').textContent = localStorage.getItem('planSelection');
-    document.getElementById('confirm_subscriptionOption').textContent = localStorage.getItem('subscriptionOption');
-    document.getElementById('confirm_amount').textContent = localStorage.getItem('amount');
-    document.getElementById('chosenPaymentMethod').textContent = localStorage.getItem('chosenPaymentMethod');
-    document.getElementById('confirm_transactionId').textContent = localStorage.getItem('transactionId');
-
-    // Show the uploaded screenshot
-    const screenshotFile = document.getElementById('screenshot').files[0];
-    if (screenshotFile) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            document.getElementById('screenshotPreview').src = e.target.result;
-            
-            // Convert screenshot to base64
-            const screenshotBase64 = e.target.result;
-
-            // Send the data to the backend (including the screenshot)
-            sendPaymentData(screenshotBase64);
-        };
-        reader.readAsDataURL(screenshotFile);
-    }
-}
-
-function sendPaymentData(screenshotBase64) {
-    const paymentData = {
-        application_number: localStorage.getItem('appl_no'),
-        application_date: localStorage.getItem('appl_date'),
-        name: localStorage.getItem('form_name'),
-        email: localStorage.getItem('form_email'),
-        phone_number: localStorage.getItem('phoneNumber'),
-        payment_mode: localStorage.getItem('chosenPaymentMethod'),
-        // payment_mode: localStorage.getItem('paymentMode'),
-        plan_selected: localStorage.getItem('planSelection'),
-        subscription_option: localStorage.getItem('subscriptionOption'),
-        amount: localStorage.getItem('amount'),
-        transaction_id: localStorage.getItem('transactionId'),
-        screenshot: screenshotBase64, // The screenshot in base64 format
-    };
-
-    // Send data to the backend (e.g., using fetch or AJAX)
-    fetch('/save-payment', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(paymentData),
+    fetch("/save-payment", {
+        method: "POST",
+        body: formData,
     })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Payment data saved:', data);
-    })
-    .catch(error => {
-        console.error('Error saving payment data:', error);
-    });
-}
-
-
-
-
-
-
-
-
-
-
-        
-
-        function downloadPDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    
-    // Set font style and size for company name and header
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(16);
-    doc.text('Payment Confirmation', 20, 20);
-
-    // Company Details Section
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(12);
-    doc.text('Company: Anytime Invest Services Pvt Ltd', 20, 30);
-    doc.text('Om Tower, Plot No. 421, 2nd Floor', 20, 35);
-    doc.text('Kakrola Housing Complex Kakrola Mor', 20, 40);
-    doc.text('Dwarka, New Delhi, 110078', 20, 45);
-    doc.text('Phone: +91 9818393867', 20, 50);
-    doc.text('Email: service@anytimeinvest.com', 20, 55);
-    
-    // Add a line separator for visual appeal
-    doc.setLineWidth(0.5);
-    doc.line(20, 60, 190, 60); // Horizontal line
-
-    // Add Payment Confirmation Details
-    doc.setFontSize(14);
-    doc.text('Application Details:', 20, 70);
-    
-    doc.setFontSize(12);
-    doc.text('Application Number: ' + localStorage.getItem('appl_no'), 20, 80);
-    doc.text('Date: ' + localStorage.getItem('appl_date'), 20, 85);
-    doc.text('Name: ' + localStorage.getItem('form_name'), 20, 90);
-    doc.text('Email: ' + localStorage.getItem('form_email'), 20, 95);
-    doc.text('Phone Number: ' + localStorage.getItem('phoneNumber'), 20, 100);
-    doc.text('Payment Mode: ' + localStorage.getItem('paymentMode'), 20, 105);
-    doc.text('Plan Selected: ' + localStorage.getItem('planSelection'), 20, 110);
-    doc.text('Subscription Option: ' + localStorage.getItem('subscriptionOption'), 20, 115);
-    doc.text('Amount: ₹' + localStorage.getItem('amount'), 20, 120);
-
-    // Payment Method and Transaction ID
-    doc.text('Payment Method Chosen: ' + localStorage.getItem('chosenPaymentMethod'), 20, 130);
-    doc.text('Transaction ID: ' + localStorage.getItem('transactionId'), 20, 135);
-
-    // Add a footer line with company info at the bottom
-    doc.setLineWidth(0.5);
-    doc.line(20, 260, 190, 260); // Footer line
-    doc.setFontSize(10);
-    doc.text('Anytime Invest Services Pvt Ltd - All Rights Reserved', 20, 270);
-    
-    // Save the PDF with a professional name
-    doc.save('Payment_Confirmation_Anytime_Invest.pdf');
-}
-
-
-        // Show Thank You message on successful payment
-        function showThankYouMessage() {
-            document.getElementById('thankYouPage').classList.remove('hidden');
-            setTimeout(() => {
-                window.location.href = '/'; // Redirect after 3 seconds
-            }, 3000);
+    .then((response) => response.json())
+    .then((data) => {
+        if (data.success) {
+            document.querySelector(".step3").classList.add("hidden");
+            document.getElementById("thankYouPage").classList.remove("hidden");
+            document.getElementById("thankApplNo").textContent = applNo;
+        } else {
+            alert("Error: " + data.message);
         }
+    })
+    .catch((error) => console.error("Error submitting payment data:", error));
+}
+
+
+
     </script>
 </body>
 </html>
-

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unpaid Applicants</title>
+    <style>
+        .yellow { background-color: yellow; }
+        .red { background-color: red; }
+        .normal { background-color: white; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px; border: 1px solid black; text-align: left; }
+    </style>
+</head>
+<body>
+    <h1>Unpaid Applicants</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Appl No</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Amount</th>
+                <th>Payment Mode</th>
+                <th>Plan Selection</th>
+                <th>Subscription Option</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="applicant-table-body">
+            <!-- Data will be populated here -->
+        </tbody>
+    </table>
+
+    <script>
+        // Function to fetch unpaid applicants
+        async function fetchUnpaidApplicants() {
+            const response = await fetch('/unpaid');
+            const applicants = await response.json();
+            
+            const tbody = document.getElementById('applicant-table-body');
+            const currentDate = new Date();
+            
+            applicants.forEach(applicant => {
+                const applDate = new Date(applicant.appl_date);
+                const row = document.createElement('tr');
+                
+                // Calculate the difference in days between current date and appl_date
+                const diffDays = Math.ceil((applDate - currentDate) / (1000 * 3600 * 24));
+
+                // Add a class based on the difference in days
+                if (diffDays <= 30) {
+                    row.classList.add('yellow');
+                } else {
+                    row.classList.add('red');
+                }
+
+                // Add row data
+                row.innerHTML = `
+                    <td>${applicant.appl_no}</td>
+                    <td>${applicant.name}</td>
+                    <td>${applicant.email}</td>
+                    <td>${applicant.phoneNumber}</td>
+                    <td>${applicant.amount}</td>
+                    <td>${applicant.paymentMode}</td>
+                    <td>${applicant.planSelection}</td>
+                    <td>${applicant.subscriptionOption}</td>
+                    <td>${applicant.status}</td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        // Load applicants when page is ready
+        window.onload = fetchUnpaidApplicants;
+    </script>
+</body>
+</html>

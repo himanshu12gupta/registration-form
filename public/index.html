@@ -1,4 +1,4 @@
-z<html lang="en">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
@@ -29,6 +29,29 @@ z<html lang="en">
                   <input type="text" id="appl_date" name="Appl_date" readonly>
                 </div>
               </div>
+<br>
+
+              <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="referral_partner">Referral/Partner Name</label>
+                        <select id="referral_partner" name="Referral_Partner" class="form-control" onchange="handleReferralSelection()">
+                            <option value="none" selected disabled>Select an option</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="referral_code">Referral Code</label>
+                        <input id="referral_code" type="text" name="Referral_Code" class="form-control"
+                            placeholder="Enter referral code" required readonly>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </div>
+            </div>
 
               <h2>Details of Applicant</h2>
               <div class="row">
@@ -315,7 +338,8 @@ z<html lang="en">
               <table>
                 <thead>
                   <tr>
-                    <th>PLAN</th>
+                    <!-- <th>PLAN NAME</th> -->
+                    <th>SCHEME NAME</th>
                     <th>TENURE</th>
                     <th>LOCK-IN</th>
                     <th>INTEREST</th>
@@ -324,21 +348,40 @@ z<html lang="en">
                 </thead>
                 <tbody>
                   <tr>
-                    <td>PLAN A</td>
+                    <!-- <td>PLAN D</td> -->
+                    <td>Elite Pro</td>
+                    <td>3 YEARS</td>
+                    <td>1 YEAR</td>
+                    <td>10%</td>
+                    <td><input type="radio" name="planSelection" value="D" onclick="updateTable();" required></td>
+                  </tr>
+                  <tr>
+                    <!-- <td>PLAN E</td> -->
+                    <td>Elite Pro+</td>
+                    <td>3 YEARS</td>
+                    <td>2 YEARS</td>
+                    <td>12%</td>
+                    <td><input type="radio" name="planSelection" value="E" onclick="updateTable();" required></td>
+                  </tr>
+                  <tr>
+                    <!-- <td>PLAN A</td> -->
+                    <td>ELITE EXECUTIVE PRO+</td>
                     <td>5 YEARS</td>
                     <td>5 YEARS</td>
                     <td>11%</td>
                     <td><input type="radio" name="planSelection" value="A" onclick="updateTable();" required></td>
                   </tr>
                   <tr>
-                    <td>PLAN B</td>
+                    <!-- <td>PLAN B</td> -->
+                    <td>ELITE EXECUTIVE PRO</td>
                     <td>5 YEARS</td>
                     <td>3 YEARS</td>
                     <td>10%</td>
                     <td><input type="radio" name="planSelection" value="B" onclick="updateTable();" required></td>
                   </tr>
                   <tr>
-                    <td>PLAN C</td>
+                    <!-- <td>PLAN C</td> -->
+                    <td>ELITE EXECUTIVE</td>
                     <td>3 YEARS</td>
                     <td>1 YEAR</td>
                     <td>9%</td>
@@ -376,11 +419,12 @@ z<html lang="en">
 
               <br><br>
               <div id="planA-monthly" class="hidden">
-                <h4>PLAN A - Monthly</h4>
+                <h4>ELITE EXECUTIVE PRO+ - Monthly</h4>
                 <table>
                   <thead>
                     <tr>
-                      <th>PLAN</th>
+                      <!-- <th>PLAN</th> -->
+                      <th>SCHEME NAME</th>
                       <th>TENURE</th>
                       <th>LOCK-IN</th>
                       <th>INTEREST</th>
@@ -389,7 +433,8 @@ z<html lang="en">
                   </thead>
                   <tbody>
                     <tr>
-                      <td>PLAN A</td>
+                      <!-- <td>PLAN A</td> -->
+                      <td>ELITE EXECUTIVE PRO+</td>
                       <td>5 YEARS</td>
                       <td>5 YEARS</td>
                       <td>11%</td>
@@ -400,12 +445,13 @@ z<html lang="en">
               </div>
 
               <div id="planA-quarterly" class="hidden">
-                <h4>PLAN A - Quarterly</h4>
+                <h4>ELITE EXECUTIVE PRO+ - Quarterly</h4>
 
                 <table>
                   <thead>
                     <tr>
-                      <th>PLAN</th>
+                      <!-- <th>PLAN</th> -->
+                      <th>SCHEME NAME</th>
                       <th>TENURE</th>
                       <th>LOCK-IN</th>
                       <th>INTEREST</th>
@@ -414,7 +460,8 @@ z<html lang="en">
                   </thead>
                   <tbody>
                     <tr>
-                      <td>PLAN A</td>
+                      <!-- <td>PLAN A</td> -->
+                      <td>ELITE EXECUTIVE PRO+</td>
                       <td>5 YEARS</td>
                       <td>5 YEARS</td>
                       <td>11%</td>
@@ -424,11 +471,12 @@ z<html lang="en">
                 </table>
               </div>
               <div id="planA-halfyearly" class="hidden">
-                <h4>PLAN A - Half Yearly</h4>
+                <h4>ELITE EXECUTIVE PRO+ - Half Yearly</h4>
                 <table>
                   <thead>
                     <tr>
-                      <th>PLAN</th>
+                      <!-- <th>PLAN</th> -->
+                      <th>SCHEME NAME</th>
                       <th>TENURE</th>
                       <th>LOCK-IN</th>
                       <th>INTEREST</th>
@@ -437,7 +485,8 @@ z<html lang="en">
                   </thead>
                   <tbody>
                     <tr>
-                      <td>PLAN A</td>
+                      <!-- <td>PLAN A</td> -->
+                      <td>ELITE EXECUTIVE PRO+</td>
                       <td>5 YEARS</td>
                       <td>5 YEARS</td>
                       <td>11%</td>
@@ -448,11 +497,12 @@ z<html lang="en">
               </div>
 
               <div id="planA-yearly" class="hidden">
-                <h4>PLAN A - Yearly</h4>
+                <h4>ELITE EXECUTIVE PRO+ - Yearly</h4>
                 <table>
                   <thead>
                     <tr>
-                      <th>PLAN</th>
+                      <!-- <th>PLAN </th> -->
+                      <th>SCHEME NAME</th>
                       <th>TENURE</th>
                       <th>LOCK-IN</th>
                       <th>INTEREST</th>
@@ -461,7 +511,8 @@ z<html lang="en">
                   </thead>
                   <tbody>
                     <tr>
-                      <td>PLAN A</td>
+                      <!-- <td>PLAN A</td> -->
+                      <td>ELITE EXECUTIVE PRO+</td>
                       <td>5 YEARS</td>
                       <td>5 YEARS</td>
                       <td>11%</td>
@@ -473,11 +524,12 @@ z<html lang="en">
 
               <!-- Tables for PLAN B -->
               <div id="planB-monthly" class="hidden">
-                <h4>PLAN B - Monthly</h4>
+                <h4>ELITE EXECUTIVE PRO - Monthly</h4>
                 <table>
                   <thead>
                     <tr>
-                      <th>PLAN</th>
+                      <!-- <th>PLAN</th> -->
+                      <th>SCHEME NAME</th>
                       <th>TENURE</th>
                       <th>LOCK-IN</th>
                       <th>INTEREST</th>
@@ -486,7 +538,8 @@ z<html lang="en">
                   </thead>
                   <tbody>
                     <tr>
-                      <td>PLAN B</td>
+                      <!-- <td>PLAN B</td> -->
+                      <td>ELITE EXECUTIVE PRO</td>
                       <td>5 YEARS</td>
                       <td>3 YEARS</td>
                       <td>10%</td>
@@ -497,11 +550,12 @@ z<html lang="en">
               </div>
 
               <div id="planB-quarterly" class="hidden">
-                <h4>PLAN B - Quarterly</h4>
+                <h4>ELITE EXECUTIVE PRO - Quarterly</h4>
                 <table>
                   <thead>
                     <tr>
-                      <th>PLAN</th>
+                      <!-- <th>PLAN</th> -->
+                      <th>SCHEME NAME</th>
                       <th>TENURE</th>
                       <th>LOCK-IN</th>
                       <th>INTEREST</th>
@@ -510,7 +564,8 @@ z<html lang="en">
                   </thead>
                   <tbody>
                     <tr>
-                      <td>PLAN B</td>
+                      <!-- <td>PLAN B</td> -->
+                      <td>ELITE EXECUTIVE PRO</td>
                       <td>5 YEARS</td>
                       <td>3 YEARS</td>
                       <td>10%</td>
@@ -521,11 +576,12 @@ z<html lang="en">
               </div>
 
               <div id="planB-halfyearly" class="hidden">
-                <h4>PLAN B - Half Yearly</h4>
+                <h4>ELITE EXECUTIVE PRO - Half Yearly</h4>
                 <table>
                   <thead>
                     <tr>
-                      <th>PLAN</th>
+                      <!-- <th>PLAN</th> -->
+                      <th>SCHEME NAME</th>
                       <th>TENURE</th>
                       <th>LOCK-IN</th>
                       <th>INTEREST</th>
@@ -534,7 +590,8 @@ z<html lang="en">
                   </thead>
                   <tbody>
                     <tr>
-                      <td>PLAN B</td>
+                      <!-- <td>PLAN B</td> -->
+                      <td>ELITE EXECUTIVE PRO</td>
                       <td>5 YEARS</td>
                       <td>3 YEARS</td>
                       <td>10%</td>
@@ -545,11 +602,12 @@ z<html lang="en">
               </div>
 
               <div id="planB-yearly" class="hidden">
-                <h4>PLAN B - Yearly</h4>
+                <h4>ELITE EXECUTIVE PRO - Yearly</h4>
                 <table>
                   <thead>
                     <tr>
-                      <th>PLAN</th>
+                      <!-- <th>PLAN</th> -->
+                      <th>SCHEME NAME</th>
                       <th>TENURE</th>
                       <th>LOCK-IN</th>
                       <th>INTEREST</th>
@@ -558,7 +616,8 @@ z<html lang="en">
                   </thead>
                   <tbody>
                     <tr>
-                      <td>PLAN B</td>
+                      <!-- <td>PLAN B</td> -->
+                      <td>ELITE EXECUTIVE PRO</td>
                       <td>5 YEARS</td>
                       <td>3 YEARS</td>
                       <td>10%</td>
@@ -588,6 +647,142 @@ z<html lang="en">
                 <h4>PLAN C - Yearly</h4>
                 <h5 style="color: blue;">You will get 9% + 0% Loyalty Bonus Every Year</h5>
               </div>
+
+
+            <!-- Tables for PLAN D -->
+            <div id="planD-monthly" class="hidden">
+              <h4>Elite Pro - Monthly</h4>
+              <h5 style="color: red;">Not Applicable</h5>
+            </div>
+
+            <div id="planD-quarterly" class="hidden">
+              <h4>Elite Pro - Quarterly</h4>
+              <table>
+                <thead>
+                  <tr>
+                    <!-- <th>PLAN</th> -->
+                    <th>SCHEME NAME</th>
+                    <th>TENURE</th>
+                    <th>LOCK-IN</th>
+                    <th>INTEREST</th>
+                    <th>LOYALTY BONUS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <!-- <td>PLAN D</td> -->
+                    <td>Elite Pro</td>
+                    <td>3 YEARS</td>
+                    <td>1 YEARS</td>
+                    <td>10%</td>
+                    <td>0%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div id="planD-halfyearly" class="hidden">
+              <h4>Elite Pro - Half Yearly</h4>
+              <table>
+                <thead>
+                  <tr>
+                    <!-- <th>PLAN</th> -->
+                    <th>SCHEME NAME</th>
+                    <th>TENURE</th>
+                    <th>LOCK-IN</th>
+                    <th>INTEREST</th>
+                    <th>LOYALTY BONUS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <!-- <td>PLAN D</td> -->
+                    <td>Elite Pro</td>
+                    <td>3 YEARS</td>
+                    <td>1 YEARS</td>
+                    <td>10%</td>
+                    <td>0%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div id="planD-yearly" class="hidden">
+              <h4>Elite Pro - Yearly</h4>
+              <table>
+                <thead>
+                  <tr>
+                    <!-- <th>PLAN</th> -->
+                    <th>SCHEME NAME</th>
+                    <th>TENURE</th>
+                    <th>LOCK-IN</th>
+                    <th>INTEREST</th>
+                    <th>LOYALTY BONUS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <!-- <td>PLAN D</td> -->
+                    <td>Elite Pro</td>
+                    <td>3 YEARS</td>
+                    <td>1 YEARS</td>
+                    <td>10%</td>
+                    <td>2%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+
+
+            
+            <!-- Tables for PLAN E -->
+            <div id="planE-monthly" class="hidden">
+              <h4>Elite Pro+ - Monthly</h4>
+              <h5 style="color: red;">Not Applicable</h5>
+            </div>
+
+            <div id="planE-quarterly" class="hidden">
+              <h4>Elite Pro+ - Quarterly</h4>
+              <h5 style="color: red;">Not Applicable</h5>
+            </div>
+
+            <div id="planE-halfyearly" class="hidden">
+              <h4>Elite Pro+ - Half Yearly</h4>
+              <h5 style="color: red;">Not Applicable</h5>
+            </div>
+
+            <div id="planE-yearly" class="hidden">
+              <h4>Elite Pro+ - Yearly</h4>
+              <table>
+                <thead>
+                  <tr>
+                    <!-- <th>PLAN</th> -->
+                    <th>SCHEME NAME</th>
+                    <th>TENURE</th>
+                    <th>LOCK-IN</th>
+                    <th>INTEREST</th>
+                    <th>LOYALTY BONUS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <!-- <td>PLAN E</td> -->
+                    <td>Elite Pro+</td>
+                    <td>3 YEARS</td>
+                    <td>2 YEARS</td>
+                    <td>12%</td>
+                    <td>3%</td>
+                  </tr>
+                </tbody>
+              </table>
+              <h3>Minimum Investment in Elite Pro+ is Rs 3Lakh</h3>
+            </div>
+
+
+            
+            
+              
               <br><br>
               <div class="button-box">
                 <button type="button" class="prev-button btn btn-primary" style="background-color: red;"

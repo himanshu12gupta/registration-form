@@ -9,11 +9,16 @@
             font-family: Arial, sans-serif;
             margin: 20px;
             padding: 0;
+            background-color: #f9f9f9;
         }
         .container {
             max-width: 800px;
             margin: 0 auto;
             text-align: center;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         .note {
             background-color: #f0f0f0;
@@ -23,13 +28,14 @@
         }
         .pay-btn, .btn {
             display: inline-block;
-            padding: 10px 20px;
+            padding: 12px 25px;
             margin: 10px;
             background-color: #007BFF;
             color: white;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
         .pay-btn:hover, .btn:hover {
             background-color: #0056b3;
@@ -44,41 +50,39 @@
         }
         .table-wrapper th, .table-wrapper td {
             border: 1px solid #ddd;
-            padding: 8px;
+            padding: 12px;
             text-align: left;
         }
-        input[type="text"], input[type="file"], button {
+        input[type="text"], input[type="file"], input[type="number"], input[type="date"], button {
             display: block;
             margin: 10px auto;
-            padding: 10px;
+            padding: 12px;
             width: 80%;
-        }
-        input[type="text"] {
             border: 1px solid #ccc;
-            border-radius: 4px;
+            border-radius: 5px;
         }
         button {
-            background-color: #007BFF;
+            background-color: #28a745;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
         }
         button:disabled {
             background-color: #ccc;
             cursor: not-allowed;
         }
-        #qr-code {
-            margin: 20px auto;
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #333;
+            color: white;
         }
-        #confirmationPage img {
-            max-width: 100px;
-            max-height: 100px;
-            display: block;
-            margin: 10px auto;
+        .thank-you-page {
+            text-align: center;
         }
     </style>
-</head> 
+</head>
 <body>
 <section id="iei">
     <div class="container step1">
@@ -87,55 +91,41 @@
         <div id="applicant-details" class="table-wrapper">
             <!-- Applicant details table will be inserted here -->
         </div>
-        <a class="pay-btn">Pay to Proceed</a>
+        <a class="pay-btn" id="payToProceedButton">Proceed To Pay</a>
     </div>
 
-    <div class="container step2 hidden">
-        <h1>Payment Options</h1>
-        <div id="payment-methods">
-            <button class="btn" id="qr-payment">QR Payment</button>
-            <button class="btn" id="imps-payment">IMPS Payment</button>
-            <button class="btn" id="upi-payment">UPI Payment</button>
-            <button class="btn" id="neft-payment">NEFT/RTGS Payment</button>
-            <button class="btn" id="cheque-payment">Cheque Payment</button>
+    <div id="paymentSection" class="hidden container step2">
+        <h3>Select Payment Option</h3>
+        <div class="mt-3">
+            <button class="btn payment-option" onclick="showPaymentForm('qr')">QR</button>
+            <button class="btn payment-option" onclick="showPaymentForm('upi')">UPI</button>
+            <button class="btn payment-option" onclick="showPaymentForm('imps')">IMPS</button>
+            <button class="btn payment-option" onclick="showPaymentForm('neft')">NEFT/RTGS</button>
+            <button class="btn payment-option" onclick="showPaymentForm('cheque')">Cheque</button>
         </div>
-        <div id="payment-details" class="hidden">
-            <!-- Dynamic payment details will be shown here -->
-        </div>
-        <button id="confirm-payment" disabled>Confirm Payment</button>
     </div>
 
-    <div id="confirmationPage" class="hidden container step3">
-        <h3>Payment Confirmation</h3>
-        <ul class="list-unstyled">
-            <li><strong>Application Number:</strong> <span id="confirm_appl_no"></span></li>
-            <li><strong>Date:</strong> <span id="confirm_appl_date"></span></li>
-            <li><strong>Name:</strong> <span id="confirm_name"></span></li>
-            <li><strong>Email:</strong> <span id="confirm_email"></span></li>
-            <li><strong>Phone Number:</strong> <span id="confirm_phoneNumber"></span></li>
-            <li><strong>Payment Mode:</strong> <span id="confirm_paymentMode"></span></li>
-            <li><strong>Plan Selected:</strong> <span id="confirm_planSelection"></span></li>
-            <li><strong>Subscription Option:</strong> <span id="confirm_subscriptionOption"></span></li>
-            <li><strong>Amount:</strong> ₹<span id="confirm_amount"></span></li>
-            <li><strong>Payment Method Chosen:</strong> <span id="chosenPaymentMethod"></span></li>
-            <li><strong>Transaction ID:</strong> <span id="confirm_transactionId"></span></li>
-            <li><strong>Upload Screenshot:</strong> <img id="confirm_screenshot" src="" alt="Screenshot"></li>
-        </ul>
-        <button id="downloadPDFButton" class="btn btn-primary w-100 mt-3" onclick="downloadPDF()">Download PDF</button>
+    <div id="formSection" class="hidden container step3">
+        <form id="paymentForm" oninput="validateForm()"></form>
+        <button class="btn" id="confirmButton" onclick="confirmPayment()" disabled>Confirm Payment</button>
     </div>
-    <div class="step4"></div>  
+
+    <div id="thankYouPage" class="thank-you-page hidden step4">
+        <h2>Thank You for Your Payment!</h2>
+        <p>Your payment has been successfully processed.</p>
+        <p><strong>Application Number:</strong> <span id="thankApplNo"></span></p>
+    </div>
+
+    <footer>
+        &copy; 2024 Your Company Name. All rights reserved.
+    </footer>
 </section>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    const payToProceedButton = document.querySelector(".pay-btn");
-    const step1 = document.querySelector(".step1");
-    const step2 = document.querySelector(".step2");
-    const step3 = document.querySelector("#confirmationPage");
+    const payToProceedButton = document.getElementById("payToProceedButton");
     const applicantData = JSON.parse(sessionStorage.getItem("applicantData"));
-    const paymentDetails = document.getElementById("payment-details");
-    const confirmPaymentButton = document.getElementById("confirm-payment");
-    let selectedPaymentMethod = "";  // Variable to track the selected payment method
+    const applicantDetailsDiv = document.getElementById('applicant-details');
     
     if (applicantData) {
         let table = '<table>';
@@ -195,162 +185,91 @@ document.addEventListener("DOMContentLoaded", function () {
                 table += `<tr><th>With Pincode</th><td>${applicantData.with_pincode}</td></tr>`;
                 table += `<tr><th>With Landmark</th><td>${applicantData.with_landmark}</td></tr>`;
                 table += `<tr><th>Terms Accepted</th><td>${applicantData.terms_accepted ? 'Yes' : 'No'}</td></tr>`;
-
-                table += `</table>`;
-
-
-        // Insert the table into the page
-        document.getElementById('applicant-details').innerHTML = table;
+        table += `</table>`;
+        applicantDetailsDiv.innerHTML = table;
     } else {
-        document.getElementById('applicant-details').innerHTML = "<p>No applicant found.</p>";
+        applicantDetailsDiv.innerHTML = "<p>No applicant found.</p>";
     }
 
     payToProceedButton.addEventListener("click", function () {
-        step1.classList.add("hidden");
-        step2.classList.remove("hidden");
+        // Hide Step 1 and show Step 2 (Payment options)
+        document.querySelector(".step1").classList.add("hidden");
+        document.querySelector(".step2").classList.remove("hidden");
     });
 
-    function createInputFields() {
-        return `
-            <input type="text" id="transaction-id" placeholder="Transaction ID">
-            <input type="file" id="screenshot">
-        `;
-    }
+    window.showPaymentForm = function (type) {
+        const formSection = document.getElementById('formSection');
+        const paymentForm = document.getElementById('paymentForm');
+        formSection.classList.remove('hidden');
+        paymentForm.innerHTML = '';
 
-    // Define payment methods
-    document.getElementById("qr-payment").addEventListener("click", function () {
-        const amount = applicantData.amount;
-        selectedPaymentMethod = "QR Payment"; // Set selected payment method as QR
-        paymentDetails.innerHTML = `
-            <h3>Scan the QR Code to Pay</h3>
-            <img id="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=750523150523@ybl&am=${amount}" alt="QR Code">
-            ${createInputFields()}
-        `;
-        paymentDetails.classList.remove("hidden");
-        confirmPaymentButton.disabled = false;
-    });
-
-    document.getElementById("imps-payment").addEventListener("click", function () {
-        selectedPaymentMethod = "IMPS Payment"; // Set selected payment method as IMPS
-        paymentDetails.innerHTML = `
-            <h3>IMPS Payment</h3>
-            <strong>Name:</strong> AnytimeInvest<br>
-            <strong>Account No.:</strong> 120410110002280<br>
-            <strong>IFSC Code:</strong> BKID0ARYAGB<br>
-            <strong>MICR Code:</strong> 110013254<br>
-            ${createInputFields()}
-        `;
-        paymentDetails.classList.remove("hidden");
-        confirmPaymentButton.disabled = false;
-    });
-
-    document.getElementById("upi-payment").addEventListener("click", function () {
-        selectedPaymentMethod = "UPI Payment"; // Set selected payment method as UPI
-        paymentDetails.innerHTML = `
-            <h3>UPI Payment</h3>
-            <strong>UPI ID:</strong> example@upi<br>
-            <strong>Amount:</strong> ₹${applicantData.amount}<br>
-            ${createInputFields()}
-        `;
-        paymentDetails.classList.remove("hidden");
-        confirmPaymentButton.disabled = false;
-    });
-
-    document.getElementById("neft-payment").addEventListener("click", function () {
-        selectedPaymentMethod = "NEFT/RTGS Payment"; // Set selected payment method as NEFT
-        paymentDetails.innerHTML = `
-            <h3>NEFT/RTGS Payment</h3>
-            <strong>Bank Name:</strong> AnyBank<br>
-            <strong>Account No.:</strong> 123456789012<br>
-            <strong>IFSC Code:</strong> ANYBANK123<br>
-            ${createInputFields()}
-        `;
-        paymentDetails.classList.remove("hidden");
-        confirmPaymentButton.disabled = false;
-    });
-
-    document.getElementById("cheque-payment").addEventListener("click", function () {
-        selectedPaymentMethod = "Cheque Payment"; // Set selected payment method as Cheque
-        paymentDetails.innerHTML = `
-            <h3>Cheque Payment</h3>
-            <strong>Cheque No.:</strong> 123456<br>
-            <strong>Bank Name:</strong> AnyBank<br>
-            ${createInputFields()}
-        `;
-        paymentDetails.classList.remove("hidden");
-        confirmPaymentButton.disabled = false;
-    });
-
-    confirmPaymentButton.addEventListener("click", function () {
-        step2.classList.add("hidden");
-        step3.classList.remove("hidden");
-        const todayDate = new Date().toLocaleDateString();
-
-        // Show data on step 3 confirmation page
-        document.getElementById("confirm_appl_no").textContent = applicantData.appl_no;
-        document.getElementById("confirm_appl_date").textContent = todayDate; // Use today's date here
-        document.getElementById("confirm_name").textContent = applicantData.name;
-        document.getElementById("confirm_email").textContent = applicantData.email;
-        document.getElementById("confirm_phoneNumber").textContent = applicantData.phoneNumber;
-        document.getElementById("confirm_paymentMode").textContent = selectedPaymentMethod; // Use dynamically set payment method
-        document.getElementById("confirm_planSelection").textContent = applicantData.planSelection;
-        document.getElementById("confirm_subscriptionOption").textContent = applicantData.subscriptionOption;
-        document.getElementById("confirm_amount").textContent = applicantData.amount;
-        document.getElementById("chosenPaymentMethod").textContent = selectedPaymentMethod; // Use dynamically set payment method
-        document.getElementById("confirm_transactionId").textContent = document.getElementById("transaction-id").value;
-        const screenshotFile = document.getElementById("screenshot").files[0];
-        if (screenshotFile) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                document.getElementById("confirm_screenshot").src = e.target.result;
-            };
-            reader.readAsDataURL(screenshotFile);
+        if (type === 'qr') {
+            paymentForm.innerHTML = `
+                <input type="text" placeholder="Transaction ID 1">
+                <input type="file" placeholder="Screenshot 1">
+                <input type="text" placeholder="Transaction ID 2">
+                <input type="file" placeholder="Screenshot 2">
+                <input type="text" placeholder="Transaction ID 3">
+                <input type="file" placeholder="Screenshot 3">
+            `;
+        } else if (type === 'upi' || type === 'imps' || type === 'neft') {
+            paymentForm.innerHTML = `
+                <input type="number" placeholder="Amount 1">
+                <input type="text" placeholder="Transaction ID 1">
+                <input type="file" placeholder="Screenshot 1">
+                <input type="number" placeholder="Amount 2">
+                <input type="text" placeholder="Transaction ID 2">
+                <input type="file" placeholder="Screenshot 2">
+                <input type="number" placeholder="Amount 3">
+                <input type="text" placeholder="Transaction ID 3">
+                <input type="file" placeholder="Screenshot 3">
+            `;
+        } else if (type === 'cheque') {
+            paymentForm.innerHTML = `
+                <input type="text" placeholder="IFSC 1">
+                <input type="text" placeholder="Bank Name 1">
+                <input type="date" placeholder="Cheque Date 1">
+                <input type="text" placeholder="IFSC 2">
+                <input type="text" placeholder="Bank Name 2">
+                <input type="date" placeholder="Cheque Date 2">
+            `;
         }
-    });
+        validateForm();
+    };
 
+    window.validateForm = function () {
+        const confirmButton = document.getElementById('confirmButton');
+        const inputs = document.querySelectorAll('#paymentForm input');
+        const filledFields = Array.from(inputs).filter(input => input.value.trim() !== '');
+        confirmButton.disabled = filledFields.length < 3;
+    };
 
+   window.confirmPayment = function () {
+        const appl_no = applicantData.appl_no;
+        const appl_date = applicantData.appl_date;
+        const name = applicantData.name;
+        const amount = applicantData.amount;
+        const panCardNumber = applicantData.panCardNumber;
+        const paymentOption = document.querySelector(".payment-option.active").textContent;
+        const paymentDate = new Date().toISOString().split('T')[0]; // Get today's date
 
-    function savePaymentData() {
-    const formData = new FormData();
-    formData.append('application_number', document.getElementById("confirm_appl_no").textContent);
-    formData.append('application_date', new Date().toLocaleDateString()); // Use today's date here
-    formData.append('name', document.getElementById("confirm_name").textContent);
-    formData.append('email', document.getElementById("confirm_email").textContent);
-    formData.append('phone_number', document.getElementById("confirm_phoneNumber").textContent);
-    formData.append('payment_mode', document.getElementById("confirm_paymentMode").textContent);
-    formData.append('plan_selected', document.getElementById("confirm_planSelection").textContent);
-    formData.append('subscription_option', document.getElementById("confirm_subscriptionOption").textContent);
-    formData.append('amount', document.getElementById("confirm_amount").textContent);
-    formData.append('transaction_id', document.getElementById("confirm_transactionId").textContent);
-    const screenshotFile = document.getElementById("screenshot").files[0];
-    if (screenshotFile) {
-        formData.append('screenshot', screenshotFile);
-    }
-
-    fetch('/api/save-payment', {
-        method: 'POST',
-        body: formData,
-    })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.success) {
-                alert('Payment saved successfully!');
-            } else {
-                alert('Failed to save payment. Please try again.');
-            }
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-            alert('An error occurred while saving payment.');
+        // Insert data into the 'payment' table
+        db.serialize(() => {
+            const stmt = db.prepare(`
+                INSERT INTO payment (appl_no, appl_date, name, amount, panCardNumber, paymentDate, paymentOption)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            `);
+            stmt.run(appl_no, appl_date, name, amount, panCardNumber, paymentDate, paymentOption);
+            stmt.finalize();
         });
-}
 
-// Call `savePaymentData()` after confirming the payment
-confirmPaymentButton.addEventListener("click", function () {
-    savePaymentData();
+        document.querySelector('.step2').classList.add('hidden');
+        document.querySelector('.step3').classList.add('hidden');
+        document.querySelector('.step4').classList.remove('hidden');
+        document.getElementById('thankApplNo').textContent = appl_no;
+    };
 });
 
-});
 </script>
 </body>
 </html>
